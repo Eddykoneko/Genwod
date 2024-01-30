@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -41,6 +43,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $genre = null;
+
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: HistoriqueExercice::class)]
+    private Collection $historiqueExercices;
+
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Leaderboard::class)]
+    private Collection $leaderboards;
+
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: LikeDislike::class)]
+    private Collection $likeDislikes;
+
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Commentaire::class)]
+    private Collection $commentaires;
+
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Favoris::class)]
+    private Collection $favoris;
+
+    public function __construct()
+    {
+        $this->historiqueExercices = new ArrayCollection();
+        $this->leaderboards = new ArrayCollection();
+        $this->likeDislikes = new ArrayCollection();
+        $this->commentaires = new ArrayCollection();
+        $this->favoris = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -168,6 +194,156 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setGenre(string $genre): static
     {
         $this->genre = $genre;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, HistoriqueExercice>
+     */
+    public function getHistoriqueExercices(): Collection
+    {
+        return $this->historiqueExercices;
+    }
+
+    public function addHistoriqueExercice(HistoriqueExercice $historiqueExercice): static
+    {
+        if (!$this->historiqueExercices->contains($historiqueExercice)) {
+            $this->historiqueExercices->add($historiqueExercice);
+            $historiqueExercice->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHistoriqueExercice(HistoriqueExercice $historiqueExercice): static
+    {
+        if ($this->historiqueExercices->removeElement($historiqueExercice)) {
+            // set the owning side to null (unless already changed)
+            if ($historiqueExercice->getUserId() === $this) {
+                $historiqueExercice->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Leaderboard>
+     */
+    public function getLeaderboards(): Collection
+    {
+        return $this->leaderboards;
+    }
+
+    public function addLeaderboard(Leaderboard $leaderboard): static
+    {
+        if (!$this->leaderboards->contains($leaderboard)) {
+            $this->leaderboards->add($leaderboard);
+            $leaderboard->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLeaderboard(Leaderboard $leaderboard): static
+    {
+        if ($this->leaderboards->removeElement($leaderboard)) {
+            // set the owning side to null (unless already changed)
+            if ($leaderboard->getUserId() === $this) {
+                $leaderboard->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LikeDislike>
+     */
+    public function getLikeDislikes(): Collection
+    {
+        return $this->likeDislikes;
+    }
+
+    public function addLikeDislike(LikeDislike $likeDislike): static
+    {
+        if (!$this->likeDislikes->contains($likeDislike)) {
+            $this->likeDislikes->add($likeDislike);
+            $likeDislike->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLikeDislike(LikeDislike $likeDislike): static
+    {
+        if ($this->likeDislikes->removeElement($likeDislike)) {
+            // set the owning side to null (unless already changed)
+            if ($likeDislike->getUserId() === $this) {
+                $likeDislike->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): static
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires->add($commentaire);
+            $commentaire->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): static
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getUserId() === $this) {
+                $commentaire->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Favoris>
+     */
+    public function getFavoris(): Collection
+    {
+        return $this->favoris;
+    }
+
+    public function addFavori(Favoris $favori): static
+    {
+        if (!$this->favoris->contains($favori)) {
+            $this->favoris->add($favori);
+            $favori->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavori(Favoris $favori): static
+    {
+        if ($this->favoris->removeElement($favori)) {
+            // set the owning side to null (unless already changed)
+            if ($favori->getUserId() === $this) {
+                $favori->setUserId(null);
+            }
+        }
 
         return $this;
     }

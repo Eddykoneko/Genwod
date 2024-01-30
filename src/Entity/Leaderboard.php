@@ -19,6 +19,14 @@ class Leaderboard
     #[ORM\Column]
     private ?int $score = null;
 
+    #[ORM\ManyToOne(inversedBy: 'leaderboards')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user_id = null;
+
+    #[ORM\ManyToOne(inversedBy: 'leaderboards')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Exercice $exercice_id = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +52,30 @@ class Leaderboard
     public function setScore(int $score): static
     {
         $this->score = $score;
+
+        return $this;
+    }
+
+    public function getUserId(): ?User
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId(?User $user_id): static
+    {
+        $this->user_id = $user_id;
+
+        return $this;
+    }
+
+    public function getExerciceId(): ?Exercice
+    {
+        return $this->exercice_id;
+    }
+
+    public function setExerciceId(?Exercice $exercice_id): static
+    {
+        $this->exercice_id = $exercice_id;
 
         return $this;
     }
