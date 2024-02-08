@@ -30,4 +30,17 @@ class ExerciceController extends AbstractController
             'commentaires' => $commentaires,
         ]);
     }
+
+    #[Route('/{id}/historique', name: 'app_exercice_historique', methods: ['GET'])]
+    public function historique(Exercice $exercice): Response
+    {
+        // Récupère l'historique des exercices pour l'exercice donné
+        $historiqueExercices = $exercice->getHistoriqueExercices();
+
+        return $this->render('historique_exercice/index.html.twig', [
+            'exercice' => $exercice,
+            'historiqueExercices' => $historiqueExercices,
+        ]);
+}
+
 }

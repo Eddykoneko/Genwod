@@ -42,6 +42,7 @@
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
     <div>
+        <a href="{{ path('enregistrer_exercice', {'id': exercice.id}) }}" class="btn btn-primary">Enregistrer l'exercice</a>
         <a href="{{ path('app_commentaire_new', {'id': exercice.id}) }}">Ajouter un commentaire</a>
     </div>
 

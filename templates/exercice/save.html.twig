@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Enregistrer l'exercice{% endblock %}
+
+{% block body %}
+    <h1>Enregistrer l'exercice</h1>
+
+    {{ form_start(form) }}
+        <table class="table">
+            <tbody>
+            
+                <tr>
+                    <td>{{ form_row(form.mode) }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form_row(form.nombreTours) }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form_row(form.nombreRepetition) }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form_row(form.temps) }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form_row(form.commentaire) }}</td>
+                </tr>
+                <tr>
+            </tbody>
+        </table>
+        
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+
+    {{ form_end(form) }}
+
+
+
+{% endblock %}

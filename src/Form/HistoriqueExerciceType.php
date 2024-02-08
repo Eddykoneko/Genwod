@@ -2,32 +2,49 @@
 
 namespace App\Form;
 
-use App\Entity\Exercice;
-use App\Entity\HistoriqueExercice;
 use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Exercice;
+use PHPUnit\Framework\Assert;
+use App\Entity\HistoriqueExercice;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class HistoriqueExerciceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('mode')
+            ->add('mode', ChoiceType::class, [
+                'choices'  => [
+                    'Mode' => [
+                        'RX' => 'RX',
+                        'SCALED' => 'SCALED',
+                    ],
+                ],
+            ])
             ->add('nombreTours')
             ->add('nombreRepetition')
-            ->add('temps')
+            ->add('temps', TimeType::class, [
+                'input'  => 'datetime',
+                'widget' => 'choice',
+                'hours' => range(0, 1), // Permet les heures de 0 à 1 (pour un total de 2 heures)
+                'minutes' => range(0, 59), // Permet toutes les minutes
+                'seconds' => range(0, 59), // Permet toutes les secondes
+                'with_seconds' => true,
+                ],
+            )
             ->add('commentaire')
-            ->add('user_id', EntityType::class, [
-                'class' => User::class,
-'choice_label' => 'id',
-            ])
-            ->add('exercice_id', EntityType::class, [
-                'class' => Exercice::class,
-'choice_label' => 'id',
-            ])
+//                 'class' => User::class,
+// 'choice_label' => 'id',
+//             ])
+//             ->add('exercice_id', EntityType::class, [
+//                 'class' => Exercice::class,
+// 'choice_label' => 'id',
+//             ])
         ;
     }
 
