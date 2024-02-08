@@ -24,6 +24,7 @@ class Commentaire
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user_id = null;
 
+    
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Exercice $exercice_id = null;
@@ -80,4 +81,13 @@ class Commentaire
 
         return $this;
     }
+
+    /**
+     * Get the value of user_email
+     */ 
+    public function getUser_email()
+    {
+        return $this->user_id ? $this->user_id->getEmail() : null;
+    }
+
 }

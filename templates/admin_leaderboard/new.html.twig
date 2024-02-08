@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Leaderboard{% endblock %}
+
+{% block body %}
+    <h1>Create new Leaderboard</h1>
+
+    {{ include('admin_leaderboard/_form.html.twig') }}
+
+    <a href="{{ path('app_admin_leaderboard_index') }}">back to list</a>
+{% endblock %}

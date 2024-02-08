@@ -1,0 +1,35 @@
+    <nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 me-5 mb-lg-0 pe-5">
+            <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
+            </li>
+            <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="{{ path('app_admin_user_index') }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Admin
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ path('app_admin_exercice_index') }}">Exercices</a></li>
+                <li><a class="dropdown-item" href="{{ path('app_admin_leaderboard_index') }}">Leaderboard</a></li>
+                <li><a class="dropdown-item" href="{{ path('app_admin_like_dislike_index') }}">Likes/Dislikes</a></li>
+                <li><a class="dropdown-item" href="{{ path('app_admin_favoris_index') }}">Favoris</a></li>
+                <li><a class="dropdown-item" href="{{ path('app_admin_user_index') }}">Utilisateurs</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se deconnecter</a></li>
+            </ul>
+            {# </li>
+            <li class="nav-item">
+            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+            </li> #}
+        </ul>
+        {# <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form> #}
+        </div>
+    </div>
+    </nav>

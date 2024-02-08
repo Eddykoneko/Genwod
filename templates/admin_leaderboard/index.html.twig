@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Leaderboard index{% endblock %}
+
+{% block body %}
+    <h1>Leaderboard index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Mode</th>
+                <th>Score</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for leaderboard in leaderboards %}
+            <tr>
+                <td>{{ leaderboard.id }}</td>
+                <td>{{ leaderboard.mode }}</td>
+                <td>{{ leaderboard.score }}</td>
+                <td>
+                    <a href="{{ path('app_admin_leaderboard_show', {'id': leaderboard.id}) }}">show</a>
+                    <a href="{{ path('app_admin_leaderboard_edit', {'id': leaderboard.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_leaderboard_new') }}">Create new</a>
+{% endblock %}

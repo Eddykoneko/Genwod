@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Leaderboard{% endblock %}
+
+{% block body %}
+    <h1>Edit Leaderboard</h1>
+
+    {{ include('admin_leaderboard/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_admin_leaderboard_index') }}">back to list</a>
+
+    {{ include('admin_leaderboard/_delete_form.html.twig') }}
+{% endblock %}

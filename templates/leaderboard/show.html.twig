@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Leaderboard{% endblock %}
+
+{% block body %}
+    <h1>Leaderboard</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Mode</th>
+                <td>{{ leaderboard.mode }}</td>
+            </tr>
+            <tr>
+                <th>Score</th>
+                <td>{{ leaderboard.score }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_leaderboard_index') }}">back to list</a>
+
+{% endblock %}

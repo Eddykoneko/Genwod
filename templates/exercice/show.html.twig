@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Exercice{% endblock %}
+
+{% block body %}
+    <h1>Exercice</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Date</th>
+                <td>{{ exercice.createdAt ? exercice.createdAt|date('d-m-Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ exercice.type }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ exercice.description }}</td>
+            </tr>
+            <tr>
+                <th>Duree</th>
+                <td>{{ exercice.duree }}</td>
+            </tr>
+            <tr>
+                <th>Difficulte</th>
+                <td>{{ exercice.difficulte }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <div>
+        {% for commentaire in exercice.commentaires %}
+            <div>
+                <p>{{ commentaire.id }}</p>
+                <p>{{ commentaire.commentaire }}</p>
+            </div>
+        {% endfor %}
+
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+    <div>
+        <a href="{{ path('app_commentaire_new', {'id': exercice.id}) }}">Ajouter un commentaire</a>
+    </div>
+
+    {% endif %}
+
+{% endblock %}

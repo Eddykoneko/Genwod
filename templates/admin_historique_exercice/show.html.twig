@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}HistoriqueExercice{% endblock %}
+
+{% block body %}
+    <h1>HistoriqueExercice</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ historique_exercice.id }}</td>
+            </tr>
+            <tr>
+                <th>Mode</th>
+                <td>{{ historique_exercice.mode }}</td>
+            </tr>
+            <tr>
+                <th>NombreTours</th>
+                <td>{{ historique_exercice.nombreTours }}</td>
+            </tr>
+            <tr>
+                <th>NombreRepetition</th>
+                <td>{{ historique_exercice.nombreRepetition }}</td>
+            </tr>
+            <tr>
+                <th>Temps</th>
+                <td>{{ historique_exercice.temps ? historique_exercice.temps|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Commentaire</th>
+                <td>{{ historique_exercice.commentaire }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_historique_exercice_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_historique_exercice_edit', {'id': historique_exercice.id}) }}">edit</a>
+
+    {{ include('admin_historique_exercice/_delete_form.html.twig') }}
+{% endblock %}

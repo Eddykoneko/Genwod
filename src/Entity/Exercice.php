@@ -15,14 +15,19 @@ class Exercice
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 80)]
     private ?string $type = null;
+
+    #[ORM\Column(type: "text", nullable: true)]
+    private ?string $description = null;
+    
 
     #[ORM\Column]
     private ?int $duree = null;
 
     #[ORM\Column(length: 255)]
     private ?string $difficulte = null;
+
 
     #[ORM\OneToMany(mappedBy: 'exercice_id', targetEntity: HistoriqueExercice::class)]
     private Collection $historiqueExercices;
@@ -38,6 +43,9 @@ class Exercice
 
     #[ORM\OneToMany(mappedBy: 'exercice_id', targetEntity: Favoris::class)]
     private Collection $favoris;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $createdAt = null;
 
     public function __construct()
     {
@@ -64,6 +72,19 @@ class Exercice
 
         return $this;
     }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
 
     public function getDuree(): ?int
     {
@@ -235,6 +256,18 @@ class Exercice
                 $favori->setExerciceId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

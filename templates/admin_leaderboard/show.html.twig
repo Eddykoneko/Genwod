@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Leaderboard{% endblock %}
+
+{% block body %}
+    <h1>Leaderboard</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ leaderboard.id }}</td>
+            </tr>
+            <tr>
+                <th>Mode</th>
+                <td>{{ leaderboard.mode }}</td>
+            </tr>
+            <tr>
+                <th>Score</th>
+                <td>{{ leaderboard.score }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_leaderboard_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_leaderboard_edit', {'id': leaderboard.id}) }}">edit</a>
+
+    {{ include('admin_leaderboard/_delete_form.html.twig') }}
+{% endblock %}

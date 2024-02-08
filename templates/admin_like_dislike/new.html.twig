@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New LikeDislike{% endblock %}
+
+{% block body %}
+    <h1>Create new LikeDislike</h1>
+
+    {{ include('admin_like_dislike/_form.html.twig') }}
+
+    <a href="{{ path('app_admin_like_dislike_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    <h1>Register</h1>
+
+    {{ form_start(registrationForm, {'attr': {'data-turbo-action': 'replace-current'}}) }}
+
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.prenom) }}
+        {{ form_row(registrationForm.nom) }}
+        {{ form_row(registrationForm.age) }}
+        {{ form_row(registrationForm.poids) }}
+        {{ form_row(registrationForm.taille) }}
+        {{ form_row(registrationForm.genre) }}
+        {{ form_row(registrationForm.plainPassword, {
+            label: 'Mot de passe',
+        }) }}
+        {{ form_row(registrationForm.agreeTerms) }}
+
+        <button type="submit" class="btn-primary">S'inscrire</button>
+    {{ form_end(registrationForm) }}
+{% endblock %}

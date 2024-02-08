@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+    <p>Bonjour, {{ app.user.prenom }} !</p>
+
+    {% else %}
+
+    <p>Bonjour, visiteur !</p>
+
+    {% endif %}
+    
+
+    <h1>Bienvenue sur Genwod</h1>
+
+
+    <div class="body-wrapper">
+        {# Affichage de l'exercice du jour  #}
+        {% if exercice is defined %}
+            <h2>WOD</h2>
+            <p>Type : {{ exercice.type }}</p>
+            <p>Duree : {{ exercice.duree }}</p>
+            <p>Difficulté : {{ exercice.difficulte }}</p>
+    <div class="description-column">
+        {% for item in exercice.description|split('\n') %}
+            <div>{{ item }}</div>
+        {% endfor %}
+    </div>
+    </div>
+
+        <a href="{{ path('app_exercice_show', {'id': exercice.id}) }}" class="btn btn-primary">Voir l'exercice</a>
+        <a href="{{ path('app_home') }}" class="btn btn-primary">Générer un nouvel exercice aléatoire</a>
+
+    {% endif %}
+{% endblock %}
