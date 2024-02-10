@@ -2,10 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\ExerciceRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\User;
+use App\Entity\Favoris;
+use App\Entity\Commentaire;
+use App\Entity\Leaderboard;
+use App\Entity\LikeDislike;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\HistoriqueExercice;
+use App\Repository\ExerciceRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: ExerciceRepository::class)]
 class Exercice
@@ -20,14 +26,12 @@ class Exercice
 
     #[ORM\Column(type: "text", nullable: true)]
     private ?string $description = null;
-    
 
     #[ORM\Column]
     private ?int $duree = null;
 
     #[ORM\Column(length: 255)]
     private ?string $difficulte = null;
-
 
     #[ORM\OneToMany(mappedBy: 'exercice_id', targetEntity: HistoriqueExercice::class)]
     private Collection $historiqueExercices;
@@ -66,7 +70,7 @@ class Exercice
         return $this->type;
     }
 
-    public function setType(string $type): static
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -78,20 +82,19 @@ class Exercice
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
         return $this;
     }
 
-
     public function getDuree(): ?int
     {
         return $this->duree;
     }
 
-    public function setDuree(int $duree): static
+    public function setDuree(int $duree): self
     {
         $this->duree = $duree;
 
@@ -103,7 +106,7 @@ class Exercice
         return $this->difficulte;
     }
 
-    public function setDifficulte(string $difficulte): static
+    public function setDifficulte(string $difficulte): self
     {
         $this->difficulte = $difficulte;
 
@@ -118,17 +121,17 @@ class Exercice
         return $this->historiqueExercices;
     }
 
-    public function addHistoriqueExercice(HistoriqueExercice $historiqueExercice): static
+    public function addHistoriqueExercice(HistoriqueExercice $historiqueExercice): self
     {
         if (!$this->historiqueExercices->contains($historiqueExercice)) {
-            $this->historiqueExercices->add($historiqueExercice);
+            $this->historiqueExercices[] = $historiqueExercice;
             $historiqueExercice->setExerciceId($this);
         }
 
         return $this;
     }
 
-    public function removeHistoriqueExercice(HistoriqueExercice $historiqueExercice): static
+    public function removeHistoriqueExercice(HistoriqueExercice $historiqueExercice): self
     {
         if ($this->historiqueExercices->removeElement($historiqueExercice)) {
             // set the owning side to null (unless already changed)
@@ -148,17 +151,17 @@ class Exercice
         return $this->leaderboards;
     }
 
-    public function addLeaderboard(Leaderboard $leaderboard): static
+    public function addLeaderboard(Leaderboard $leaderboard): self
     {
         if (!$this->leaderboards->contains($leaderboard)) {
-            $this->leaderboards->add($leaderboard);
+            $this->leaderboards[] = $leaderboard;
             $leaderboard->setExerciceId($this);
         }
 
         return $this;
     }
 
-    public function removeLeaderboard(Leaderboard $leaderboard): static
+    public function removeLeaderboard(Leaderboard $leaderboard): self
     {
         if ($this->leaderboards->removeElement($leaderboard)) {
             // set the owning side to null (unless already changed)
@@ -178,17 +181,17 @@ class Exercice
         return $this->likeDislikes;
     }
 
-    public function addLikeDislike(LikeDislike $likeDislike): static
+    public function addLikeDislike(LikeDislike $likeDislike): self
     {
         if (!$this->likeDislikes->contains($likeDislike)) {
-            $this->likeDislikes->add($likeDislike);
-            $likeDislike->setExerciceId($this);
+            $this->likeDislikes[] = $likeDislike;
+            $likeDislike->setExerciceId($this); // Assurez-vous d'avoir cette méthode dans votre classe LikeDislike
         }
 
         return $this;
     }
 
-    public function removeLikeDislike(LikeDislike $likeDislike): static
+    public function removeLikeDislike(LikeDislike $likeDislike): self
     {
         if ($this->likeDislikes->removeElement($likeDislike)) {
             // set the owning side to null (unless already changed)
@@ -200,6 +203,15 @@ class Exercice
         return $this;
     }
 
+    public function isLikedByUser(User $user): bool
+    {
+        // Vous pouvez utiliser une fonction de filtrage sur la collection de LikeDislike pour vérifier si l'utilisateur a aimé cet exercice
+        return $this->likeDislikes->exists(function ($key, LikeDislike $likeDislike) use ($user) {
+            return $likeDislike->getUserId() === $user && $likeDislike->getStatut() === 'like';
+        });
+    }
+
+
     /**
      * @return Collection<int, Commentaire>
      */
@@ -208,17 +220,17 @@ class Exercice
         return $this->commentaires;
     }
 
-    public function addCommentaire(Commentaire $commentaire): static
+    public function addCommentaire(Commentaire $commentaire): self
     {
         if (!$this->commentaires->contains($commentaire)) {
-            $this->commentaires->add($commentaire);
+            $this->commentaires[] = $commentaire;
             $commentaire->setExerciceId($this);
         }
 
         return $this;
     }
 
-    public function removeCommentaire(Commentaire $commentaire): static
+    public function removeCommentaire(Commentaire $commentaire): self
     {
         if ($this->commentaires->removeElement($commentaire)) {
             // set the owning side to null (unless already changed)
@@ -238,17 +250,17 @@ class Exercice
         return $this->favoris;
     }
 
-    public function addFavori(Favoris $favori): static
+    public function addFavori(Favoris $favori): self
     {
         if (!$this->favoris->contains($favori)) {
-            $this->favoris->add($favori);
+            $this->favoris[] = $favori;
             $favori->setExerciceId($this);
         }
 
         return $this;
     }
 
-    public function removeFavori(Favoris $favori): static
+    public function removeFavori(Favoris $favori): self
     {
         if ($this->favoris->removeElement($favori)) {
             // set the owning side to null (unless already changed)
@@ -265,10 +277,12 @@ class Exercice
         return $this->createdAt;
     }
 
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
+
+
 }

@@ -22,6 +22,7 @@
         {# Affichage de l'exercice du jour  #}
         {% if exercice is defined %}
             <h2>WOD</h2>
+            <p>{{ exercice.createdAt|date('d-m-Y') }}</p>
             <p>Type : {{ exercice.type }}</p>
             <p>Duree : {{ exercice.duree }}</p>
             <p>Difficulté : {{ exercice.difficulte }}</p>

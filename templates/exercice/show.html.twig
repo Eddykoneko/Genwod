@@ -9,7 +9,7 @@
         <tbody>
             <tr>
                 <th>Date</th>
-                <td>{{ exercice.createdAt ? exercice.createdAt|date('d-m-Y H:i:s') : '' }}</td>
+                <td>{{ exercice.createdAt|date('d-m-Y') }}</td>
             </tr>
             <tr>
                 <th>Type</th>
@@ -29,23 +29,59 @@
             </tr>
         </tbody>
     </table>
-
-
+    
     <div>
-        {% for commentaire in exercice.commentaires %}
-            <div>
-                <p>{{ commentaire.id }}</p>
-                <p>{{ commentaire.commentaire }}</p>
-            </div>
-        {% endfor %}
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <div>
+            <a href="{{ path('enregistrer_exercice', {'id': exercice.id}) }}" class="btn btn-primary">Enregistrer l'exercice</a>
 
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        {% if not exercice.isLikedByUser(app.user) %}
+            <form action="{{ path('exercice_like', {'id': exercice.id}) }}" method="post" style="display: inline;" id="likeForm">
+                <button type="submit" class="btn btn-success" id="likeButton">Liker</button>
+            </form>
+        {% endif %}
 
-    <div>
-        <a href="{{ path('enregistrer_exercice', {'id': exercice.id}) }}" class="btn btn-primary">Enregistrer l'exercice</a>
-        <a href="{{ path('app_commentaire_new', {'id': exercice.id}) }}">Ajouter un commentaire</a>
-    </div>
+        {% if exercice.isLikedByUser(app.user) %}
+            <form action="{{ path('exercice_like', {'id': exercice.id}) }}" method="post" style="display: inline;" id="unlikeForm">
+                <button type="submit" class="btn btn-danger" id="unlikeButton">Retirer le like</button>
+            </form>
+        {% endif %}
 
+            <a href="{{ path('app_commentaire_new', {'id': exercice.id}) }}" class="btn btn-primary">Ajouter un commentaire</a>
+        </div>
     {% endif %}
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var likeButton = document.getElementById('likeButton');
+        var unlikeButton = document.getElementById('unlikeButton');
+        var likeForm = document.getElementById('likeForm');
+        var unlikeForm = document.getElementById('unlikeForm');
+
+        if (likeButton) {
+            likeButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                likeForm.submit();
+                likeButton.textContent = 'Retirer le like';
+                likeButton.classList.remove('btn-success');
+                likeButton.classList.add('btn-danger');
+                likeButton.id = 'unlikeButton';
+                likeForm.id = 'unlikeForm';
+            });
+        }
+
+        if (unlikeButton) {
+            unlikeButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                unlikeForm.submit();
+                unlikeButton.textContent = 'Liker';
+                unlikeButton.classList.remove('btn-danger');
+                unlikeButton.classList.add('btn-success');
+                unlikeButton.id = 'likeButton';
+                unlikeForm.id = 'likeForm';
+            });
+        }
+    });
+    </script>
 
 {% endblock %}
