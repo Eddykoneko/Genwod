@@ -9,6 +9,8 @@
         <thead>
             <tr>
                 <th>Id</th>
+                <th>User</th>
+                <th>Date de l'exercice</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -16,6 +18,8 @@
         {% for favori in favoris %}
             <tr>
                 <td>{{ favori.id }}</td>
+                <td>{{ favori.userId.prenom }} {{ favori.userId.nom }}</td>
+                <td>{{ favori.exerciceId.createdAt|date('d-m-Y') }}</td> 
                 <td>
                     <a href="{{ path('app_admin_favoris_show', {'id': favori.id}) }}">show</a>
                     <a href="{{ path('app_admin_favoris_edit', {'id': favori.id}) }}">edit</a>

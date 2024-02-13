@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Leaderboard;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Leaderboard>
@@ -21,6 +22,15 @@ class LeaderboardRepository extends ServiceEntityRepository
         parent::__construct($registry, Leaderboard::class);
     }
 
+    public function removeUserEntries(User $user): void
+{
+    $this->createQueryBuilder('l')
+        ->delete()
+        ->where('l.user = :user')
+        ->setParameter('user', $user)
+        ->getQuery()
+        ->execute();
+}
 //    /**
 //     * @return Leaderboard[] Returns an array of Leaderboard objects
 //     */

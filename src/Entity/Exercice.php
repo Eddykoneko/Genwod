@@ -272,6 +272,14 @@ class Exercice
         return $this;
     }
 
+    public function isFavoritedByUser(User $user): bool
+{
+    // Vous pouvez utiliser une fonction de filtrage sur la collection de Favoris pour vérifier si l'utilisateur a ajouté cet exercice à ses favoris
+    return $this->favoris->exists(function ($key, Favoris $favori) use ($user) {
+        return $favori->getUserId() === $user;
+    });
+}
+
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;

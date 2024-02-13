@@ -26,6 +26,7 @@ class AdminFavorisController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $favori = new Favoris();
+        $favori->setUserId($this->getUser());
         $form = $this->createForm(FavorisType::class, $favori);
         $form->handleRequest($request);
 
@@ -39,6 +40,7 @@ class AdminFavorisController extends AbstractController
         return $this->render('admin_favoris/new.html.twig', [
             'favori' => $favori,
             'form' => $form,
+            'user' => $this->getUser(),
         ]);
     }
 

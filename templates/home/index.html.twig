@@ -2,39 +2,54 @@
 
 {% block title %}Home{% endblock %}
 
-{% block body %}
+
+
+
+{% block header %}
+
+<div class="entete">
+
+    <img src="{{ asset('img/logo.png') }}" alt="Logo Genwod">
+
 
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
-    <p>Bonjour, {{ app.user.prenom }} !</p>
+        <p>Bonjour, {{ app.user.nom }} !</p>
 
     {% else %}
 
-    <p>Bonjour, visiteur !</p>
+        <p>Bonjour, visiteur !</p>
 
     {% endif %}
     
+        <h4>Bienvenue sur Genwod</h4>
 
-    <h1>Bienvenue sur Genwod</h1>
+    </div>
 
+{% endblock %}
+
+{% block body %}
 
     <div class="body-wrapper">
         {# Affichage de l'exercice du jour  #}
         {% if exercice is defined %}
-            <h2>WOD</h2>
-            <p>{{ exercice.createdAt|date('d-m-Y') }}</p>
+            <p> Date : {{ exercice.createdAt|date('d-m-Y') }}</p>
             <p>Type : {{ exercice.type }}</p>
-            <p>Duree : {{ exercice.duree }}</p>
+            <p>Duree : {{ exercice.duree }} mns</p>
             <p>Difficulté : {{ exercice.difficulte }}</p>
+
     <div class="description-column">
         {% for item in exercice.description|split('\n') %}
             <div>{{ item }}</div>
         {% endfor %}
     </div>
+
     </div>
-
+    
+    <div class="boutons">
         <a href="{{ path('app_exercice_show', {'id': exercice.id}) }}" class="btn btn-primary">Voir l'exercice</a>
-        <a href="{{ path('app_home') }}" class="btn btn-primary">Générer un nouvel exercice aléatoire</a>
 
+        <a href="{{ path('app_home') }}" class="btn btn-primary">Générer</a>
+    </div>
     {% endif %}
 {% endblock %}

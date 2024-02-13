@@ -37,6 +37,7 @@ class CommentaireController extends AbstractController
         return $this->render('commentaire/new.html.twig', [
             'commentaire' => $commentaire,
             'form' => $form,
+            'exercice' => $exercice,
         ]);
     }
 }

@@ -3,7 +3,30 @@
 {% block title %}New Commentaire{% endblock %}
 
 {% block body %}
-    <h1>Create new Commentaire</h1>
+
+    {# Commentaires #}
+
+    <div class="comments">
+
+    <h2>Commentaires</h2>
+
+    {% for commentaire in exercice.commentaires %}
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ commentaire.getUser_email }}</h5>
+                <p class="card-text">{{ commentaire.commentaire }}</p>
+                <p class="card-text"><small class="text-muted">{{ commentaire.createdAt|date('d-m-Y H:i') }}</small></p>
+            </div>
+        </div>
+        
+    {% endfor %}
+
+    </div>
+    
+    {# Formulaire de création de commentaire #}
+
+    <h1>Ajouter un commentaire</h1>
 
     {{ include('commentaire/_form.html.twig') }}
     

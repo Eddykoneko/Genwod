@@ -3,7 +3,7 @@
 {% block title %}Exercice{% endblock %}
 
 {% block body %}
-    <h1>Exercice</h1>
+    <h1>Wod</h1>
 
     <table class="table">
         <tbody>
@@ -35,6 +35,8 @@
         <div>
             <a href="{{ path('enregistrer_exercice', {'id': exercice.id}) }}" class="btn btn-primary">Enregistrer l'exercice</a>
 
+        {# bouton like et unlike #}
+
         {% if not exercice.isLikedByUser(app.user) %}
             <form action="{{ path('exercice_like', {'id': exercice.id}) }}" method="post" style="display: inline;" id="likeForm">
                 <button type="submit" class="btn btn-success" id="likeButton">Liker</button>
@@ -47,16 +49,54 @@
             </form>
         {% endif %}
 
+
+        {# bouton favoris #}
+
+        {% if not exercice.isFavoritedByUser(app.user) %}
+        <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post" style="display: inline;" id="favoriteForm">
+            <button type="submit" class="btn btn-warning" id="favoriteButton">Ajouter aux favoris</button>
+        </form>
+    {% endif %}
+
+    {% if exercice.isFavoritedByUser(app.user) %}
+        <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post" style="display: inline;" id="unfavoriteForm">
+            <button type="submit" class="btn btn-secondary" id="unfavoriteButton">Retirer des favoris</button>
+        </form>
+    {% endif %}
+    </div>
+    
+    {# bouton commentaire #}
+        <div>
             <a href="{{ path('app_commentaire_new', {'id': exercice.id}) }}" class="btn btn-primary">Ajouter un commentaire</a>
         </div>
     {% endif %}
     </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+
     <script>
+
+    // Like et unlike
+
     document.addEventListener('DOMContentLoaded', function() {
-        var likeButton = document.getElementById('likeButton');
-        var unlikeButton = document.getElementById('unlikeButton');
-        var likeForm = document.getElementById('likeForm');
-        var unlikeForm = document.getElementById('unlikeForm');
+
+        // Like et unlike
+
+        const likeButton = document.getElementById('likeButton');
+        const unlikeButton = document.getElementById('unlikeButton');
+        const likeForm = document.getElementById('likeForm');
+        const unlikeForm = document.getElementById('unlikeForm');
+
+        // Favoris
+        const favoriteButton = document.getElementById('favoriteButton');
+        const unfavoriteButton = document.getElementById('unfavoriteButton');
+        const favoriteForm = document.getElementById('favoriteForm');
+        const unfavoriteForm = document.getElementById('unfavoriteForm');
+
+        // Like et unlike
 
         if (likeButton) {
             likeButton.addEventListener('click', function(e) {
@@ -81,7 +121,35 @@
                 unlikeForm.id = 'likeForm';
             });
         }
-    });
-    </script>
 
+        // Favoris
+
+        if (favoriteButton) {
+            favoriteButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                favoriteForm.submit();
+                favoriteButton.textContent = 'Retirer des favoris';
+                favoriteButton.classList.remove('btn-warning');
+                favoriteButton.classList.add('btn-secondary');
+                favoriteButton.id = 'unfavoriteButton';
+                favoriteForm.id = 'unfavoriteForm';
+            });
+        }
+
+        if (unfavoriteButton) {
+            unfavoriteButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                unfavoriteForm.submit();
+                unfavoriteButton.textContent = 'Ajouter aux favoris';
+                unfavoriteButton.classList.remove('btn-secondary');
+                unfavoriteButton.classList.add('btn-warning');
+                unfavoriteButton.id = 'favoriteButton';
+                unfavoriteForm.id = 'favoriteForm';
+            });
+        }
+    });
+
+
+
+    </script>
 {% endblock %}

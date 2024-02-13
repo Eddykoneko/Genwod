@@ -15,13 +15,14 @@ class FavorisType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('statut')
             ->add('user_id', EntityType::class, [
                 'class' => User::class,
-'choice_label' => 'id',
+'choice_label' => 'email',
             ])
             ->add('exercice_id', EntityType::class, [
                 'class' => Exercice::class,
-'choice_label' => 'id',
+'choice_label' => 'description',
             ])
         ;
     }

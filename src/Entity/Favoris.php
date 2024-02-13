@@ -13,6 +13,9 @@ class Favoris
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $statut = null;
+
     #[ORM\ManyToOne(inversedBy: 'favoris')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user_id = null;
@@ -49,4 +52,17 @@ class Favoris
 
         return $this;
     }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): static
+    {
+        $this->statut = $statut;
+
+        return $this;
+    }
+
 }

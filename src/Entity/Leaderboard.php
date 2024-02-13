@@ -20,7 +20,7 @@ class Leaderboard
     private ?int $score = null;
 
     #[ORM\ManyToOne(inversedBy: 'leaderboards')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(onDelete: "CASCADE", nullable: false)]
     private ?User $user_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'leaderboards')]
