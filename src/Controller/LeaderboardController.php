@@ -22,9 +22,13 @@ class LeaderboardController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_leaderboard_show', methods: ['GET'])]
-    public function show(Leaderboard $leaderboard): Response
+    public function show($id, LeaderboardRepository $leaderboardRepository): Response
     {
-        
+        $leaderboard = $leaderboardRepository->find($id);
+
+        if (!$leaderboard) {
+        throw $this->createNotFoundException('Le leaderboard demandé n\'existe pas.');
+    }
         return $this->render('leaderboard/show.html.twig', [
             'leaderboard' => $leaderboard,
         ]);

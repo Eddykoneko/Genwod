@@ -111,6 +111,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
+        if (!$this->isVerified()) {
+            // Retourner un rôle qui ne donne pas accès aux fonctionnalités complètes
+            return ['ROLE_UNVERIFIED'];
+        }
+    
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
@@ -394,4 +399,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
 }

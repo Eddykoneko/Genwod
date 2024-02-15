@@ -21,7 +21,7 @@
             </tr>
             <tr>
                 <th>Duree</th>
-                <td>{{ exercice.duree }}</td>
+                <td>{{ exercice.duree }} mns</td>
             </tr>
             <tr>
                 <th>Difficulte</th>
@@ -53,18 +53,23 @@
         {# bouton favoris #}
 
         {% if not exercice.isFavoritedByUser(app.user) %}
-        <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post" style="display: inline;" id="favoriteForm">
-            <button type="submit" class="btn btn-warning" id="favoriteButton">Ajouter aux favoris</button>
-        </form>
-    {% endif %}
+            <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post" style="display: inline;" id="favoriteForm">
+                <button type="submit" class="btn btn-warning" id="favoriteButton">Ajouter aux favoris</button>
+            </form>
+        {% endif %}
 
-    {% if exercice.isFavoritedByUser(app.user) %}
-        <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post" style="display: inline;" id="unfavoriteForm">
-            <button type="submit" class="btn btn-secondary" id="unfavoriteButton">Retirer des favoris</button>
-        </form>
-    {% endif %}
+        {% if exercice.isFavoritedByUser(app.user) %}
+            <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post" style="display: inline;" id="unfavoriteForm">
+                <button type="submit" class="btn btn-secondary" id="unfavoriteButton">Retirer des favoris</button>
+            </form>
+        {% endif %}
     </div>
     
+        {# bouton leaderboard #}
+        <div>
+            <a href="{{ path('app_leaderboard_show', {'id': exercice.id}) }}" class="btn btn-primary">Voir le leaderboard</a>
+        </div>
+        
     {# bouton commentaire #}
         <div>
             <a href="{{ path('app_commentaire_new', {'id': exercice.id}) }}" class="btn btn-primary">Ajouter un commentaire</a>
