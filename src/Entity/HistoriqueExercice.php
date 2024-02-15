@@ -29,11 +29,11 @@ class HistoriqueExercice
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaire = null;
 
-    #[ORM\ManyToOne(inversedBy: 'historiqueExercices')]
+    #[ORM\ManyToOne(inversedBy: 'historiqueExercices', cascade: ['remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user_id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'historiqueExercices')]
+    #[ORM\ManyToOne(inversedBy: 'historiqueExercices', cascade: ['remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Exercice $exercice_id = null;
 

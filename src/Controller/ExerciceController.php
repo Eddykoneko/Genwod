@@ -5,9 +5,10 @@ namespace App\Controller;
 
 use App\Entity\Exercice;
 use App\Repository\ExerciceRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/exercice')]
 class ExerciceController extends AbstractController
@@ -41,6 +42,35 @@ class ExerciceController extends AbstractController
             'exercice' => $exercice,
             'historiqueExercices' => $historiqueExercices,
         ]);
-}
+    }
+
+    #[Route('/{id}/leaderboard', name: 'app_exercice_leaderboard', methods: ['GET'])]
+    public function leaderboard(Exercice $exercice): Response
+    {
+        // Récupère le leaderboard pour l'exercice donné
+        $leaderboards = $exercice->getLeaderboards();
+
+        return $this->render('leaderboard/index.html.twig', [
+            'exercice' => $exercice,
+            'leaderboards' => $leaderboards,
+        ]);
+    }
+
+    public function deleteExercice(Exercice $exercice, EntityManagerInterface $entityManager): Response
+    {
+        // Récupérez et supprimez d'abord tous les enregistrements liés dans historique_exercice
+        foreach ($exercice->getHistoriqueExercices() as $historiqueExercice) {
+            $entityManager->remove($historiqueExercice);
+        }
+
+        // Ensuite, supprimez l'exercice lui-même
+        $entityManager->remove($exercice);
+        $entityManager->flush();
+
+        // Redirigez ou affichez un message de confirmation
+        // ...
+
+        return new Response(); // Add a return statement to return a Response object
+    }
 
 }

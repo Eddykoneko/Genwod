@@ -38,11 +38,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/user, roles: ROLE_USER }
-        # Exemple de restriction pour les utilisateurs non vérifiés
         - { path: ^/user, roles: ROLE_USER }
-        # Permettre aux utilisateurs non vérifiés d'accéder seulement aux routes de vérification
-        - { path: ^/verify/email, roles: ROLE_UNVERIFIED }
+        
 
 when@test:
     security:

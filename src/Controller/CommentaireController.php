@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use App\Entity\Exercice;
 use App\Entity\Commentaire;
 use App\Form\Commentaire1Type;
+use App\Repository\CommentaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,4 +41,24 @@ class CommentaireController extends AbstractController
             'exercice' => $exercice,
         ]);
     }
+
+    public function deleteExercice(Exercice $exercice, EntityManagerInterface $entityManager, CommentaireRepository $commentaireRepository): Response
+    {
+    // Récupérer et supprimer tous les commentaires liés à cet exercice
+    $commentaires = $commentaireRepository->findBy(['exercice' => $exercice]);
+    foreach ($commentaires as $commentaire) {
+        $entityManager->remove($commentaire);
+    }
+
+    // Supprimer l'exercice
+    $entityManager->remove($exercice);
+    $entityManager->flush();
+
+    return new Response();
+    // Redirigez ou affichez un message de confirmation
+    // ...
+    }
+
+
+    
 }

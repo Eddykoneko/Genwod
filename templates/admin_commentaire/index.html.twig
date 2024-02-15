@@ -8,6 +8,8 @@
     <table class="table">
         <thead>
             <tr>
+                <th>Date de création</th>
+                <th>Exercice</th>
                 <th>Email</th>
                 <th>Commentaire</th>
                 <th>CreatedAt</th>
@@ -17,6 +19,8 @@
         <tbody>
         {% for commentaire in commentaires %}
             <tr>
+                <td>{{ commentaire.exerciceId.createdAt|date('d-m-Y') }}</td>
+                <td>{{ commentaire.exerciceId.description }}</td>
                 <td>{{ commentaire.getUser_email }}</td>
                 <td>{{ commentaire.commentaire }}</td>
                 <td>{{ commentaire.createdAt ? commentaire.createdAt|date('Y-m-d H:i:s') : '' }}</td>

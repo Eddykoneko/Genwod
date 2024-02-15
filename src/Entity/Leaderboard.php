@@ -19,11 +19,11 @@ class Leaderboard
     #[ORM\Column]
     private ?int $score = null;
 
-    #[ORM\ManyToOne(inversedBy: 'leaderboards')]
+    #[ORM\ManyToOne(inversedBy: 'leaderboards', cascade: ['remove'])]
     #[ORM\JoinColumn(onDelete: "CASCADE", nullable: false)]
     private ?User $user_id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'leaderboards')]
+    #[ORM\ManyToOne(inversedBy: 'leaderboards', cascade: ['remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Exercice $exercice_id = null;
 

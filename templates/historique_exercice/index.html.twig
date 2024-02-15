@@ -7,8 +7,10 @@
     <table class="table">
         <thead>
             <tr>
+                <th>Date du Wod</th>
+                <th>Wod</th>
                 <th>Mode</th>
-                <th>Exercice</th>
+                <th>Type</th>
                 <th>Nombre de Tours</th>
                 <th>Nombre de Répétitions</th>
                 <th>Temps</th>
@@ -18,6 +20,8 @@
         <tbody>
             {% for historique in historiqueExercices %}
                 <tr>
+                    <td>{{ historique.exerciceId.createdAt|date('d-m-Y') }}</td>
+                    <td>{{ historique.exerciceId.description }}</td>
                     <td>{{ historique.mode }}</td>
                     <td>{{ historique.exerciceId.type }}</td>
                     <td>{{ historique.nombreTours }}</td>

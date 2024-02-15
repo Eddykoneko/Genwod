@@ -91,6 +91,7 @@ select {
 .custom-navbar {
     background-color: #DA7635;
     height: 50px;
+    padding-bottom: 30px;
 }
 
 /* Header */

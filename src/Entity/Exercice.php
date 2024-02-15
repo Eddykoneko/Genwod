@@ -27,25 +27,25 @@ class Exercice
     #[ORM\Column(type: "text", nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "integer", nullable: true)]
     private ?int $duree = null;
 
     #[ORM\Column(length: 255)]
     private ?string $difficulte = null;
 
-    #[ORM\OneToMany(mappedBy: 'exercice_id', targetEntity: HistoriqueExercice::class)]
+    #[ORM\OneToMany(mappedBy: 'exercice_id', targetEntity: HistoriqueExercice::class, cascade: ['remove'])]
     private Collection $historiqueExercices;
 
-    #[ORM\OneToMany(mappedBy: 'exercice_id', targetEntity: Leaderboard::class)]
+    #[ORM\OneToMany(mappedBy: 'exercice_id', targetEntity: Leaderboard::class, cascade: ['remove'])]
     private Collection $leaderboards;
 
-    #[ORM\OneToMany(mappedBy: 'exercice_id', targetEntity: LikeDislike::class)]
+    #[ORM\OneToMany(mappedBy: 'exercice_id', targetEntity: LikeDislike::class, cascade: ['remove'])]
     private Collection $likeDislikes;
 
-    #[ORM\OneToMany(mappedBy: 'exercice_id', targetEntity: Commentaire::class)]
+    #[ORM\OneToMany(mappedBy: 'exercice_id', targetEntity: Commentaire::class, cascade: ['remove'])]
     private Collection $commentaires;
 
-    #[ORM\OneToMany(mappedBy: 'exercice_id', targetEntity: Favoris::class)]
+    #[ORM\OneToMany(mappedBy: 'exercice_id', targetEntity: Favoris::class, cascade: ['remove'])]
     private Collection $favoris;
 
     #[ORM\Column(nullable: true)]

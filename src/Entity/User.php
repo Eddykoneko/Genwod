@@ -46,19 +46,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $genre = null;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: HistoriqueExercice::class)]
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: HistoriqueExercice::class, cascade: ['remove'])]
     private Collection $historiqueExercices;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Leaderboard::class)]
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Leaderboard::class, cascade: ['remove'])]
     private Collection $leaderboards;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: LikeDislike::class)]
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: LikeDislike::class, cascade: ['remove'])]
     private Collection $likeDislikes;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Commentaire::class)]
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Commentaire::class, cascade: ['remove'])]
     private Collection $commentaires;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Favoris::class)]
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Favoris::class, cascade: ['remove'])]
     private Collection $favoris;
 
     #[ORM\Column(type: 'boolean')]
@@ -111,11 +111,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        if (!$this->isVerified()) {
-            // Retourner un rôle qui ne donne pas accès aux fonctionnalités complètes
-            return ['ROLE_UNVERIFIED'];
-        }
-    
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
@@ -399,6 +394,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-
 }

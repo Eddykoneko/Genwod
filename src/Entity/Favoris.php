@@ -16,11 +16,11 @@ class Favoris
     #[ORM\Column(length: 255)]
     private ?string $statut = null;
 
-    #[ORM\ManyToOne(inversedBy: 'favoris')]
+    #[ORM\ManyToOne(inversedBy: 'favoris', cascade: ['remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user_id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'favoris')]
+    #[ORM\ManyToOne(inversedBy: 'favoris', cascade: ['remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Exercice $exercice_id = null;
 

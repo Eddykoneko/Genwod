@@ -37,17 +37,17 @@ class RegistrationController extends AbstractController
             dump($form->getErrors(true, false)); // Ajoutez cette ligne pour voir les erreurs de validation
             // encode the plain password
             $user->setPassword(
-            $userPasswordHasher->hashPassword(
-            $user,
-            $form->get('plainPassword')->getData()
-            )
-        );
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
 
                 // set the creation date
             $user->setCreatedAt(new DateTimeImmutable());
 
             // set the role
-            $user->setRoles(['ROLE_UNVERIFIED']);
+            $user->setRoles(['ROLE_USER']);
 
             // set the lastname
             $user->setNom($form->get('nom')->getData());
@@ -70,7 +70,7 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Générer un lien de confirmation d'email et l'envoyer à l'utilisateur
+            // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
                     ->from(new Address('no-reply@genwod.com', 'No Reply'))
@@ -78,12 +78,9 @@ class RegistrationController extends AbstractController
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
+            // do anything else you need here, like send an email
 
-            // Ajouter un message flash pour indiquer à l'utilisateur de vérifier son email
-            $this->addFlash('success', 'Un email de confirmation a été envoyé. Veuillez vérifier votre boîte mail.');
-
-            // Rediriger vers la page d'accueil ou une page spécifique
-            return $this->redirectToRoute('app_home'); // Changez 'home' par la route de votre choix
+            return $this->redirectToRoute('app_verify_email');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -96,16 +93,18 @@ class RegistrationController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
+        // validate email confirmation link, sets User::isVerified=true and persists
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
-            return $this->redirectToRoute('app_home');
+
+            return $this->redirectToRoute('app_register');
         }
 
-        $this->addFlash('success', 'Votre adresse e-mail a été vérifiée. Vous pouvez maintenant vous connecter.');
-        return $this->redirectToRoute('app_login'); // Rediriger vers la page de connexion
+        // @TODO Change the redirect on success and handle or remove the flash message in your templates
+        $this->addFlash('success', 'Your email address has been verified.');
+
+        return $this->redirectToRoute('app_register');
     }
-
-
 }
