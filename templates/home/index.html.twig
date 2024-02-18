@@ -7,9 +7,16 @@
 
 {% block header %}
 
+
 <div class="entete">
 
+    <h4>Bienvenue sur Genwod</h4>
+
+    <hr>
+
     <img src="{{ asset('img/logo.png') }}" alt="Logo Genwod">
+
+    <hr>
 
 
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
@@ -22,7 +29,7 @@
 
     {% endif %}
     
-        <h4>Bienvenue sur Genwod</h4>
+        
 
     </div>
 
@@ -35,8 +42,12 @@
         {% if exercice is defined %}
             <p>Date : {{ exercice.createdAt|date('d-m-Y') }}</p>
             <p>Type : {{ exercice.type }}</p>
+            {% if exercice.duree is defined and exercice.duree is not null %}
             <p>Duree : {{ exercice.duree }} mns</p>
+            {% endif %}
             <p>Difficulté : {{ exercice.difficulte }}</p>
+    
+    <div class="separateur"></div>
 
     <div class="description-column">
         {% for item in exercice.description|split('\n') %}

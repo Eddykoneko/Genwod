@@ -1,39 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Historique des Exercices{% endblock %}
+{% block title %}Historique des WOD{% endblock %}
 
 {% block body %}
-    <h1>Historique des Exercices</h1>
-    <table class="table">
-        <thead>
+
+    <h1>Historique des WOD</h1>
+
+
+<table class="table">
+
+    <tbody>
+    
+        {% for historique in historiqueExercices %}  
             <tr>
                 <th>Date du Wod</th>
-                <th>Wod</th>
-                <th>Mode</th>
-                <th>Type</th>
-                <th>Nombre de Tours</th>
-                <th>Nombre de Répétitions</th>
-                <th>Temps</th>
-                <th>Commentaire</th>
+                <td>{{ historique.exerciceId.createdAt|date('d-m-Y') }}</td>
             </tr>
-        </thead>
-        <tbody>
-            {% for historique in historiqueExercices %}
-                <tr>
-                    <td>{{ historique.exerciceId.createdAt|date('d-m-Y') }}</td>
-                    <td>{{ historique.exerciceId.description }}</td>
-                    <td>{{ historique.mode }}</td>
-                    <td>{{ historique.exerciceId.type }}</td>
-                    <td>{{ historique.nombreTours }}</td>
-                    <td>{{ historique.nombreRepetition }}</td>
-                    <td>{{ historique.temps|date('H:i:s') }}</td>
-                    <td>{{ historique.commentaire }}</td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="8">Aucun historique trouvé.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                <th>Wod</th>
+                <td>{{ historique.exerciceId.description }}</td>
+            </tr>
+                <th>Mode</th>
+                <td>{{ historique.mode }}</td>
+            </tr>
+                <th>Type</th>
+                <td>{{ historique.exerciceId.type }}</td>
+            </tr>
+                <th>Nombre de Tours</th>
+                <td>{{ historique.nombreTours }}</td>
+            </tr>
+                <th>Nombre de Répétitions</th>
+                <td>{{ historique.nombreRepetition }}</td>
+            </tr>
+                <th>Temps</th>
+                <td>{{ historique.temps|date('H:i:s') }}</td>
+            </tr>
+                <th>Commentaire</th>
+                <td>{{ historique.commentaire }}</td>
+            </tr>
+            </div>
+        {% else %}
+            <tr>
+                <td colspan="8">Aucun historique trouvé.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    
+</table>
+
 {% endblock %}

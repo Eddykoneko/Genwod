@@ -20,12 +20,12 @@ class Commentaire
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'commentaires', cascade: ['remove'])]
+    #[ORM\ManyToOne(inversedBy: 'commentaires')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user_id = null;
 
     
-    #[ORM\ManyToOne(inversedBy: 'commentaires', cascade: ['remove'])]
+    #[ORM\ManyToOne(inversedBy: 'commentaires')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Exercice $exercice_id = null;
 

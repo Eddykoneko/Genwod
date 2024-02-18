@@ -25,8 +25,8 @@
                 <td>{{ commentaire.commentaire }}</td>
                 <td>{{ commentaire.createdAt ? commentaire.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_admin_commentaire_show', {'id': commentaire.id}) }}">show</a>
-                    <a href="{{ path('app_admin_commentaire_edit', {'id': commentaire.id}) }}">edit</a>
+                    <a href="{{ path('app_admin_commentaire_show', {'id': commentaire.id}) }}" class="btn btn-primary">show</a>
+                    <a href="{{ path('app_admin_commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-primary">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -37,5 +37,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_admin_commentaire_new') }}">Create new</a>
+    <a href="{{ path('app_admin_commentaire_new') }}" class="btn btn-primary">Create new</a>
 {% endblock %}

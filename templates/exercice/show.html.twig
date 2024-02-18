@@ -3,6 +3,7 @@
 {% block title %}Exercice{% endblock %}
 
 {% block body %}
+
     <h1>Wod</h1>
 
     <table class="table">
@@ -20,8 +21,9 @@
                 <td>{{ exercice.description }}</td>
             </tr>
             <tr>
-                <th>Duree</th>
-                <td>{{ exercice.duree }} mns</td>
+            {% if exercice.duree is defined and exercice.duree is not null %}
+                <th>Duree : {{ exercice.duree }} mns</th>
+            {% endif %}
             </tr>
             <tr>
                 <th>Difficulte</th>
@@ -31,39 +33,38 @@
     </table>
     
     <div>
-        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <div>
-            <a href="{{ path('enregistrer_exercice', {'id': exercice.id}) }}" class="btn btn-primary">Enregistrer l'exercice</a>
-
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <a href="{{ path('enregistrer_exercice', {'id': exercice.id}) }}" class="btn btn-primary">Enregistrer l'exercice</a>
+        
         {# bouton like et unlike #}
+        
+            {% if not exercice.isLikedByUser(app.user) %}
+                <form action="{{ path('exercice_like', {'id': exercice.id}) }}" method="post" style="display: inline;" id="likeForm">
+                    <button type="submit" class="btn btn-primary" id="likeButton"><i class="bi bi-hand-thumbs-up"></i></button>
+                </form>
+            {% endif %}
 
-        {% if not exercice.isLikedByUser(app.user) %}
-            <form action="{{ path('exercice_like', {'id': exercice.id}) }}" method="post" style="display: inline;" id="likeForm">
-                <button type="submit" class="btn btn-success" id="likeButton">Liker</button>
-            </form>
-        {% endif %}
-
-        {% if exercice.isLikedByUser(app.user) %}
-            <form action="{{ path('exercice_like', {'id': exercice.id}) }}" method="post" style="display: inline;" id="unlikeForm">
-                <button type="submit" class="btn btn-danger" id="unlikeButton">Retirer le like</button>
-            </form>
-        {% endif %}
-
+            {% if exercice.isLikedByUser(app.user) %}
+                <form action="{{ path('exercice_like', {'id': exercice.id}) }}" method="post" style="display: inline;" id="unlikeForm">
+                    <button type="submit" class="btn btn-success" id="unlikeButton"><i class="bi bi-hand-thumbs-up-fill"></i></button>
+                </form>
+            {% endif %}
 
         {# bouton favoris #}
 
-        {% if not exercice.isFavoritedByUser(app.user) %}
-            <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post" style="display: inline;" id="favoriteForm">
-                <button type="submit" class="btn btn-warning" id="favoriteButton">Ajouter aux favoris</button>
-            </form>
-        {% endif %}
+            {% if not exercice.isFavoritedByUser(app.user) %}
+                <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post" style="display: inline;" id="favoriteForm">
+                    <button type="submit" class="btn btn-primary" id="favoriteButton"><i class="bi bi-heart"></i></button>
+                </form>
+            {% endif %}
 
-        {% if exercice.isFavoritedByUser(app.user) %}
-            <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post" style="display: inline;" id="unfavoriteForm">
-                <button type="submit" class="btn btn-secondary" id="unfavoriteButton">Retirer des favoris</button>
-            </form>
-        {% endif %}
-    </div>
+            {% if exercice.isFavoritedByUser(app.user) %}
+                <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post" style="display: inline;" id="unfavoriteForm">
+                    <button type="submit" class="btn btn-warning" id="unfavoriteButton"><i class="bi bi-heart-fill"></i></button>
+                </form>
+            {% endif %}
+        </div>
     
         {# bouton leaderboard #}
         <div>
@@ -78,83 +79,4 @@
     </div>
 
 
-{% endblock %}
-
-{% block javascripts %}
-
-    <script>
-
-    // Like et unlike
-
-    document.addEventListener('DOMContentLoaded', function() {
-
-        // Like et unlike
-
-        const likeButton = document.getElementById('likeButton');
-        const unlikeButton = document.getElementById('unlikeButton');
-        const likeForm = document.getElementById('likeForm');
-        const unlikeForm = document.getElementById('unlikeForm');
-
-        // Favoris
-        const favoriteButton = document.getElementById('favoriteButton');
-        const unfavoriteButton = document.getElementById('unfavoriteButton');
-        const favoriteForm = document.getElementById('favoriteForm');
-        const unfavoriteForm = document.getElementById('unfavoriteForm');
-
-        // Like et unlike
-
-        if (likeButton) {
-            likeButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                likeForm.submit();
-                likeButton.textContent = 'Retirer le like';
-                likeButton.classList.remove('btn-success');
-                likeButton.classList.add('btn-danger');
-                likeButton.id = 'unlikeButton';
-                likeForm.id = 'unlikeForm';
-            });
-        }
-
-        if (unlikeButton) {
-            unlikeButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                unlikeForm.submit();
-                unlikeButton.textContent = 'Liker';
-                unlikeButton.classList.remove('btn-danger');
-                unlikeButton.classList.add('btn-success');
-                unlikeButton.id = 'likeButton';
-                unlikeForm.id = 'likeForm';
-            });
-        }
-
-        // Favoris
-
-        if (favoriteButton) {
-            favoriteButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                favoriteForm.submit();
-                favoriteButton.textContent = 'Retirer des favoris';
-                favoriteButton.classList.remove('btn-warning');
-                favoriteButton.classList.add('btn-secondary');
-                favoriteButton.id = 'unfavoriteButton';
-                favoriteForm.id = 'unfavoriteForm';
-            });
-        }
-
-        if (unfavoriteButton) {
-            unfavoriteButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                unfavoriteForm.submit();
-                unfavoriteButton.textContent = 'Ajouter aux favoris';
-                unfavoriteButton.classList.remove('btn-secondary');
-                unfavoriteButton.classList.add('btn-warning');
-                unfavoriteButton.id = 'favoriteButton';
-                unfavoriteForm.id = 'favoriteForm';
-            });
-        }
-    });
-
-
-
-    </script>
 {% endblock %}

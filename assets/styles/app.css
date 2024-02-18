@@ -1,3 +1,12 @@
+/* Police de caractères */
+
+/* Bitter */
+@import url('https://fonts.googleapis.com/css2?family=Bitter:ital@0;1&display=swap');
+
+* {
+    font-family: 'Bitter', sans-serif;
+}
+
 /* Reset css*/
 
 /* Box sizing rules */
@@ -78,21 +87,38 @@ select {
     }
 }
 
-/* ////////////////////////////////////////////////*/
+
+/* /////////////////////////////////////////////////////////////////*/
+
 
 /* Navbar */
+
 .navbar {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 1000; /* S'assurer que la navbar est au-dessus des autres éléments */
+    z-index: 1000;
 } 
 
 .custom-navbar {
     background-color: #DA7635;
-    height: 50px;
-    padding-bottom: 30px;
+    padding-right: 80px;
+    height: fit-content;
 }
+
+
+/* Entete */
+.entete {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-right: 50px;
+}
+
+
+/* ////////////////////////////////////////////////*/
+
 
 /* Header */
 
@@ -101,7 +127,7 @@ select {
     flex-direction: row;
     /* Aligner verticalement */
     align-items: center;
-    gap: 70px;
+    gap: 20px;
 }
 
 .content {
@@ -117,16 +143,11 @@ select {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-} */
-
-/* Entete */
-.entete {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding-right: 100px;
 }
+
+
+/* ////////////////////////////////////////////////*/
+
 
 /* Body */
 body {
@@ -139,12 +160,27 @@ body {
     padding-bottom: 50px; /* Ajoutez du padding en bas pour compenser la hauteur du footer */
     margin: 0; /* Assurez-vous qu'il n'y a pas de margin externe */
     background-color: #f4f4f4; /* Couleur de fond pour tout le corps */
+
 }
 
 /* Espace entre les paragraphes */
 span {
     margin-bottom: 16px;
 }
+
+/* Titre H1 */
+h1,h3 {
+    text-align: center;
+    color: #333;
+    margin-top: 20px; /*Ajuster en fonction de la hauteur de votre navbar */
+    font-size: 2em;
+}
+
+
+/* ////////////////////////////////////////////////*/
+
+
+/* Styles pour les colonnes */
 
 
 /* Colonne */
@@ -153,10 +189,15 @@ span {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 3px solid #000;
+    border: 5px solid gray;
     padding: 10px;
     margin: 10px;
     border-radius: 10px;
+}
+
+.separateur {
+    border: black 1px solid;
+    width: 100%;
 }
 
 /* Colonne description */
@@ -167,42 +208,37 @@ span {
     align-items: center;
 }
 
+/* ////////////////////////////////////////////////*/
+
 /* Boutons */
 .btn {
-    padding: 10px 15px;
+    padding: 10px 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-right: 10px;
     text-decoration: none; /* Retire le soulignement des liens */
 }
 
 .btn-primary {
     background-color: #25b7ba;
     color: white;
+    
 }
 
-.btn-success {
-    background-color: #5cb85c;
-    color: white;
-}
-
-.btn-danger {
-    background-color: #d9534f;
-    color: white;
-}
-
-.btn-primary:hover,
-.btn-success:hover,
-.btn-danger:hover {
+.btn-primary:hover{
+    background-color: #333;
     opacity: 0.8;
+    
 }
 
 /* Conteneur pour les boutons */
 div > div {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 10px;
 }
+
+/* ////////////////////////////////////////////////*/
+
 
 /* Styles pour les formulaires et les commentaires */
 .form, .comments {
@@ -223,6 +259,9 @@ div > div {
     border-bottom: none;
 }
 
+/* ////////////////////////////////////////////////*/
+
+
 /* Footer */
 .footer {
     display: flex;
@@ -235,10 +274,13 @@ div > div {
     height: 50px;
 }
 
+
+/* ////////////////////////////////////////////////*/
+
+
 /* Styles de la table */
 .table {
     border-collapse: collapse;
-    width: 80%;
     margin: 20px auto;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -246,9 +288,8 @@ div > div {
 
 .table th,
 .table td {
-    text-align: left;
-    padding: 12px 20px;
     border-bottom: 1px solid #ddd;
+    text-align: center; /* Centre le texte dans les cellules */
 }
 
 .table th {
@@ -261,12 +302,33 @@ div > div {
     border-bottom: none;
 }
 
-/* Titre H1 */
-h1,h3 {
-    text-align: center;
-    color: #333;
-    margin-top: 20px; /* Ajuster en fonction de la hauteur de votre navbar */
-    font-size: 2em;
+
+/* ////////////////////////////////////////////////*/
+
+/* Media Queries */
+
+
+@media (max-width: 932px) { /* Ajustez ce breakpoint selon vos besoins */
+    /* Style pour les éléments de la barre de navigation en mode mobile */
+    .navbar-nav {
+        padding-left: 60px;
+    }
+
+    .navbar-nav .nav-item {
+        display: block; /* Affiche chaque élément sur sa propre ligne */
+    }
+
+    .main-container {
+        flex-direction: column; /* Empilez les éléments les uns sur les autres */
+        gap: 0; /* Enlever le gap */
+    }
+    .entete {
+        padding-right: 10px;
+    }
+    .content {
+        margin-bottom: 20px;
+    }
+    
 }
 
 

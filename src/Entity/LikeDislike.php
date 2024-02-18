@@ -16,11 +16,11 @@ class LikeDislike
     #[ORM\Column(length: 255)]
     private ?string $statut = null;
 
-    #[ORM\ManyToOne(inversedBy: 'likeDislikes', cascade: ['remove'])]
+    #[ORM\ManyToOne(inversedBy: 'likeDislikes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user_id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'likeDislikes', cascade: ['remove'])]
+    #[ORM\ManyToOne(inversedBy: 'likeDislikes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Exercice $exercice_id = null;
 
