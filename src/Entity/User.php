@@ -394,4 +394,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getScore(): int
+    {
+        $score = 0;
+
+        // Parcourir les HistoriqueExercice de l'utilisateur
+        foreach ($this->getHistoriqueExercices() as $historiqueExercice) {
+            $score += $historiqueExercice->getNombreRepetition();
+        }
+
+        return $score;
+    }
 }

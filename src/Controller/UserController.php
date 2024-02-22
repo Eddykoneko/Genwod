@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Entity\HistoriqueExercice;
 
 #[Route('/user')]
 class UserController extends AbstractController
@@ -45,6 +48,21 @@ class UserController extends AbstractController
             'user' => $user,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
+    public function delete(Request $request, User $user, EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, SessionInterface $session): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($user);
+            $entityManager->flush();
+
+             // Invalidate the user session
+            $tokenStorage->setToken(null);
+            $session->invalidate();
+            }
+
+        return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
     }
 
 }

@@ -8,7 +8,6 @@
     {{ form_start(form) }}
         <table class="table">
             <tbody>
-            
                 <tr>
                     <td>{{ form_row(form.mode) }}</td>
                 </tr>
@@ -16,10 +15,10 @@
                     <td>{{ form_row(form.nombreTours) }}</td>
                 </tr>
                 <tr>
-                    <td>{{ form_row(form.nombreRepetition) }}</td>
+                    <td>{{ form_row(form.temps) }}</td>
                 </tr>
                 <tr>
-                    <td>{{ form_row(form.temps) }}</td>
+                    <td>Score : {{ form_row(form.nombreRepetition) }}</td>
                 </tr>
                 <tr>
                     <td>{{ form_row(form.commentaire) }}</td>
@@ -31,6 +30,8 @@
         <button type="submit" class="btn btn-primary">Enregistrer</button>
 
     {{ form_end(form) }}
+
+    <a href="{{ path('app_home') }}">Retour</a>
 
 
 

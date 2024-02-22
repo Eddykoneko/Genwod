@@ -33,6 +33,12 @@ class Exercice
     #[ORM\Column(length: 255)]
     private ?string $difficulte = null;
 
+    #[ORM\Column(type: "integer", nullable: true)]
+    private ?int $score = null;
+
+    #[ORM\Column(length: 60)]
+    private ?string $mode = null;
+
     #[ORM\OneToMany(mappedBy: 'exercice_id', targetEntity: HistoriqueExercice::class)]
     private Collection $historiqueExercices;
 
@@ -280,6 +286,7 @@ class Exercice
     });
 }
 
+//     public function CreatedAt()
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -292,5 +299,29 @@ class Exercice
         return $this;
     }
 
+//     public function getScore()
+    public function getScore() : ?int
+    {
+        return $this->score;
+    }
 
+
+    public function setScore(?int $score) : self
+    {
+        $this->score = $score;
+
+        return $this;
+    }
+
+    public function getMode(): ?string
+    {
+        return $this->mode;
+    }
+
+    public function setMode(string $mode): static
+    {
+        $this->mode = $mode;
+
+        return $this;
+    }
 }

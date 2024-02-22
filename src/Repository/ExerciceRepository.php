@@ -6,6 +6,8 @@ use App\Form\RechercheExerciceType;
 use App\Entity\Exercice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * @extends ServiceEntityRepository<Exercice>
@@ -54,23 +56,39 @@ class ExerciceRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function findRandom()
+    public function findRandom(SessionInterface $session)
     {
-        // Obtenez le nombre total d'enregistrements
-        $count = $this->createQueryBuilder('e')
-            ->select('COUNT(e)')
-            ->getQuery()
-            ->getSingleScalarResult();
+    // Obtenez l'ID de l'exercice précédemment renvoyé
+    $previousExerciseId = $session->get('previous_exercise_id');
 
-        // Générez un nombre aléatoire entre 0 et le nombre total d'enregistrements
-        $rand = rand(0, $count - 1);
+    // Obtenez le nombre total d'enregistrements, en excluant l'exercice précédemment renvoyé
+    $queryBuilder = $this->createQueryBuilder('e');
+    if ($previousExerciseId !== null) {
+        $queryBuilder->where('e.id != :previousId')
+            ->setParameter('previousId', $previousExerciseId);
+    }
+    $count = $queryBuilder
+        ->select('COUNT(e)')
+        ->getQuery()
+        ->getSingleScalarResult();
 
-        // Utilisez ce nombre aléatoire pour sauter un certain nombre d'enregistrements et obtenir le suivant
-        return $this->createQueryBuilder('e')
-            ->setFirstResult($rand)
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getSingleResult();
+    // Générez un nombre aléatoire entre 0 et le nombre total d'enregistrements
+    $rand = rand(0, $count - 1);
+
+    // Utilisez ce nombre aléatoire pour sauter un certain nombre d'enregistrements et obtenir le suivant
+    $queryBuilder = $this->createQueryBuilder('e')
+        ->setFirstResult($rand)
+        ->setMaxResults(1);
+    if ($previousExerciseId !== null) {
+        $queryBuilder->where('e.id != :previousId')
+            ->setParameter('previousId', $previousExerciseId);
+    }
+    $exercise = $queryBuilder->getQuery()->getSingleResult();
+
+    // Stockez l'ID de l'exercice renvoyé dans la session pour l'exclure lors de la prochaine exécution
+    $session->set('previous_exercise_id', $exercise->getId());
+
+    return $exercise;
     }
 
 //     * @return Exercice[] Returns an array of Exercice objects

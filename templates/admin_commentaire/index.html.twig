@@ -3,17 +3,17 @@
 {% block title %}Commentaire index{% endblock %}
 
 {% block body %}
-    <h1>Commentaire index</h1>
+    <h1>Index des commentaires</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Date de création</th>
+                <th>Date de création du WOD</th>
                 <th>Exercice</th>
                 <th>Email</th>
                 <th>Commentaire</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
+                <th>Date du commentaire</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -25,17 +25,17 @@
                 <td>{{ commentaire.commentaire }}</td>
                 <td>{{ commentaire.createdAt ? commentaire.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_admin_commentaire_show', {'id': commentaire.id}) }}" class="btn btn-primary">show</a>
-                    <a href="{{ path('app_admin_commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-primary">edit</a>
+                    <a href="{{ path('app_admin_commentaire_show', {'id': commentaire.id}) }}" class="btn btn-primary">Voir</a>
+                    <a href="{{ path('app_admin_commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-primary">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">no records found</td>
+                <td colspan="4">Pas de commentaire trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_admin_commentaire_new') }}" class="btn btn-primary">Create new</a>
+    <a href="{{ path('app_admin_commentaire_new') }}" class="btn btn-primary">Créer un commentaire</a>
 {% endblock %}

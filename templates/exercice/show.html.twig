@@ -21,8 +21,9 @@
                 <td>{{ exercice.description }}</td>
             </tr>
             <tr>
+                <th>Durée</th>
             {% if exercice.duree is defined and exercice.duree is not null %}
-                <th>Duree : {{ exercice.duree }} mns</th>
+                <td>{{ exercice.duree }} mns</td>
             {% endif %}
             </tr>
             <tr>
@@ -76,6 +77,9 @@
             <a href="{{ path('app_commentaire_new', {'id': exercice.id}) }}" class="btn btn-primary">Ajouter un commentaire</a>
         </div>
     {% endif %}
+
+    <a href="{{ path('app_home') }}">Retour</a>
+
     </div>
 
 

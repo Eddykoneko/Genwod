@@ -33,6 +33,7 @@ class HistoriqueExerciceController extends AbstractController
     
         return $this->render('exercice/save.html.twig', [
             'form' => $form->createView(),
+            'exercice' => $exercice,
         ]);
     }
 

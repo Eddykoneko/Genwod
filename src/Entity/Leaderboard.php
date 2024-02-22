@@ -13,11 +13,6 @@ class Leaderboard
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 60)]
-    private ?string $mode = null;
-
-    #[ORM\Column]
-    private ?int $score = null;
 
     #[ORM\ManyToOne(inversedBy: 'leaderboards')]
     #[ORM\JoinColumn(onDelete: "CASCADE", nullable: false)]
@@ -32,29 +27,6 @@ class Leaderboard
         return $this->id;
     }
 
-    public function getMode(): ?string
-    {
-        return $this->mode;
-    }
-
-    public function setMode(string $mode): static
-    {
-        $this->mode = $mode;
-
-        return $this;
-    }
-
-    public function getScore(): ?int
-    {
-        return $this->score;
-    }
-
-    public function setScore(int $score): static
-    {
-        $this->score = $score;
-
-        return $this;
-    }
 
     public function getUserId(): ?User
     {

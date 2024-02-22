@@ -3,11 +3,11 @@
 {% block title %}Edit Exercice{% endblock %}
 
 {% block body %}
-    <h1>Edit Exercice</h1>
+    <h1>Editer les exercices</h1>
 
-    {{ include('admin_exercice/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('admin_exercice/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 
-    <a href="{{ path('app_admin_exercice_index') }}">back to list</a>
+    <a href="{{ path('app_admin_exercice_index') }}">Retour à la liste</a>
 
     {{ include('admin_exercice/_delete_form.html.twig') }}
 {% endblock %}

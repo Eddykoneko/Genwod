@@ -156,8 +156,8 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh; /* Gardez min-height pour s'assurer que le body remplit au moins la hauteur de l'écran */
-    padding-top: 50px; /* Réduisez selon la nouvelle hauteur de la navbar */
-    padding-bottom: 50px; /* Ajoutez du padding en bas pour compenser la hauteur du footer */
+    padding-top: 70px; /* Réduisez selon la nouvelle hauteur de la navbar */
+    padding-bottom: 70px; /* Ajoutez du padding en bas pour compenser la hauteur du footer */
     margin: 0; /* Assurez-vous qu'il n'y a pas de margin externe */
     background-color: #f4f4f4; /* Couleur de fond pour tout le corps */
 

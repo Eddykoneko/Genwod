@@ -3,7 +3,7 @@
 {% block title %}Exercice index{% endblock %}
 
 {% block body %}
-    <h1>Exercice index</h1>
+    <h1>Index des Exercices</h1>
 
     <table class="table">
         <thead>
@@ -13,7 +13,7 @@
                 <th>Description</th>
                 <th>Duree</th>
                 <th>Difficulte</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -25,17 +25,16 @@
                 <td>{{ exercice.duree }}</td>
                 <td>{{ exercice.difficulte }}</td>
                 <td>
-                    <a href="{{ path('app_admin_exercice_show', {'id': exercice.id}) }}">show</a>
                     <a href="{{ path('app_admin_exercice_edit', {'id': exercice.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="5">Pas d'exercice trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_admin_exercice_new') }}">Create new</a>
+    <a href="{{ path('app_admin_exercice_new') }}">Créer un nouvel exercice</a>
 {% endblock %}

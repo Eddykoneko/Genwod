@@ -16,13 +16,13 @@ class LeaderboardType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('mode', ChoiceType::class, [
-                'choices' => [
-                    'RX' => 'RX',
-                    'SCALED' => 'SCALED',
-                ],
-            ])
-            ->add('score')
+            // ->add('mode', ChoiceType::class, [
+            //     'choices' => [
+            //         'RX' => 'RX',
+            //         'SCALED' => 'SCALED',
+            //     ],
+            // ])
+            // ->add('score')
             ->add('user_id', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'email',

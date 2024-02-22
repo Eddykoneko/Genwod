@@ -6,10 +6,12 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Range;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class UserType extends AbstractType
 {
@@ -24,6 +26,18 @@ class UserType extends AbstractType
                 ])
             ->add('nom')
             ->add('prenom')
+            //je veux mettre le mot de passe mais chiffre
+            ->add('plainPassword', PasswordType::class, [
+            // instead of being set onto the object directly,
+            // this is read and encoded in the controller
+            'mapped' => false,
+            'label' => 'Mot de passe',
+            'attr' => ['autocomplete' => 'new-password'],
+            'constraints' => [
+                    new Regex("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/",
+                    "Il faut que le mot de passe contienne au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.")
+                ],
+            ])
             ->add('createdAt')
             ->add('age', ChoiceType::class, [
                 'choices' => $this->getAgeChoices(),
@@ -44,15 +58,18 @@ class UserType extends AbstractType
                     'Autre' => 'Autre',
                 ],
             ])
-            ->add('isVerified')
-
+            ->add('isVerified', CheckboxType::class, [
+                'label' => 'Est Vérifié',
+                'required' => false,
+            ])
+            
         ;
     }
 
     private function getAgeChoices()
     {
         $ages = [];
-        for ($i = 12; $i <= 80; $i++) {
+        for ($i = 18; $i <= 100; $i++) {
             $ages[$i] = $i;
         }
         return $ages;

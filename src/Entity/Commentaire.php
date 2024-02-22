@@ -26,7 +26,7 @@ class Commentaire
 
     
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(onDelete: "CASCADE", nullable: false)]
     private ?Exercice $exercice_id = null;
 
     public function getId(): ?int

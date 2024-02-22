@@ -67,10 +67,9 @@ class ExerciceController extends AbstractController
         $entityManager->remove($exercice);
         $entityManager->flush();
 
-        // Redirigez ou affichez un message de confirmation
-        // ...
-
-        return new Response(); // Add a return statement to return a Response object
+        $this->addFlash('success', 'Exercice supprimé avec succès.');
+        return $this->redirectToRoute('app_exercice_index');
+ // Add a return statement to return a Response object
     }
 
 }

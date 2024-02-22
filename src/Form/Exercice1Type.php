@@ -13,9 +13,11 @@ class Exercice1Type extends AbstractType
     {
         $builder
             ->add('type')
+            ->add('mode')
             ->add('description')
             ->add('duree')
             ->add('difficulte')
+            ->add('score')
         ;
     }
 

@@ -73,8 +73,36 @@ class AdminExerciceController extends AbstractController
     public function delete(Request $request, Exercice $exercice, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$exercice->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($exercice);
-            $entityManager->flush();
+
+        // Récupérez et supprimez d'abord tous les enregistrements liés dans historique_exercice
+        foreach ($exercice->getHistoriqueExercices() as $historiqueExercice) {
+            $entityManager->remove($historiqueExercice);
+        }
+
+        // Récupérez et supprimez tous les commentaires liés à l'exercice
+        foreach ($exercice->getCommentaires() as $commentaire) {
+            $entityManager->remove($commentaire);
+        }
+
+        // Récupérez et supprimez tous les leaderboards liés à l'exercice
+        foreach ($exercice->getLeaderboards() as $leaderboard) {
+        $entityManager->remove($leaderboard);
+        }
+
+        // Récupérez et supprimez tous les leaderboards liés à l'exercice
+        foreach ($exercice->getFavoris() as $favori) {
+        $entityManager->remove($favori);
+        }
+
+        // Ensuite, supprimez l'exercice lui-même
+        $entityManager->remove($exercice);
+        $entityManager->flush();
+
+        // Redirigez ou affichez un message de confirmation
+        // ...
+
+    //     return new Response(); // Add a return statement to return a Response object
+    // }
         }
 
         return $this->redirectToRoute('app_admin_exercice_index', [], Response::HTTP_SEE_OTHER);
