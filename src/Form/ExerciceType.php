@@ -36,7 +36,7 @@ class ExerciceType extends AbstractType
                     'Difficile' => 'Difficile',
                 ],
             ])
-            ->add('score',IntegerType::class)
+            // ->add('score',IntegerType::class)
         ;
     }
 

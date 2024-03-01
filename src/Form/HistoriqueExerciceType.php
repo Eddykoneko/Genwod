@@ -2,16 +2,15 @@
 
 namespace App\Form;
 
-use App\Entity\User;
-use App\Entity\Exercice;
-use PHPUnit\Framework\Assert;
+
 use App\Entity\HistoriqueExercice;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+
 
 class HistoriqueExerciceType extends AbstractType
 {
@@ -27,7 +26,9 @@ class HistoriqueExerciceType extends AbstractType
                 ],
             ])
             ->add('nombreTours')
+
             ->add('nombreRepetition')
+
             ->add('temps', TimeType::class, [
                 'input'  => 'datetime',
                 'widget' => 'choice',
@@ -54,4 +55,5 @@ class HistoriqueExerciceType extends AbstractType
             'data_class' => HistoriqueExercice::class,
         ]);
     }
+
 }

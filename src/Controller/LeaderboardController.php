@@ -11,68 +11,100 @@ use Doctrine\ORM\EntityRepository;
 use App\Repository\ExerciceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\LeaderboardRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\HistoriqueExerciceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/leaderboard')]
 class LeaderboardController extends AbstractController
 {
-    // #[Route('/', name: 'app_leaderboard_index', methods: ['GET'])]
-    // public function index(UserRepository $userRepository): Response
-    // {
-    //     // Récupérer tous les utilisateurs
-    //     $users = $userRepository->findAll();
-    
-    //     // Triez les utilisateurs par score en ordre décroissant
-    //     usort($users, function($a, $b) {
-    //         return $b->getScore() - $a->getScore();
-    //     });
-    
-    //     // Si vous voulez seulement le top 10, vous pouvez utiliser array_slice
-    //     $users = array_slice($users, 0, 10);
-    
-    //     return $this->render('leaderboard/index.html.twig', [
-    //         'users' => $users,
-    //     ]);
-    // }
+    #[Route('/', name: 'app_leaderboard_index', methods: ['GET'])]
+    public function index(Request $request, EntityManagerInterface $entityManager, ExerciceRepository $exerciceRepository, HistoriqueExerciceRepository $historiqueExerciceRepository, $id = null): Response    {
+        $exercices = $exerciceRepository->findAll();
 
-    // #[Route('/{id}', name: 'app_leaderboard_show', methods: ['GET'])]
-    // public function show($id, LeaderboardRepository $leaderboardRepository): Response
-    // {
-    //     $leaderboard = $leaderboardRepository->find($id);
-    //     if (!$leaderboard) {
-    //         throw $this->createNotFoundException('Le leaderboard demandé n\'existe pas.');
-    //     }
+        // Récupérez l'exercice sélectionné
+        $id = $request->get('exercice');
         
-    //     $user = $leaderboard->getUserId(); 
-    //     $exercice = $leaderboard->getExerciceId();
+        // Récupérez l'historique de l'exercice
+        $historique = $historiqueExerciceRepository->findBy(['exercice' => $id]);
+
+        $leaderboard = [];
+        foreach ($exercices as $exercice) {
+            $leaderboard[$exercice->getId()] = $historiqueExerciceRepository->createQueryBuilder('h')
+                ->select('u.nom, u.prenom, SUM(h.nombreRepetition) as totalRepetitions')
+                ->join('h.user_id', 'u')
+                ->where('h.exercice_id = :exerciseId')
+                ->setParameter('exerciseId', $exercice->getId())
+                ->groupBy('u.id')
+                ->orderBy('totalRepetitions', 'DESC')
+                ->getQuery()
+                ->getResult();
+        }
     
-    //     return $this->render('leaderboard/show.html.twig', [
-    //         'leaderboards' => $leaderboard,
-    //         'user' => $user,
-    //         'exercice' => $exercice,
-    //     ]);
-    // }
+        return $this->render('leaderboard/index.html.twig', [
+            'exercices' => $exercices,
+            'leaderboard' => $leaderboard,
+            'id' => $id,
+            'historique' => $historique,
+        ]);
+    }
 
     #[Route('/exercice/{id?}', name: 'app_leaderboard_exercise', methods: ['GET'])]
-    public function exercise($id, EntityManagerInterface $entityManager): Response
+    public function exercise($id, EntityManagerInterface $entityManager, ExerciceRepository $exerciceRepository): Response
+    {
+        $repository = $entityManager->getRepository(HistoriqueExercice::class);
+    
+        $queryBuilder = $repository->createQueryBuilder('h')
+            ->select('u.nom, u.prenom, SUM(h.nombreRepetition) as totalRepetitions')
+            ->join('h.user_id', 'u')
+            ->where('h.exercice_id = :exerciseId')
+            ->setParameter('exerciseId', $id)
+            ->groupBy('u.id')
+            ->orderBy('totalRepetitions', 'DESC');
+    
+        $leaderboard = $queryBuilder->getQuery()->getResult();
+    
+        $exercices = $exerciceRepository->findAll();
+    
+        return $this->render('leaderboard/index.html.twig', [
+            'leaderboard' => $leaderboard,
+            'exercices' => $exercices,
+            'id' => $id,
+        ]);
+    }
+
+    public function saveExercise(Request $request, EntityManagerInterface $entityManager): Response
 {
-    $repository = $entityManager->getRepository(HistoriqueExercice::class);
+    // Récupérez les données de l'exercice à partir de la requête
+    $data = $request->request->all();
 
-    $queryBuilder = $repository->createQueryBuilder('h')
-        ->select('u.nom, u.prenom, SUM(h.nombreRepetition) as totalRepetitions')
-        ->join('h.user_id', 'u')
-        ->where('h.exercice_id = :exerciseId')
-        ->setParameter('exerciseId', $id)
-        ->groupBy('u.id')
-        ->orderBy('totalRepetitions', 'DESC');
+    // Créez un nouvel objet HistoriqueExercice
+    $historiqueExercice = new HistoriqueExercice();
+    $historiqueExercice->setUserId($data['user_id']);
+    $historiqueExercice->setExerciceId($data['exercice_id']);
+    $historiqueExercice->setNombreRepetition($data['nombre_repetition']);
 
-    $leaderboard = $queryBuilder->getQuery()->getResult();
+    // Enregistrez l'objet HistoriqueExercice dans la base de données
+    $entityManager->persist($historiqueExercice);
+    $entityManager->flush();
 
-    return $this->render('leaderboard/index.html.twig', [
+    // Créez un tableau leaderboard
+    $leaderboard = [];
+
+    // Ajoutez une nouvelle entrée dans le tableau leaderboard
+    $leaderboard[$data['exercice_id']][] = [
+        'prenom' => $data['prenom'],
+        'nom' => $data['nom'],
+        'totalRepetitions' => $data['nombre_repetition'],
+    ];
+
+    // Renvoyez une réponse
+    return $this->redirectToRoute('app_leaderboard_index', [
         'leaderboard' => $leaderboard,
-    ]);
+    ]
+    );
 }
 
 }

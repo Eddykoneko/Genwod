@@ -15,7 +15,9 @@ class Commentaire1Type extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('commentaire');
+            ->add('commentaire', null, [
+                'label' => false
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

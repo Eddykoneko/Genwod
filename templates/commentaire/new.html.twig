@@ -8,8 +8,6 @@
 
     <div class="comments">
 
-    <h2>Commentaires</h2>
-
     {% for commentaire in exercice.commentaires %}
 
         <div class="card mb-3">
@@ -30,6 +28,6 @@
 
     {{ include('commentaire/_form.html.twig') }}
 
-    <a href="{{ path('app_home') }}">Retour</a>
+    <button class="btn-primary" a href="{{ path('app_home') }}">Retour</button>
     
 {% endblock %}

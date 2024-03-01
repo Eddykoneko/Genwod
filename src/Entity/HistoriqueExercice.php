@@ -20,7 +20,7 @@ class HistoriqueExercice
     #[ORM\Column(nullable: true)]
     private ?int $nombreTours = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $nombreRepetition = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

@@ -5,7 +5,18 @@
 {% block body %}
     <h1>Leaderboard index</h1>
 
+    <form action="{{ path('app_leaderboard_exercise') }}" method="get">
+    <select id="exercice" name="exercice" onchange="this.form.submit()">
+        {% for exercice in exercices %}
+            <option value="{{ exercice.id }}" {% if exercice.id == id %}selected{% endif %}>
+                {{ exercice.description }}
+            </option>
+        {% endfor %}
+    </select>
+    </form>
+
     <table class="table">
+    
         <thead>
             <tr>
                 <th>Nom</th>
@@ -14,17 +25,19 @@
             </tr>
         </thead>
         <tbody>
-        {% for exercice in leaderboard %}
+        {% if id is not null %}
+        {% for exercice in leaderboard[id] %}
             <tr>
                 <td>{{ exercice.prenom }}</td>
                 <td>{{ exercice.nom }}</td>
                 <td>{{ exercice.totalRepetitions }}</td>
             </tr>
+            {% endfor %}
         {% else %}
             <tr>
                 <td colspan="2">Aucun enregistrement trouvé</td>
             </tr>
-        {% endfor %}
+        {% endif %}
         </tbody>
     </table>
 {% endblock %}

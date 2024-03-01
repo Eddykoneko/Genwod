@@ -18,9 +18,9 @@ class User1Type extends AbstractType
             ->add('email')
             ->add('nom')
             ->add('prenom')
-            ->add('mot_de_passe', TextType::class, [
-                'mapped' => false,
-            ])
+            // ->add('mot_de_passe', TextType::class, [
+            //     'mapped' => false,
+            // ])
             ->add('age', ChoiceType::class, [
                 'choices' => $this->getAgeChoices(),
                 'placeholder' => 'Choisir un âge',

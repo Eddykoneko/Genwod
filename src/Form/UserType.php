@@ -26,18 +26,18 @@ class UserType extends AbstractType
                 ])
             ->add('nom')
             ->add('prenom')
-            //je veux mettre le mot de passe mais chiffre
-            ->add('plainPassword', PasswordType::class, [
-            // instead of being set onto the object directly,
-            // this is read and encoded in the controller
-            'mapped' => false,
-            'label' => 'Mot de passe',
-            'attr' => ['autocomplete' => 'new-password'],
-            'constraints' => [
-                    new Regex("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/",
-                    "Il faut que le mot de passe contienne au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.")
-                ],
-            ])
+            // //je veux mettre le mot de passe mais chiffre
+            // ->add('plainPassword', PasswordType::class, [
+            // // instead of being set onto the object directly,
+            // // this is read and encoded in the controller
+            // 'mapped' => false,
+            // 'label' => 'Mot de passe',
+            // 'attr' => ['autocomplete' => 'new-password'],
+            // 'constraints' => [
+            //         new Regex("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/",
+            //         "Il faut que le mot de passe contienne au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.")
+            //     ],
+            // ])
             ->add('createdAt')
             ->add('age', ChoiceType::class, [
                 'choices' => $this->getAgeChoices(),

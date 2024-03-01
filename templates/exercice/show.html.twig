@@ -67,10 +67,10 @@
             {% endif %}
         </div>
     
-        {# bouton leaderboard #}
+        {# bouton leaderboard
         <div>
             <a href="{{ path('app_leaderboard_show', {'id': exercice.id}) }}" class="btn btn-primary">Voir le leaderboard</a>
-        </div>
+        </div> #}
         
     {# bouton commentaire #}
         <div>
@@ -78,7 +78,7 @@
         </div>
     {% endif %}
 
-    <a href="{{ path('app_home') }}">Retour</a>
+    <a href="{{ path('app_home') }}" class="btn btn-primary">Retour</a>
 
     </div>
 
