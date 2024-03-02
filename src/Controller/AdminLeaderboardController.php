@@ -4,13 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Leaderboard;
 use App\Form\LeaderboardType;
-use App\Repository\LeaderboardRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\LeaderboardRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/admin/leaderboard')]
 class AdminLeaderboardController extends AbstractController
 {
@@ -22,6 +24,7 @@ class AdminLeaderboardController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'app_admin_leaderboard_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -42,6 +45,7 @@ class AdminLeaderboardController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_admin_leaderboard_show', methods: ['GET'])]
     public function show(Leaderboard $leaderboard): Response
     {
@@ -50,6 +54,7 @@ class AdminLeaderboardController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'app_admin_leaderboard_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Leaderboard $leaderboard, EntityManagerInterface $entityManager): Response
     {
@@ -68,6 +73,7 @@ class AdminLeaderboardController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_admin_leaderboard_delete', methods: ['POST'])]
     public function delete(Request $request, Leaderboard $leaderboard, EntityManagerInterface $entityManager): Response
     {

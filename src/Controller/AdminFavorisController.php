@@ -6,11 +6,13 @@ use App\Entity\Favoris;
 use App\Form\FavorisType;
 use App\Repository\FavorisRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/admin/favoris')]
 class AdminFavorisController extends AbstractController
 {
@@ -22,6 +24,7 @@ class AdminFavorisController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'app_admin_favoris_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -44,6 +47,7 @@ class AdminFavorisController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_admin_favoris_show', methods: ['GET'])]
     public function show(Favoris $favori): Response
     {
@@ -52,6 +56,7 @@ class AdminFavorisController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'app_admin_favoris_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Favoris $favori, EntityManagerInterface $entityManager): Response
     {
@@ -70,6 +75,7 @@ class AdminFavorisController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_admin_favoris_delete', methods: ['POST'])]
     public function delete(Request $request, Favoris $favori, EntityManagerInterface $entityManager): Response
     {

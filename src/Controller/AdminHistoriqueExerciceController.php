@@ -4,13 +4,15 @@ namespace App\Controller;
 
 use App\Entity\HistoriqueExercice;
 use App\Form\HistoriqueExerciceType;
-use App\Repository\HistoriqueExerciceRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\HistoriqueExerciceRepository;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/admin/historiqueexercice')]
 class AdminHistoriqueExerciceController extends AbstractController
 {
@@ -22,6 +24,7 @@ class AdminHistoriqueExerciceController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'app_admin_historique_exercice_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -42,6 +45,7 @@ class AdminHistoriqueExerciceController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_admin_historique_exercice_show', methods: ['GET'])]
     public function show(HistoriqueExercice $historiqueExercice): Response
     {
@@ -50,6 +54,7 @@ class AdminHistoriqueExerciceController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'app_admin_historique_exercice_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, HistoriqueExercice $historiqueExercice, EntityManagerInterface $entityManager): Response
     {
@@ -68,6 +73,7 @@ class AdminHistoriqueExerciceController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_admin_historique_exercice_delete', methods: ['POST'])]
     public function delete(Request $request, HistoriqueExercice $historiqueExercice, EntityManagerInterface $entityManager): Response
     {
