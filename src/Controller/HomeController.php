@@ -13,11 +13,11 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(ExerciceRepository $exerciceRepository, SessionInterface $session): Response
     {
-       // $exercice = $exerciceRepository->findRandom($session);
+        $exercice = $exerciceRepository->findRandom($session);
 
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
-           // 'exercice' => $exercice
+            'exercice' => $exercice
         ]);
     }
 }

@@ -8,12 +8,12 @@
     <div>
 
     {{ include('user/_form.html.twig', {'button_label': 'Mettre à jour','button_class': 'btn btn-primary'}) }}
-    
-    <a href="{{ path('app_user_show') }}">Retour</a>
+
+    <a class="btn btn-primary mt-4" href="{{ path('app_user_show') }}">Retour</a>
 
     <form method="post" action="{{ path('app_user_delete', {'id': user.id}) }}" onsubmit="return confirm('Etes-vous sûr de vouloir supprimer votre compte? (Cette action est irréversible)');">
         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-        <button class="btn-primary">Supprimer le compte</button>
+        <button class="btn btn-primary mt-4">Supprimer le compte</button>
     </form>
 
     </div>

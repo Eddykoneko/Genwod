@@ -115,7 +115,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
                 'label_attr' => [
-                    'class' => 'form-label mt-4'
+                    'class' => 'form-label mt-4 px-4'
                 ],
             ])          
             ->add('plainPassword', PasswordType::class, [
@@ -138,7 +138,7 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
 
-            
+            /*
             ->add('submit', SubmitType::class, [
                 'attr' => [
                     'class' => 'button mt-4 mb-4'
@@ -146,7 +146,7 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Enregistrer'
 
             ]);
-            /*
+            
                 ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [
