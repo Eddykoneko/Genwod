@@ -25,8 +25,9 @@ class RegistrationFormType extends AbstractType
         ->add('email', EmailType::class, [
             'attr' => [
                 'class' => 'form-control',
-                'minlength' => '2',
+            /*    'minlength' => '2',
                 'maxlength' => '180'
+                */
             ],
             'label' => 'Adresse email',
             'label_attr' => [
@@ -36,8 +37,9 @@ class RegistrationFormType extends AbstractType
         ->add('nom', TextType::class, [
             'attr' => [
                 'class' => 'form-control',
-                'minlength' => '2',
+            /*    'minlength' => '2',
                 'maxlength' => '80'
+                */
             ],
             'label' => 'Nom',
             'label_attr' => [
@@ -47,8 +49,9 @@ class RegistrationFormType extends AbstractType
             ->add('prenom', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
-                    'minlength' => '2',
+                /*    'minlength' => '2',
                     'maxlength' => '80'
+                */
                 ],
                 'label' => 'Prenom',
                 'label_attr' => [
@@ -135,7 +138,7 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
 
-            /*
+            
             ->add('submit', SubmitType::class, [
                 'attr' => [
                     'class' => 'button mt-4 mb-4'
@@ -143,7 +146,7 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Enregistrer'
 
             ]);
-            
+            /*
                 ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [

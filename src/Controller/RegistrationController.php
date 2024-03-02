@@ -32,10 +32,12 @@ class RegistrationController extends AbstractController
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-      // dd('je suis ici', $user);
-        if ($form->isSubmitted()/* && $form->isValid()*/) {
+
+        // dd($form->getErrors());
+        if ($form->isSubmitted() && $form->isValid()) {
 
            // dump($form->getErrors(true, false)); // Ajoutez cette ligne pour voir les erreurs de validation
+
             // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
@@ -69,7 +71,6 @@ class RegistrationController extends AbstractController
             $user->setGenre($form->get('genre')->getData());
 
             $entityManager->persist($user);
-         //   dd('je suis ici', $user);  ->isVerified ?
             $entityManager->flush();
 
             // generate a signed url and email it to the user
