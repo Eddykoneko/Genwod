@@ -32,9 +32,10 @@ class RegistrationController extends AbstractController
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
+      // dd('je suis ici', $user);
+        if ($form->isSubmitted()/* && $form->isValid()*/) {
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            dump($form->getErrors(true, false)); // Ajoutez cette ligne pour voir les erreurs de validation
+           // dump($form->getErrors(true, false)); // Ajoutez cette ligne pour voir les erreurs de validation
             // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
@@ -68,6 +69,7 @@ class RegistrationController extends AbstractController
             $user->setGenre($form->get('genre')->getData());
 
             $entityManager->persist($user);
+         //   dd('je suis ici', $user);  ->isVerified ?
             $entityManager->flush();
 
             // generate a signed url and email it to the user
@@ -82,11 +84,69 @@ class RegistrationController extends AbstractController
 
             return $this->redirectToRoute('app_login');
         }
-
+// dd('je suis la');
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }
+
+/*
+
+            //this controller allows us to register ourselves
+    #[Route('/inscription', 'security.registration', methods: ['GET', 'POST'])]
+    public function registration(
+        Request $request,
+        EntityManagerInterface $manager,
+        UserPasswordHasherInterface $hasher,
+        ): Response {
+        $user = new User();
+        $user->setRoles(['ROLE_USER']);
+
+        $form = $this->createForm(RegistrationType::class, $user);
+        $form->add('userInfo', AdditionnalType::class);
+
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+
+            // Retrieve the userInfo object from the form
+            $userInfo = $form['userInfo']->getData();
+            $user->setUserInfo($userInfo);
+
+            // Hash the user's password
+            $hashedPassword = $hasher->hashPassword($user, $user->getPassword());
+            $user->setPassword($hashedPassword);
+
+            $manager->persist($user);  
+            
+            $userInfo ->setRelation($user);
+            $manager->persist($userInfo);
+            // dd($userInfo);  
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Votre compte a bien été créé !'
+            );
+
+            return $this->redirectToRoute('security.login');
+        }else {
+            if (!$form->get('recaptcha')->getData() && $form->isSubmitted()) {
+                $this->addFlash('danger', 'Le champ reCAPTCHA doit être coché.');
+                return $this->render('pages/security/registration.html.twig', [
+                    'form' => $form->createView()
+                ]);
+            }
+        }
+        return $this->render('pages/security/registration.html.twig', [
+            'form' => $form->createView()
+        ]);
+      
+
+    }
+
+
+*/     
 
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
