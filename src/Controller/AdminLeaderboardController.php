@@ -4,13 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Leaderboard;
 use App\Form\LeaderboardType;
-use App\Repository\LeaderboardRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\LeaderboardRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/admin/leaderboard')]
 class AdminLeaderboardController extends AbstractController
 {

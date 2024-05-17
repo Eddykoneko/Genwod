@@ -16,14 +16,6 @@ class FavorisType extends AbstractType
     {
         $builder
             ->add('statut')
-            ->add('user_id', EntityType::class, [
-                'class' => User::class,
-'choice_label' => 'email',
-            ])
-            ->add('exercice_id', EntityType::class, [
-                'class' => Exercice::class,
-'choice_label' => 'description',
-            ])
         ;
     }
 

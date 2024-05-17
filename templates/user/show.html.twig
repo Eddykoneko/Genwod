@@ -42,7 +42,10 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_user_edit') }}" class="btn btn-primary">Modifier son profil</a>
-
-    <a href="{{ path('app_home') }}" class="btn btn-primary">Retour</a>
+    <div>
+        <a href="{{ path('app_user_edit') }}" class="btn btn-primary"><i class="fa-solid fa-user-pen"></i> &nbsp; Modifier son profil</a>
+    </div>
+    <div>
+        <a href="{{ path('app_home') }}" class="btn btn-primary"><i class="fa-solid fa-arrow-rotate-left"></i> &nbsp; Retour</a>
+    </div>
 {% endblock %}

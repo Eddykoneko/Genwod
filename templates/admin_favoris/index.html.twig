@@ -11,7 +11,7 @@
                 <th>Id</th>
                 <th>User</th>
                 <th>Date de l'exercice</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -21,17 +21,16 @@
                 <td>{{ favori.userId.prenom }} {{ favori.userId.nom }}</td>
                 <td>{{ favori.exerciceId.createdAt|date('d-m-Y') }}</td> 
                 <td>
-                    <a href="{{ path('app_admin_favoris_show', {'id': favori.id}) }}">show</a>
-                    <a href="{{ path('app_admin_favoris_edit', {'id': favori.id}) }}">edit</a>
+                    <a href="{{ path('app_admin_favoris_edit', {'id': favori.id}) }}" class="btn btn-primary">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="2">no records found</td>
+                <td colspan="2">Pas de favori trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_admin_favoris_new') }}">Create new</a>
+    <a href="{{ path('app_admin_favoris_new') }}" class="btn btn-primary">Créer un favori</a>
 {% endblock %}

@@ -25,7 +25,7 @@
                 <td>{{ exercice.duree }}</td>
                 <td>{{ exercice.difficulte }}</td>
                 <td>
-                    <a href="{{ path('app_admin_exercice_edit', {'id': exercice.id}) }}">edit</a>
+                    <a href="{{ path('app_admin_exercice_edit', {'id': exercice.id}) }}" class="btn btn-primary" >edit</a>
                 </td>
             </tr>
         {% else %}
@@ -36,5 +36,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_admin_exercice_new') }}">Créer un nouvel exercice</a>
+    <a href="{{ path('app_admin_exercice_new') }}" class="btn btn-primary" >Créer un nouvel exercice</a>
 {% endblock %}

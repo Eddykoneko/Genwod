@@ -18,7 +18,6 @@
 
     <hr>
 
-
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
         <p>Bonjour, {{ app.user.nom }} !</p>
@@ -58,9 +57,10 @@
     </div>
     
     <div class="boutons">
-        <a href="{{ path('app_exercice_show', {'id': exercice.id}) }}" class="btn btn-primary">Voir l'exercice</a>
 
-        <a href="{{ path('app_home') }}" class="btn btn-primary">Générer</a>
+        <a href="{{ path('app_exercice_show', {'id': exercice.id}) }}" class="btn btn-primary btn-space"><i class="fa-solid fa-dumbbell fa"></i> &nbsp; Voir l'exercice</a>
+        
+        <a href="{{ path('app_home') }}" class="btn btn-primary"><i class="fa-solid fa-shuffle fa"> &nbsp; </i>Générer un autre WOD</a>
     </div>
 
     {% endif %}

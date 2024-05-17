@@ -5,27 +5,50 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
-            ->add('nom')
-            ->add('prenom')
+            ->add('email', EmailType::class, [
+                'constraints' => [
+                    new Email([
+                        'message' => 'Veuillez entrer un email valide.',
+                    ]),
+                ],
+            ])
+            ->add('nom', null, [
+                'constraints' => [
+                    new Regex([
+                        'pattern' => "/^[a-zA-Z0-9]*$/",
+                        'message' => "Le nom ne peut contenir que des lettres et des chiffres."
+                    ])
+                ],
+            ])
+            ->add('prenom', null, [
+                'constraints' => [
+                    new Regex([
+                        'pattern' => "/^[a-zA-Z0-9]*$/",
+                        'message' => "Le prenom ne peut contenir que des lettres et des chiffres."
+                    ])
+                ],
+            ])
             ->add('age', ChoiceType::class, [
                 'choices' => $this->getAgeChoices(),
                 'placeholder' => 'Choisir un âge',
-
             ])
             ->add('poids', ChoiceType::class, [
                 'choices' => $this->getPoidsChoices(),
@@ -50,15 +73,23 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
                 'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
-                    new Regex("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/",
-                    "Il faut que le mot de passe contienne au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.")
+                'options' => ['attr' => ['autocomplete' => 'new-password']],
+                'first_options' => [
+                    'label' => 'Mot de passe',
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/",
+                            'message' => "Il faut que le mot de passe contienne au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."
+                        ])
+                    ],
                 ],
+                'second_options' => [
+                    'label' => 'Confirmation du mot de passe',
+                ],
+                'invalid_message' => 'Les mots de passe doivent correspondre.',
             ])
             ;
     }
@@ -66,7 +97,7 @@ class RegistrationFormType extends AbstractType
     private function getAgeChoices()
     {
         $ages = [];
-        for ($i = 18; $i <= 100; $i++) {
+        for ($i = 10; $i <= 80; $i++) {
             $ages[$i] = $i;
         }
         return $ages;
@@ -84,7 +115,7 @@ class RegistrationFormType extends AbstractType
     private function getTailleChoices()
     {
         $tailles = [];
-        for ($i = 120; $i <= 220; $i++) {
+        for ($i = 100; $i <= 200; $i++) {
             $tailles[$i] = $i;
         }
         return $tailles;

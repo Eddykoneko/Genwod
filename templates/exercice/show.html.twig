@@ -36,19 +36,21 @@
     <div>
         <div>
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                <a href="{{ path('enregistrer_exercice', {'id': exercice.id}) }}" class="btn btn-primary">Enregistrer l'exercice</a>
-        
+                <a href="{{ path('enregistrer_exercice', {'id': exercice.id}) }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk fa"></i> &nbsp; Enregistrer l'exercice</a>
+        </div>
+
         {# bouton like et unlike #}
-        
+
+        <div>
             {% if not exercice.isLikedByUser(app.user) %}
                 <form action="{{ path('exercice_like', {'id': exercice.id}) }}" method="post" style="display: inline;" id="likeForm">
-                    <button type="submit" class="btn btn-primary" id="likeButton"><i class="bi bi-hand-thumbs-up"></i></button>
+                    <button type="submit" class="btn btn-primary btn-space" id="likeButton"><i class="bi bi-hand-thumbs-up"></i> &nbsp; Favori</button>
                 </form>
             {% endif %}
 
             {% if exercice.isLikedByUser(app.user) %}
                 <form action="{{ path('exercice_like', {'id': exercice.id}) }}" method="post" style="display: inline;" id="unlikeForm">
-                    <button type="submit" class="btn btn-success" id="unlikeButton"><i class="bi bi-hand-thumbs-up-fill"></i></button>
+                    <button type="submit" class="btn btn-success btn-space" id="unlikeButton"><i class="bi bi-hand-thumbs-up-fill"></i> &nbsp; Enlever</button>
                 </form>
             {% endif %}
 
@@ -56,13 +58,13 @@
 
             {% if not exercice.isFavoritedByUser(app.user) %}
                 <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post" style="display: inline;" id="favoriteForm">
-                    <button type="submit" class="btn btn-primary" id="favoriteButton"><i class="bi bi-heart"></i></button>
+                    <button type="submit" class="btn btn-primary" id="favoriteButton"><i class="bi bi-heart"></i> &nbsp; Like</button></button>
                 </form>
             {% endif %}
 
             {% if exercice.isFavoritedByUser(app.user) %}
                 <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post" style="display: inline;" id="unfavoriteForm">
-                    <button type="submit" class="btn btn-warning" id="unfavoriteButton"><i class="bi bi-heart-fill"></i></button>
+                    <button type="submit" class="btn btn-warning" id="unfavoriteButton"><i class="bi bi-heart-fill"></i> &nbsp; Enlever</button></button>
                 </form>
             {% endif %}
         </div>
@@ -72,15 +74,19 @@
             <a href="{{ path('app_leaderboard_show', {'id': exercice.id}) }}" class="btn btn-primary">Voir le leaderboard</a>
         </div> #}
         
+        
     {# bouton commentaire #}
+
         <div>
-            <a href="{{ path('app_commentaire_new', {'id': exercice.id}) }}" class="btn btn-primary">Ajouter un commentaire</a>
+            <a href="{{ path('app_commentaire_new', {'id': exercice.id}) }}" class="btn btn-primary"><i class="fa-solid fa-comments"></i> &nbsp; Ajouter un commentaire</a>
+            {% endif %}
         </div>
-    {% endif %}
-
-    <a href="{{ path('app_home') }}" class="btn btn-primary">Retour</a>
-
-    </div>
 
 
+        <div>
+            <a href="{{ path('app_home') }}" class="btn btn-primary"><i class="fa-solid fa-arrow-rotate-left"></i> &nbsp; Retour</a>
+        </div>
+
+
+    
 {% endblock %}

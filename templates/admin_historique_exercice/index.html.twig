@@ -24,7 +24,7 @@
                 <td>{{ historique_exercice.mode }}</td>
                 <td>{{ historique_exercice.nombreTours }}</td>
                 <td>{{ historique_exercice.nombreRepetition }}</td>
-                <td>{{ historique_exercice.temps ? historique_exercice.temps|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ historique_exercice.temps ? historique_exercice.temps|date('s-m-Y H:i:s') : '' }}</td>
                 <td>{{ historique_exercice.commentaire }}</td>
                 <td>
                     <a href="{{ path('app_admin_historique_exercice_show', {'id': historique_exercice.id}) }}">show</a>

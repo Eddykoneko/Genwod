@@ -23,9 +23,8 @@
                 <td>{{ commentaire.exerciceId.description }}</td>
                 <td>{{ commentaire.getUser_email }}</td>
                 <td>{{ commentaire.commentaire }}</td>
-                <td>{{ commentaire.createdAt ? commentaire.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ commentaire.createdAt ? commentaire.createdAt|date('d-m-Y H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_admin_commentaire_show', {'id': commentaire.id}) }}" class="btn btn-primary">Voir</a>
                     <a href="{{ path('app_admin_commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-primary">Modifier</a>
                 </td>
             </tr>

@@ -9,9 +9,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/admin/user')]
 class AdminUserController extends AbstractController
 {
@@ -71,9 +73,12 @@ class AdminUserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $form -> get('plainPassword')->getData();
-            $hashPassword = $passwordHasher->hashPassword($user,$plainPassword);
-            $user->setPassword($hashPassword);
+            
+            // Gérer le mot de passe
+
+            // $plainPassword = $form -> get('plainPassword')->getData();
+            // $hashPassword = $passwordHasher->hashPassword($user,$plainPassword);
+            // $user->setPassword($hashPassword);
 
             // Gérer le rôle d'administrateur
             $user = $form->getData();

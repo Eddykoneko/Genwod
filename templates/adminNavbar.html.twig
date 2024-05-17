@@ -1,12 +1,15 @@
-<nav class="navbar navbar-expand-lg custom-navbar">
+<nav class="navbar navbar-expand-lg custom-navbar-admin">
     <div class="container-fluid">
+        <a class="navbar-brand" href="{{ path('app_home') }}">
+                <img src="{{ asset('img/logo.png') }}" class="logo" alt="Logo">
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
+                <a class="nav-link" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('app_mon_historique') }}">Mon historique</a>
@@ -15,15 +18,15 @@
                 <a class="nav-link" href="{{ path('app_user_show') }}">Mon profil</a>
             </li>
             <li class="nav-item dropdown center">
-                <a class="nav-link dropdown-toggle" href="{{ path('app_admin_user_index') }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{{ path('app_admin_exercice_index') }}">Exercices</a></li>
-                    <li><a class="dropdown-item" href="{{ path('app_admin_leaderboard_index') }}">Leaderboard</a></li>
+                    {# <li><a class="dropdown-item" href="{{ path('app_admin_leaderboard_index') }}">Leaderboard</a></li> #}
                     <li><a class="dropdown-item" href="{{ path('app_admin_like_dislike_index') }}">Likes/Dislikes</a></li>
                     <li><a class="dropdown-item" href="{{ path('app_admin_favoris_index') }}">Favoris</a></li>
                     <li><a class="dropdown-item" href="{{ path('app_admin_commentaire_index') }}">Commentaires</a></li>
                     <li><a class="dropdown-item" href="{{ path('app_admin_user_index') }}">Utilisateurs</a></li>
-                <li><hr class="dropdown-divider"></li>
+                    <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se deconnecter</a></li>
                 </ul>
             </li>

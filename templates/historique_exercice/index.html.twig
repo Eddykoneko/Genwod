@@ -37,6 +37,10 @@
                 <th>Commentaire</th>
                 <td>{{ historique.commentaire }}</td>
             </tr>
+            <tr> <!-- Espace entre les wod -->
+                <td></td>
+            </tr>
+            
             </div>
         {% else %}
             <tr>
@@ -46,7 +50,7 @@
     </tbody>
     
 </table>
-
-<a href="{{ path('app_home') }}" class="btn btn-primary">Retour</a>
-
+    <div>
+        <a href="{{ path('app_home') }}" class="btn btn-primary "><i class="fa-solid fa-arrow-rotate-left"></i> &nbsp; Retour</a>
+    </div>
 {% endblock %}

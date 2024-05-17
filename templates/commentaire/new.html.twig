@@ -4,30 +4,31 @@
 
 {% block body %}
 
-    {# Commentaires #}
+    <div class="container mt-5">
+ 
+        <h2 class="mb-3">Commentaires</h2>
 
-    <div class="comments">
+        {% for commentaire in exercice.commentaires %}
 
-    {% for commentaire in exercice.commentaires %}
-
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">{{ commentaire.getUser_email }}</h5>
-                <p class="card-text">{{ commentaire.commentaire }}</p>
-                <p class="card-text"><small class="text-muted">{{ commentaire.createdAt|date('d-m-Y H:i') }}</small></p>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ commentaire.getUser_email }}</h5>
+                    <p class="card-text">{{ commentaire.commentaire }}</p>
+                    <p class="card-text"><small class="text-muted">{{ commentaire.createdAt|date('d-m-Y H:i') }}</small></p>
+                </div>
             </div>
-        </div>
-        
-    {% endfor %}
+            
+        {% else %}
+            <p>Aucun commentaire pour le moment.</p>
+        {% endfor %}
 
     </div>
-    
-    {# Formulaire de création de commentaire #}
 
-    <h1>Ajouter un commentaire</h1>
+        <h1 class="mb-4">Ajouter un commentaire</h1>
 
-    {{ include('commentaire/_form.html.twig') }}
+        {{ include('commentaire/_form.html.twig') }}
 
-    <button class="btn-primary" a href="{{ path('app_home') }}">Retour</button>
-    
+    <div>
+        <a href="{{ path('app_exercice_show', {'id': exercice.id}) }}" class="btn btn-primary mt-3 mb-5"><i class="fa-solid fa-arrow-rotate-left"></i> &nbsp; Retour</a>   
+    </div>
 {% endblock %}

@@ -4,13 +4,15 @@ namespace App\Controller;
 
 use App\Entity\HistoriqueExercice;
 use App\Form\HistoriqueExerciceType;
-use App\Repository\HistoriqueExerciceRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\HistoriqueExerciceRepository;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/admin/historiqueexercice')]
 class AdminHistoriqueExerciceController extends AbstractController
 {

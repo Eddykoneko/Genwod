@@ -35,6 +35,7 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             dump($form->getErrors(true, false)); // Ajoutez cette ligne pour voir les erreurs de validation
+            
             // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(

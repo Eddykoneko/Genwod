@@ -18,27 +18,25 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
             ->add('isAdmin', CheckboxType::class, [
-                'label' => 'Administrateur',
-                'mapped' => false,
-                'required' => false,
-                ])
+            'label' => 'Administrateur',
+            'mapped' => false,
+            'required' => false,
+            ])
+            ->add('email')
+            //je veux mettre le mot de passe mais chiffre
+            ->add('plainPassword', PasswordType::class, [
+            'mapped' => false,
+            'label' => 'Mot de passe',
+            'attr' => ['autocomplete' => 'new-password'],
+            'constraints' => [
+                    new Regex("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/",
+                    "Il faut que le mot de passe contienne au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.")
+                ],
+            ])
+            ->add('createdAt')
             ->add('nom')
             ->add('prenom')
-            // //je veux mettre le mot de passe mais chiffre
-            // ->add('plainPassword', PasswordType::class, [
-            // // instead of being set onto the object directly,
-            // // this is read and encoded in the controller
-            // 'mapped' => false,
-            // 'label' => 'Mot de passe',
-            // 'attr' => ['autocomplete' => 'new-password'],
-            // 'constraints' => [
-            //         new Regex("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/",
-            //         "Il faut que le mot de passe contienne au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.")
-            //     ],
-            // ])
-            ->add('createdAt')
             ->add('age', ChoiceType::class, [
                 'choices' => $this->getAgeChoices(),
                 'placeholder' => 'Choisir un âge',
@@ -69,7 +67,7 @@ class UserType extends AbstractType
     private function getAgeChoices()
     {
         $ages = [];
-        for ($i = 18; $i <= 100; $i++) {
+        for ($i = 10; $i <= 80; $i++) {
             $ages[$i] = $i;
         }
         return $ages;
@@ -87,7 +85,7 @@ class UserType extends AbstractType
     private function getTailleChoices()
     {
         $tailles = [];
-        for ($i = 120; $i <= 220; $i++) {
+        for ($i = 100; $i <= 200; $i++) {
             $tailles[$i] = $i;
         }
         return $tailles;

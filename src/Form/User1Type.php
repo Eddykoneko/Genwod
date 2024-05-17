@@ -38,7 +38,7 @@ class User1Type extends AbstractType
     private function getAgeChoices()
     {
         $ages = [];
-        for ($i = 18; $i <= 100; $i++) {
+        for ($i = 10; $i <= 80; $i++) {
             $ages[$i] = $i;
         }
         return $ages;
@@ -56,7 +56,7 @@ class User1Type extends AbstractType
     private function getTailleChoices()
     {
         $tailles = [];
-        for ($i = 120; $i <= 220; $i++) {
+        for ($i = 100; $i <= 200; $i++) {
             $tailles[$i] = $i;
         }
         return $tailles;

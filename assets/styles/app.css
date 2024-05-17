@@ -13,8 +13,8 @@
 *,
 *::before,
 *::after {
-            box-sizing: border-box;
-        }
+    box-sizing: border-box;
+}
 
 /* Remove default margin */
 body,
@@ -90,6 +90,13 @@ select {
 
 /* /////////////////////////////////////////////////////////////////*/
 
+/* Animations des pages */
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 
 /* Navbar */
 
@@ -98,13 +105,34 @@ select {
     top: 0;
     width: 100%;
     z-index: 1000;
+    border-bottom: 2px solid #DA7635;
 } 
 
 .custom-navbar {
-    background-color: #DA7635;
-    padding-right: 80px;
+    background-color: #505050;
+    color: white;
+    padding-top: 0;
+    padding-bottom: 0;
     height: fit-content;
 }
+
+.custom-navbar-admin {
+    background-color: #505050;
+    color: white;
+    padding-top: 0;
+    padding-bottom: 0;
+    height: fit-content;
+    padding-right: 70px;
+}
+
+.nav-item {
+    padding-right: 5px;
+}
+
+.nav-link {
+    color : white;
+}
+
 
 
 /* Entete */
@@ -116,6 +144,13 @@ select {
     padding-right: 50px;
 }
 
+/* Logo */
+.logo {
+    width: 40px;
+    height: 40px;
+    margin-left: 30px;
+}
+
 
 /* ////////////////////////////////////////////////*/
 
@@ -125,9 +160,10 @@ select {
 .main-container{
     display: flex;
     flex-direction: row;
+
     /* Aligner verticalement */
     align-items: center;
-    gap: 20px;
+    
 }
 
 .content {
@@ -136,6 +172,7 @@ select {
     flex-grow: 1; /* Permet au contenu de remplir l'espace disponible */
     justify-content: space-between;
     padding: 0 20px;
+    animation: fadeIn 1s ease-out forwards;
 }
 
 .container-fluid {
@@ -144,6 +181,16 @@ select {
     align-items: center;
     width: 100%;
 }
+
+
+.box-shadow {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.navbar, .form, .comments {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
 
 
 /* ////////////////////////////////////////////////*/
@@ -160,7 +207,9 @@ body {
     padding-bottom: 70px; /* Ajoutez du padding en bas pour compenser la hauteur du footer */
     margin: 0; /* Assurez-vous qu'il n'y a pas de margin externe */
     background-color: #f4f4f4; /* Couleur de fond pour tout le corps */
-
+    background-image: url('/img/wallpaper3.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 /* Espace entre les paragraphes */
@@ -171,11 +220,14 @@ span {
 /* Titre H1 */
 h1,h3 {
     text-align: center;
-    color: #333;
+    color: #505050;
     margin-top: 20px; /*Ajuster en fonction de la hauteur de votre navbar */
     font-size: 2em;
 }
 
+.margin-bottom {
+    margin-bottom: 10px;
+}
 
 /* ////////////////////////////////////////////////*/
 
@@ -184,19 +236,21 @@ h1,h3 {
 
 
 /* Colonne */
+
 .body-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 5px solid gray;
-    padding: 10px;
-    margin: 10px;
+    border: 1px solid #505050;;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3); /* Ajout d'une ombre pour un effet 3D */
+    margin: 20px;
     border-radius: 10px;
+    padding: 20px;
 }
 
 .separateur {
-    border: black 1px solid;
+    border: #DA7635 1px solid;
     width: 100%;
 }
 
@@ -217,17 +271,29 @@ h1,h3 {
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none; /* Retire le soulignement des liens */
+
+     /* Ajout d'une transition */
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.btn-primary {
-    margin: 5px;
+/* Espace entre les boutons */
+
+.btn-space {
+    margin-right: 20px;
+}
+
+.btn-primary , .button_label{
     background-color: #25b7ba;
     color: white;
+    margin: 5px;
 }
 
 .btn-primary:hover{
-    background-color: #333;
+    background-color: #505050;
     opacity: 0.8;
+
+    /* Ajout d'une animation de survol */
+    transform: scale(1.1);
     
 }
 
@@ -241,6 +307,7 @@ div > div {
 
 
 /* Styles pour les formulaires et les commentaires */
+
 .form, .comments {
     border-collapse: collapse;
     width: 80%;
@@ -259,19 +326,57 @@ div > div {
     border-bottom: none;
 }
 
+.formulaire {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Centre le texte dans le placeholder */
+::placeholder { /* Sélecteur de placeholder pour la plupart des navigateurs modernes */
+    text-align: center;
+}
+
+/* Mettre l'icone dans le champ de saisie */
+.input-icon {
+    position: relative;
+}
+
+.input-icon .icon {
+    position: absolute;
+    left: 30px; /* Ajustez cette valeur en fonction de votre mise en page */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Agrandir le widget du formulaire */
+.large-input {
+    width: 120%; /* ou une autre valeur qui convient à votre mise en page */
+}
+
+
 /* ////////////////////////////////////////////////*/
 
 
 /* Footer */
+
+
 .footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #25b7ba;
+    background-color: #505050;
+    color: white;
     position: fixed;
     bottom: 0;
     width: 100%;
     height: 50px;
+    left: 0; /* Ajout pour s'assurer qu'il démarre du bord gauche */
+    border-top: 2px solid #DA7635;
+}
+
+.footer-container {
+    position: relative;
+    min-height: 100vh;
 }
 
 
@@ -279,21 +384,26 @@ div > div {
 
 
 /* Styles de la table */
+
 .table {
     border-collapse: collapse;
     margin: 20px auto;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
 }
 
 .table th,
 .table td {
-    border-bottom: 1px solid #ddd;
+    /* border-bottom: 1px solid #ddd; */
     text-align: center; /* Centre le texte dans les cellules */
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding : 20px;
 }
 
 .table th {
-    background-color: #DA7635;
+    background-color: #505050;
     color: white;
 }
 
@@ -302,20 +412,51 @@ div > div {
     border-bottom: none;
 }
 
+/* Formulaires */
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #505050;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3); /* Ajout d'une ombre pour un effet 3D */
+    border-radius: 10px;
+}
+
+.other-elements{
+    margin-left: -30px;
+}
+
+.condition{
+    margin-left: 20px;
+}
+
+.large-input {
+    border-radius: 5px;
+}
+
+.large-input:focus {
+    outline: 3px solid lightskyblue;
+}
 
 /* ////////////////////////////////////////////////*/
 
 /* Media Queries */
 
 
-@media (max-width: 932px) { /* Ajustez ce breakpoint selon vos besoins */
+@media (max-width: 990px) { /* Ajustez ce breakpoint selon vos besoins */
     /* Style pour les éléments de la barre de navigation en mode mobile */
-    .navbar-nav {
-        padding-left: 60px;
+
+    .custom-navbar {
+        height: fit-content;
+        padding-right: 5px;
     }
 
     .navbar-nav .nav-item {
         display: block; /* Affiche chaque élément sur sa propre ligne */
+        padding-left: 100px;
     }
 
     .main-container {
@@ -330,5 +471,3 @@ div > div {
     }
     
 }
-
-
