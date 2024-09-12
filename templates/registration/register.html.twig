@@ -11,8 +11,7 @@
 
     <div class="container">
 
-
-    {{ form_start(registrationForm, {'attr': {'data-turbo-action': 'replace'}}) }}
+    {{ form_start(registrationForm, {'attr': {'data-turbo-frame': 'registration-form', 'data-turbo-action': 'replace', 'data-turbo': 'false'}}) }}
 
     <div class="form">
         
@@ -71,7 +70,6 @@
             {{ form_widget(registrationForm.genre) }}
         </div>
 
-        
 
         <div class="input-icon mb-3 other-elements">
         {{ form_widget(registrationForm.plainPassword.first, {
@@ -79,8 +77,8 @@
                 'class': 'large-input',
                 'placeholder': 'Mot de passe',
                 'required': 'required',
-                'pattern': "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*\\-]).{8,}$",
-                'title': "Il faut que le mot de passe contienne au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."}}) }}
+                'pattern': "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*\\-]).{14,}$",
+                'title': "Il faut que le mot de passe contienne au moins 14 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."}}) }}
         {{ form_errors(registrationForm.plainPassword.first) }}
         </div>
 
@@ -90,7 +88,7 @@
                 'class': 'large-input',
                 'placeholder': 'Confirmer le mot de passe',
                 'required': 'required',
-                'pattern': "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*\\-]).{8,}$",
+                'pattern': "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*\\-]).{14,}$",
                 }}) }}
         {{ form_errors(registrationForm.plainPassword.second) }}
         </div>
@@ -121,4 +119,5 @@
     <div>
         <p>Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Connectez-vous</a></p>
     </div>
+</div>
 {% endblock %}

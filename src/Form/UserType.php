@@ -30,8 +30,8 @@ class UserType extends AbstractType
             'label' => 'Mot de passe',
             'attr' => ['autocomplete' => 'new-password'],
             'constraints' => [
-                    new Regex("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/",
-                    "Il faut que le mot de passe contienne au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.")
+                    new Regex("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{14,}$/",
+                    "Il faut que le mot de passe contienne au moins 14 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.")
                 ],
             ])
             ->add('createdAt')

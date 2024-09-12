@@ -106,10 +106,11 @@ select {
     width: 100%;
     z-index: 1000;
     border-bottom: 2px solid #DA7635;
+
 } 
 
 .custom-navbar {
-    background-color: #505050;
+    background-color: #afafaf;
     color: white;
     padding-top: 0;
     padding-bottom: 0;
@@ -117,7 +118,7 @@ select {
 }
 
 .custom-navbar-admin {
-    background-color: #505050;
+    background-color: #afafaf;
     color: white;
     padding-top: 0;
     padding-bottom: 0;
@@ -130,7 +131,7 @@ select {
 }
 
 .nav-link {
-    color : white;
+    color : black;
 }
 
 
@@ -144,12 +145,6 @@ select {
     padding-right: 50px;
 }
 
-/* Logo */
-.logo {
-    width: 40px;
-    height: 40px;
-    margin-left: 30px;
-}
 
 
 /* ////////////////////////////////////////////////*/
@@ -220,7 +215,7 @@ span {
 /* Titre H1 */
 h1,h3 {
     text-align: center;
-    color: #505050;
+    color: black;
     margin-top: 20px; /*Ajuster en fonction de la hauteur de votre navbar */
     font-size: 2em;
 }
@@ -242,11 +237,15 @@ h1,h3 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 1px solid #505050;;
+    border: 1px solid #afafaf;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3); /* Ajout d'une ombre pour un effet 3D */
     margin: 20px;
     border-radius: 10px;
     padding: 20px;
+}
+
+.body-wrapper p, .body-wrapper ul li, .body-wrapper h1 {
+    margin-bottom: 10px; /* Ajustez l'espacement selon vos besoins */
 }
 
 .separateur {
@@ -289,7 +288,7 @@ h1,h3 {
 }
 
 .btn-primary:hover{
-    background-color: #505050;
+    background-color: #afafaf;
     opacity: 0.8;
 
     /* Ajout d'une animation de survol */
@@ -364,7 +363,7 @@ div > div {
 
 
 .footer {
-    background-color: #505050;
+    background-color: #afafaf;
     color: white;
     position: fixed;
     bottom: 0;
@@ -403,7 +402,7 @@ div > div {
 }
 
 .table th {
-    background-color: #505050;
+    background-color: #afafaf;
     color: white;
 }
 
@@ -420,7 +419,7 @@ div > div {
     justify-content: center;
     align-items: center;
     padding: 20px;
-    border: 1px solid #505050;
+    border: 1px solid #afafaf;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3); /* Ajout d'une ombre pour un effet 3D */
     border-radius: 10px;
 }
@@ -444,7 +443,6 @@ div > div {
 /* ////////////////////////////////////////////////*/
 
 /* Media Queries */
-
 
 @media (max-width: 990px) { /* Ajustez ce breakpoint selon vos besoins */
     /* Style pour les éléments de la barre de navigation en mode mobile */

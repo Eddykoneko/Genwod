@@ -82,7 +82,7 @@ class RegistrationFormType extends AbstractType
                     'constraints' => [
                         new Regex([
                             'pattern' => "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/",
-                            'message' => "Il faut que le mot de passe contienne au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."
+                            'message' => "Il faut que le mot de passe contienne au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."
                         ])
                     ],
                 ],

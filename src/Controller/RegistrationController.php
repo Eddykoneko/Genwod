@@ -34,8 +34,6 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dump($form->getErrors(true, false)); // Ajoutez cette ligne pour voir les erreurs de validation
-            
             // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
@@ -44,7 +42,7 @@ class RegistrationController extends AbstractController
                 )
             );
 
-                // set the creation date
+            // set the creation date
             $user->setCreatedAt(new DateTimeImmutable());
 
             // set the role
@@ -78,10 +76,11 @@ class RegistrationController extends AbstractController
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
+                    
             );
-            // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('app_login');
+            $this->addFlash('success', 'Votre inscription a été réussie ! Veuillez vérifier votre email pour confirmer votre compte.');
+            return $this->redirectToRoute('app_check_email');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -89,11 +88,15 @@ class RegistrationController extends AbstractController
         ]);
     }
 
+    #[Route('/check-email', name: 'app_check_email')]
+    public function checkEmail(): Response
+    {
+        return $this->render('registration/check_email.html.twig');
+    }
+
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
@@ -103,9 +106,8 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Your email address has been verified.');
+        $this->addFlash('success', 'Votre adresse email a été vérifiée.');
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('app_login'); 
     }
 }

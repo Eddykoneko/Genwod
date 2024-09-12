@@ -39,12 +39,14 @@
     <div class="body-wrapper">
         {# Affichage de l'exercice du jour  #}
         {% if exercice is defined %}
-            <p>Date : {{ exercice.createdAt|date('d-m-Y') }}</p>
-            <p>Type : {{ exercice.type }}</p>
+            <p><span style="color: #DA7635;">DATE : </span>{{ exercice.createdAt|date('d-m-Y') }}</p>
+            <p><span style="color: #DA7635;">TYPE DE WOD : </span>{{ exercice.type }}</p>
             {% if exercice.duree is defined and exercice.duree is not null %}
-            <p>Duree : {{ exercice.duree }} mns</p>
+            <p><span style="color: #DA7635;">DUREE : </span>{{ exercice.duree }} mns</p>
             {% endif %}
-            <p>Difficulté : {{ exercice.difficulte }}</p>
+            <p><span style="color: #DA7635;">DIFFICULTE : </span>{{ exercice.difficulte }}</p>
+
+            <hr>
     
     <div class="separateur"></div>
 
@@ -61,6 +63,7 @@
         <a href="{{ path('app_exercice_show', {'id': exercice.id}) }}" class="btn btn-primary btn-space"><i class="fa-solid fa-dumbbell fa"></i> &nbsp; Voir l'exercice</a>
         
         <a href="{{ path('app_home') }}" class="btn btn-primary"><i class="fa-solid fa-shuffle fa"> &nbsp; </i>Générer un autre WOD</a>
+        
     </div>
 
     {% endif %}
