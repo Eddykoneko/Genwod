@@ -1,43 +1,62 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Leaderboard index{% endblock %}
+{% block title %}Leaderboard{% endblock %}
 
 {% block body %}
-    <h1>Leaderboard index</h1>
+    <h1>Leaderboard</h1>
 
-    <form action="{{ path('app_leaderboard_exercise') }}" method="get">
-    <select id="exercice" name="exercice" onchange="this.form.submit()">
-        {% for exercice in exercices %}
-            <option value="{{ exercice.id }}" {% if exercice.id == id %}selected{% endif %}>
-                {{ exercice.description }}
-            </option>
-        {% endfor %}
-    </select>
-    </form>
-
-    <table class="table">
-    
+    <h2>Classement Global</h2>
+    <table class="table" aria-label="Classement Global">
         <thead>
             <tr>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Total de répétitions</th>
+                <th>Utilisateur</th>
+                <th>Score Total</th>
             </tr>
         </thead>
         <tbody>
-        {% if id is not null %}
-        {% for exercice in leaderboard[id] %}
-            <tr>
-                <td>{{ exercice.prenom }}</td>
-                <td>{{ exercice.nom }}</td>
-                <td>{{ exercice.totalRepetitions }}</td>
-            </tr>
-            {% endfor %}
-        {% else %}
-            <tr>
-                <td colspan="2">Aucun enregistrement trouvé</td>
-            </tr>
-        {% endif %}
+            {% if globalLeaderboard is not empty %}
+                {% for user in globalLeaderboard %}
+                    <tr>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.totalScore|number_format(0, ',', ' ') }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="2">Aucun utilisateur trouvé.</td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
+
+    <h2>Classement par Exercice</h2>
+    {% if exercices is not empty %}
+        {% for exercice in exercices %}
+            <h3>{{ exercice.name }}</h3>
+            <table class="table" aria-label="Classement pour {{ exercice.name }}">
+                <thead>
+                    <tr>
+                        <th>Utilisateur</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if exercice.id in exerciseLeaderboards %}
+                        {% for leaderboard in exerciseLeaderboards[exercice.id] %}
+                            <tr>
+                                <td>{{ leaderboard.user_id.email }}</td>
+                                <td>{{ leaderboard.score|number_format(0, ',', ' ') }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="2">Aucun score trouvé pour cet exercice.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        {% endfor %}
+    {% else %}
+        <p>Aucun exercice trouvé.</p>
+    {% endif %}
 {% endblock %}

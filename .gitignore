@@ -1,4 +1,9 @@
 
+###> macOS ###
+.DS_Store
+**/.DS_Store
+###< macOS ###
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

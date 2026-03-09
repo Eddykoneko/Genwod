@@ -15,10 +15,19 @@ class RechercheExerciceController extends AbstractController
     public function index(Request $request,ExerciceRepository $exerciceRepository): Response
     {
         $search = $request->query->get('search');
-        $exercices = $exerciceRepository->findBySearch($search);
+        $dureeMin = $request->query->get('duree_min');
+        $dureeMax = $request->query->get('duree_max');
+
+        $dureeMin = is_numeric($dureeMin) ? (int) $dureeMin : null;
+        $dureeMax = is_numeric($dureeMax) ? (int) $dureeMax : null;
+
+        $exercices = $exerciceRepository->findBySearch($search, $dureeMin, $dureeMax);
         return $this->render('recherche_exercice/index.html.twig', [
             'controller_name' => 'RechercheExerciceController',
-            'exercices' => $exercices
+            'exercices' => $exercices,
+            'search' => $search,
+            'duree_min' => $dureeMin,
+            'duree_max' => $dureeMax,
         ]);
     }
 // {

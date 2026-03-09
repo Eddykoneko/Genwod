@@ -1,32 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Qui sommes nous?{% endblock %}
+{% block title %}Qui sommes-nous ?{% endblock %}
 
 {% block body %}
-
-<div class="body-wrapper">
-
-    <h1>Qu'est-ce que Genwod?</h1>
-
-    <p>Cette application est conçue pour vous offrir des séances d’entraînement CrossFit personnalisées et dynamiques.</p>
-    <p>Que vous soyez débutant ou athlète confirmé, vous pouvez générer des WODs (Workouts of the Day) adaptés à vos besoins :</p>
-
-    <div>
-
-    <ul>
-        <p> => Suivre votre progression</p>
-        
-        <p> => Découvrir de nouveaux exercices</p>
-        
-        <p> => Interagir avec la communauté en likant et mettre en favoris vos exercices</p>
-        
-        <p> => Et commenter les WODs que vous avez réalisés.</p>
-    </ul>
-
-    <p>Inscrivez-vous pour accéder à toutes les fonctionnalités, y compris la possibilité de sauvegarder vos séances favorites et de visualiser votre historique d’entraînement.</p>
-    <p>Rejoignez-nous pour des entraînements motivants et pour atteindre vos objectifs fitness en toute sécurité !</p>
-    
+<div class="container d-flex justify-content-center align-items-center" style="min-height:80vh;">
+    <div class="card shadow-lg p-4" style="max-width: 700px; width:100%; border-radius: 20px;">
+        <div class="text-center mb-4">
+            <span class="d-inline-block bg-primary rounded-circle p-3 mb-2">
+                <i class="fa-solid fa-dumbbell fa-2x text-white"></i>
+            </span>
+            <h1 class="h2 mb-3 text-primary">Genwod, votre partenaire CrossFit</h1>
+            <p class="lead">Genwod vous accompagne dans votre progression, que vous soyez débutant ou confirmé, grâce à des séances personnalisées et une communauté active.</p>
+        </div>
+        <div class="row text-center">
+            <div class="col-6 col-md-3 mb-4">
+                <div class="mb-2">
+                    <i class="fa-solid fa-chart-line fa-2x text-success"></i>
+                </div>
+                <div class="fw-bold">Progression</div>
+                <div class="small text-muted">Suivez vos performances et vos records.</div>
+            </div>
+            <div class="col-6 col-md-3 mb-4">
+                <div class="mb-2">
+                    <i class="fa-solid fa-dumbbell fa-2x text-warning"></i>
+                </div>
+                <div class="fw-bold">Exercices</div>
+                <div class="small text-muted">Découvrez et testez de nouveaux WODs.</div>
+            </div>
+            <div class="col-6 col-md-3 mb-4">
+                <div class="mb-2">
+                    <i class="fa-solid fa-heart fa-2x text-danger"></i>
+                </div>
+                <div class="fw-bold">Communauté</div>
+                <div class="small text-muted">Likez, commentez et partagez vos favoris.</div>
+            </div>
+            <div class="col-6 col-md-3 mb-4">
+                <div class="mb-2">
+                    <i class="fa-solid fa-comments fa-2x text-info"></i>
+                </div>
+                <div class="fw-bold">Échanges</div>
+                <div class="small text-muted">Discutez et motivez-vous entre membres.</div>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            <a href="/register" class="btn btn-primary btn-lg">Rejoignez-nous</a>
+        </div>
     </div>
 </div>
-
 {% endblock %}

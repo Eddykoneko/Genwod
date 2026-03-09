@@ -13,7 +13,6 @@ class Leaderboard
     #[ORM\Column]
     private ?int $id = null;
 
-
     #[ORM\ManyToOne(inversedBy: 'leaderboards')]
     #[ORM\JoinColumn(onDelete: "CASCADE", nullable: false)]
     private ?User $user_id = null;
@@ -22,20 +21,22 @@ class Leaderboard
     #[ORM\JoinColumn(nullable: false)]
     private ?Exercice $exercice_id = null;
 
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $score = null;
+
     public function getId(): ?int
     {
         return $this->id;
     }
-
 
     public function getUserId(): ?User
     {
         return $this->user_id;
     }
 
-    public function setUserId(?User $user_id): static
+    public function setUserId(?User $user): self
     {
-        $this->user_id = $user_id;
+        $this->user_id = $user;
 
         return $this;
     }
@@ -45,9 +46,21 @@ class Leaderboard
         return $this->exercice_id;
     }
 
-    public function setExerciceId(?Exercice $exercice_id): static
+    public function setExerciceId(?Exercice $exercice): self
     {
-        $this->exercice_id = $exercice_id;
+        $this->exercice_id = $exercice;
+
+        return $this;
+    }
+
+    public function getScore(): ?int
+    {
+        return $this->score;
+    }
+
+    public function setScore(int $score): self
+    {
+        $this->score = $score;
 
         return $this;
     }

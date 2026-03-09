@@ -1,92 +1,88 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Exercice{% endblock %}
+{% block title %}WOD - {{ exercice.type }}{% endblock %}
 
 {% block body %}
+    <div class="wod-page">
+        <div class="wod-card body-wrapper">
+            <h1 class="wod-title">WOD : {{ exercice.type }}</h1>
 
-    <h1>Wod</h1>
+            <div class="wod-meta">
+                <span class="wod-date">
+                    <i class="fa-regular fa-calendar"></i>
+                    {{ exercice.createdAt|date('d/m/Y') }}
+                </span>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Date</th>
-                <td>{{ exercice.createdAt|date('d-m-Y') }}</td>
-            </tr>
-            <tr>
-                <th>Type</th>
-                <td>{{ exercice.type }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ exercice.description }}</td>
-            </tr>
-            <tr>
-                <th>Durée</th>
-            {% if exercice.duree is defined and exercice.duree is not null %}
-                <td>{{ exercice.duree }} mns</td>
-            {% endif %}
-            </tr>
-            <tr>
-                <th>Difficulte</th>
-                <td>{{ exercice.difficulte }}</td>
-            </tr>
-        </tbody>
-    </table>
-    
-    <div>
-        <div>
+                {% if exercice.duree is defined and exercice.duree is not null %}
+                    <span class="wod-duration">
+                        <i class="fa-solid fa-stopwatch"></i>
+                        {{ exercice.duree }} min
+                    </span>
+                {% endif %}
+
+                <span class="wod-difficulty">
+                    <i class="fa-solid fa-fire"></i>
+                    Difficulté : {{ exercice.difficulte }}
+                </span>
+            </div>
+
+            <hr class="separateur">
+
+            <p class="wod-description">
+                {{ exercice.description }}
+            </p>
+
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                <a href="{{ path('enregistrer_exercice', {'id': exercice.id}) }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk fa"></i> &nbsp; Enregistrer l'exercice</a>
+                <div class="wod-actions">
+                    <a href="{{ path('enregistrer_exercice', {'id': exercice.id}) }}"
+                       class="btn btn-primary">
+                        <i class="fa-solid fa-floppy-disk"></i> Enregistrer l'exercice
+                    </a>
+
+                    {# Like / Unlike #}
+                    {% if not exercice.isLikedByUser(app.user) %}
+                        <form action="{{ path('exercice_like', {'id': exercice.id}) }}" method="post">
+                            <button type="submit" class="btn btn-warning btn-space">
+                                <i class="bi bi-hand-thumbs-up"></i> Like
+                            </button>
+                        </form>
+                    {% else %}
+                        <form action="{{ path('exercice_like', {'id': exercice.id}) }}" method="post">
+                            <button type="submit" class="btn btn-warning btn-space">
+                                <i class="bi bi-hand-thumbs-up-fill"></i> Enlever
+                            </button>
+                        </form>
+                    {% endif %}
+
+                    {# Favori / Unfavori #}
+                    {% if not exercice.isFavoritedByUser(app.user) %}
+                        <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-heart"></i> Favori
+                            </button>
+                        </form>
+                    {% else %}
+                        <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-heart-fill"></i> Enlever
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+
+                <div class="wod-secondary-actions">
+                    <a href="{{ path('app_commentaire_new', {'id': exercice.id}) }}"
+                       class="btn btn-info">
+                        <i class="fa-solid fa-comments"></i> Ajouter un commentaire
+                    </a>
+                </div>
+            {% endif %}
+
+            <div class="wod-back">
+                <a href="{{ path('app_home') }}" class="btn btn-primary">
+                    <i class="fa-solid fa-arrow-rotate-left"></i> Retour
+                </a>
+            </div>
         </div>
-
-        {# bouton like et unlike #}
-
-        <div>
-            {% if not exercice.isLikedByUser(app.user) %}
-                <form action="{{ path('exercice_like', {'id': exercice.id}) }}" method="post" style="display: inline;" id="likeForm">
-                    <button type="submit" class="btn btn-primary btn-space" id="likeButton"><i class="bi bi-hand-thumbs-up"></i> &nbsp; Favori</button>
-                </form>
-            {% endif %}
-
-            {% if exercice.isLikedByUser(app.user) %}
-                <form action="{{ path('exercice_like', {'id': exercice.id}) }}" method="post" style="display: inline;" id="unlikeForm">
-                    <button type="submit" class="btn btn-success btn-space" id="unlikeButton"><i class="bi bi-hand-thumbs-up-fill"></i> &nbsp; Enlever</button>
-                </form>
-            {% endif %}
-
-        {# bouton favoris #}
-
-            {% if not exercice.isFavoritedByUser(app.user) %}
-                <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post" style="display: inline;" id="favoriteForm">
-                    <button type="submit" class="btn btn-primary" id="favoriteButton"><i class="bi bi-heart"></i> &nbsp; Like</button></button>
-                </form>
-            {% endif %}
-
-            {% if exercice.isFavoritedByUser(app.user) %}
-                <form action="{{ path('app_favori', {'id': exercice.id}) }}" method="post" style="display: inline;" id="unfavoriteForm">
-                    <button type="submit" class="btn btn-warning" id="unfavoriteButton"><i class="bi bi-heart-fill"></i> &nbsp; Enlever</button></button>
-                </form>
-            {% endif %}
-        </div>
-    
-        {# bouton leaderboard
-        <div>
-            <a href="{{ path('app_leaderboard_show', {'id': exercice.id}) }}" class="btn btn-primary">Voir le leaderboard</a>
-        </div> #}
-        
-        
-    {# bouton commentaire #}
-
-        <div>
-            <a href="{{ path('app_commentaire_new', {'id': exercice.id}) }}" class="btn btn-primary"><i class="fa-solid fa-comments"></i> &nbsp; Ajouter un commentaire</a>
-            {% endif %}
-        </div>
-
-
-        <div>
-            <a href="{{ path('app_home') }}" class="btn btn-primary"><i class="fa-solid fa-arrow-rotate-left"></i> &nbsp; Retour</a>
-        </div>
-
-
-    
+    </div>
 {% endblock %}

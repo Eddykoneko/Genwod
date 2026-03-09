@@ -3,32 +3,44 @@
 {% block title %}Recherche d'exercices{% endblock %}
 
 {% block body %}
-{# <div class="container">
-    <h1>Recherche d'exercices</h1> #}
+<div class="container mt-4">
+    <h1 class="mb-3">Recherche d'exercices</h1>
 
-    {# {{ form_start(form) }}
-        {{ form_widget(form) }} #}
-        <div>
-        <form>
-        <input type="search" name="search" placeholder="Recherche">
-        <button type="submit" class="btn btn-primary">Rechercher</button>
-        </form>
-    {# {{ form_end(form) }}
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-6">
+            <input class="form-control" type="search" name="search" placeholder="Mot-clé (type, description)" value="{{ search|default('') }}">
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" type="number" min="0" step="1" name="duree_min" placeholder="Durée min" value="{{ duree_min is defined and duree_min is not null ? duree_min : '' }}">
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" type="number" min="0" step="1" name="duree_max" placeholder="Durée max" value="{{ duree_max is defined and duree_max is not null ? duree_max : '' }}">
+        </div>
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </div>
+    </form>
 
-    {% if exercices is defined %}
-        <h2>Résultats de la recherche</h2>
-
-        <ul>
-{% for exercice in exercices %}
-        <li>
-            Type: {{ exercice.type }} - 
-            Durée: {{ exercice.duree }} - 
-            Difficulté: {{ exercice.difficulte }}
-        </li>
-        {% else %}
-        <li>Aucun exercice trouvé.</li>
-        {% endfor %}
-        </ul>
-    {% endif %} #}
+    <div>
+        {% if exercices is defined %}
+            <h2 class="h5 mb-3">Résultats</h2>
+            <ul class="list-group">
+                {% for exercice in exercices %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="fw-bold">{{ exercice.type }}</div>
+                            <div class="text-muted small">{{ exercice.description|default('')|slice(0, 120) }}{% if exercice.description and exercice.description|length > 120 %}…{% endif %}</div>
+                        </div>
+                        <div class="text-end">
+                            <div>Durée: {{ exercice.duree is not null ? exercice.duree ~ ' min' : '—' }}</div>
+                            <div>Difficulté: {{ exercice.difficulte }}</div>
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="list-group-item">Aucun exercice trouvé.</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

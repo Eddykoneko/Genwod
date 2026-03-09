@@ -49,6 +49,14 @@ body {
     min-height: 100vh;
     text-rendering: optimizeSpeed;
     line-height: 1.6;
+    display: block;
+    padding-top: 70px;
+    padding-bottom: 70px;
+    margin: 0;
+    background-color: #f4f4f4;
+    background-image: url('/img/wallpaper3.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 /* A elements that don't have a class get default styles */
@@ -110,7 +118,7 @@ select {
 } 
 
 .custom-navbar {
-    background-color: #afafaf;
+    background-color: #2C3E50;
     color: white;
     padding-top: 0;
     padding-bottom: 0;
@@ -118,7 +126,7 @@ select {
 }
 
 .custom-navbar-admin {
-    background-color: #afafaf;
+    background-color: #2C3E50;
     color: white;
     padding-top: 0;
     padding-bottom: 0;
@@ -131,7 +139,12 @@ select {
 }
 
 .nav-link {
-    color : black;
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #DA7635;
 }
 
 
@@ -269,31 +282,60 @@ h1,h3 {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    text-decoration: none; /* Retire le soulignement des liens */
-
-     /* Ajout d'une transition */
+    text-decoration: none;
     transition: background-color 0.3s ease, transform 0.3s ease;
+    color: white;
+    margin: 5px;
+}
+
+/* Bouton principal (enregistrer l'exercice) */
+.btn-primary {
+    background-color: #34495E;
+}
+
+.btn-primary:hover {
+    background-color: #2C3E50;
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
+/* Bouton favoris */
+.btn-success {
+    background-color: #16A085;
+}
+
+.btn-success:hover {
+    background-color: #138D75;
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
+/* Bouton like */
+.btn-warning {
+    background-color: #2980B9;
+}
+
+.btn-warning:hover {
+    background-color: #2471A3;
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
+/* Bouton commentaire */
+.btn-info {
+    background-color: #8E44AD;
+}
+
+.btn-info:hover {
+    background-color: #7D3C98;
+    opacity: 0.8;
+    transform: scale(1.1);
 }
 
 /* Espace entre les boutons */
 
 .btn-space {
     margin-right: 20px;
-}
-
-.btn-primary , .button_label{
-    background-color: #25b7ba;
-    color: white;
-    margin: 5px;
-}
-
-.btn-primary:hover{
-    background-color: #afafaf;
-    opacity: 0.8;
-
-    /* Ajout d'une animation de survol */
-    transform: scale(1.1);
-    
 }
 
 /* Conteneur pour les boutons */
@@ -363,7 +405,7 @@ div > div {
 
 
 .footer {
-    background-color: #afafaf;
+    background-color: #2C3E50;
     color: white;
     position: fixed;
     bottom: 0;
@@ -389,20 +431,18 @@ div > div {
     margin: 20px auto;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    
 }
 
 .table th,
 .table td {
-    /* border-bottom: 1px solid #ddd; */
-    text-align: center; /* Centre le texte dans les cellules */
+    text-align: center;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
-    padding : 20px;
+    padding: 20px;
 }
 
 .table th {
-    background-color: #afafaf;
+    background-color: #2C3E50;
     color: white;
 }
 
@@ -419,7 +459,7 @@ div > div {
     justify-content: center;
     align-items: center;
     padding: 20px;
-    border: 1px solid #afafaf;
+    border: 1px solid #2C3E50;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3); /* Ajout d'une ombre pour un effet 3D */
     border-radius: 10px;
 }
@@ -440,6 +480,48 @@ div > div {
     outline: 3px solid lightskyblue;
 }
 
+
+.wod-page {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.wod-card {
+    background-color: rgba(255,255,255,0.95);
+}
+
+.wod-title {
+    margin-bottom: 10px;
+}
+
+.wod-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+.wod-meta span i {
+    margin-right: 5px;
+}
+
+.wod-description {
+    text-align: left;
+    margin: 15px 0;
+}
+
+.wod-actions,
+.wod-secondary-actions,
+.wod-back {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
 /* ////////////////////////////////////////////////*/
 
 /* Media Queries */

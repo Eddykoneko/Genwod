@@ -56,6 +56,39 @@ class ExerciceRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    /**
+     * Recherche des exercices par texte et par durée min/max.
+     *
+     * @param string|null $searchTexte  Terme de recherche (type, description)
+     * @param int|null    $dureeMin     Durée minimum en minutes
+     * @param int|null    $dureeMax     Durée maximum en minutes
+     *
+     * @return Exercice[]
+     */
+    public function findBySearch(?string $searchTexte, ?int $dureeMin, ?int $dureeMax): array
+    {
+        $qb = $this->createQueryBuilder('e');
+
+        if ($searchTexte !== null && $searchTexte !== '') {
+            $qb->andWhere('(LOWER(e.type) LIKE :q OR LOWER(e.description) LIKE :q)')
+               ->setParameter('q', '%' . mb_strtolower($searchTexte) . '%');
+        }
+
+        if ($dureeMin !== null) {
+            $qb->andWhere('e.duree >= :dmin')
+               ->setParameter('dmin', $dureeMin);
+        }
+
+        if ($dureeMax !== null) {
+            $qb->andWhere('e.duree <= :dmax')
+               ->setParameter('dmax', $dureeMax);
+        }
+
+        return $qb->orderBy('e.createdAt', 'DESC')
+                  ->getQuery()
+                  ->getResult();
+    }
+
     public function findRandom(SessionInterface $session)
     {
     // Obtenez l'ID de l'exercice précédemment renvoyé
