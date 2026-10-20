@@ -1,0 +1,18 @@
+<div id="interactions-{{ wod.id }}" class="cluster" style="--gap: 8px">
+    {% if app.user %}
+        <form method="post" action="{{ path('app_wod_like', {slug: wod.slug}) }}" class="inline-form">
+            <input type="hidden" name="_token" value="{{ csrf_token('interaction-' ~ wod.id) }}">
+            <button class="btn btn-toggle-like" aria-pressed="{{ aime ? 'true' : 'false' }}" title="{{ aime ? 'Je n\'aime plus' : 'J\'aime' }}">
+                {{ ux_icon(aime ? 'lucide:heart' : 'lucide:heart', {style: aime ? 'fill: currentColor' : ''}) }} <span class="nums">{{ wod.likesCount }}</span>
+            </button>
+        </form>
+        <form method="post" action="{{ path('app_wod_favori', {slug: wod.slug}) }}" class="inline-form">
+            <input type="hidden" name="_token" value="{{ csrf_token('interaction-' ~ wod.id) }}">
+            <button class="btn btn-toggle-fav" aria-pressed="{{ favori ? 'true' : 'false' }}">
+                {{ ux_icon('lucide:bookmark', {style: favori ? 'fill: currentColor' : ''}) }} {{ favori ? 'Enregistré' : 'Favori' }}
+            </button>
+        </form>
+    {% else %}
+        <a class="btn" href="{{ path('app_login') }}" title="Connectez-vous pour aimer ce WOD">{{ ux_icon('lucide:heart') }} <span class="nums">{{ wod.likesCount }}</span></a>
+    {% endif %}
+</div>

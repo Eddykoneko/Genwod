@@ -2,51 +2,51 @@
 
 namespace App\Security;
 
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 
-class EmailVerifier
+/**
+ * Envoi et validation du lien signé de confirmation d'adresse e-mail.
+ */
+final class EmailVerifier
 {
     public function __construct(
-        private VerifyEmailHelperInterface $verifyEmailHelper,
-        private MailerInterface $mailer,
-        private EntityManagerInterface $entityManager
+        private readonly VerifyEmailHelperInterface $helper,
+        private readonly MailerInterface $mailer,
+        private readonly EntityManagerInterface $em,
     ) {
     }
 
-    public function sendEmailConfirmation(string $verifyEmailRouteName, UserInterface $user, TemplatedEmail $email): void
+    public function envoyerConfirmation(User $user): void
     {
-        $signatureComponents = $this->verifyEmailHelper->generateSignature(
-            $verifyEmailRouteName,
-            $user->getId(),
-            $user->getEmail()
+        $signature = $this->helper->generateSignature(
+            'app_verify_email',
+            (string) $user->getId(),
+            (string) $user->getEmail(),
+            ['id' => $user->getId()],
         );
 
-        $context = $email->getContext();
-        $context['signedUrl'] = $signatureComponents->getSignedUrl();
-        $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
-        $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
-
-        $email->context($context);
-
-        $this->mailer->send($email);
+        $this->mailer->send((new TemplatedEmail())
+            ->to((string) $user->getEmail())
+            ->subject('Confirmez votre adresse e-mail · Genwod')
+            ->htmlTemplate('emails/confirmation.html.twig')
+            ->context([
+                'pseudo' => $user->getPseudo(),
+                'lien' => $signature->getSignedUrl(),
+                'expiration' => $signature->getExpiresAtIntervalInstance(),
+            ]));
     }
 
-    /**
-     * @throws VerifyEmailExceptionInterface
-     */
-    public function handleEmailConfirmation(Request $request, UserInterface $user): void
+    /** @throws VerifyEmailExceptionInterface */
+    public function confirmer(Request $request, User $user): void
     {
-        $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());
-
+        $this->helper->validateEmailConfirmationFromRequest($request, (string) $user->getId(), (string) $user->getEmail());
         $user->setIsVerified(true);
-
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $this->em->flush();
     }
 }

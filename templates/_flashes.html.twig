@@ -1,0 +1,11 @@
+<div class="flashes" id="flashes" aria-live="polite">
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }}" role="status" data-controller="flash">
+                {{ ux_icon(type == 'danger' ? 'lucide:circle-alert' : (type == 'info' ? 'lucide:info' : 'lucide:circle-check')) }}
+                <span>{{ message }}</span>
+                <button type="button" class="close" data-action="flash#fermer" aria-label="Fermer">×</button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>

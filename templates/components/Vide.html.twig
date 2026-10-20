@@ -1,0 +1,6 @@
+{% props icone = 'lucide:inbox', titre %}
+<div {{ attributes.defaults({class: 'empty'}) }}>
+    {{ ux_icon(icone) }}
+    <h3>{{ titre }}</h3>
+    <div class="stack" style="--stack: 14px">{% block content %}{% endblock %}</div>
+</div>

@@ -1,0 +1,24 @@
+{# Affichage « tableau blanc » d'un WOD (persisté ou fraîchement généré). #}
+{% props wod, titreTag = 'h1' %}
+<article {{ attributes.defaults({class: 'board type-' ~ wod.type.value}) }}>
+    <div class="board-meta">
+        <twig:TypeBadge :type="wod.type" />
+        <span class="badge">{{ ux_icon('lucide:timer') }} {{ wod.duree }} min</span>
+        <span class="badge"><twig:Flammes :difficulte="wod.difficulte" /> {{ wod.difficulte.label }}</span>
+        {% if wod.officiel %}<span class="badge badge-accent">{{ ux_icon('lucide:badge-check') }} Officiel</span>{% endif %}
+    </div>
+    <{{ titreTag }} class="board-title">{{ wod.titre }}</{{ titreTag }}>
+    <p class="board-format">{{ wod.format }}</p>
+    <ol class="board-lines">
+        {% for ligne in wod.lignes %}
+            <li>
+                <span class="qte">{{ wod.type.value == 'tabata' ? '8×' : ligne.unite.format(ligne.quantite) }}</span>
+                <span class="mvt">{{ ligne.mouvement.nom }}{% if ligne.mouvement.description %}<small>{{ ligne.mouvement.description }}</small>{% endif %}</span>
+                {% set charge = ligne.note ?? ligne.mouvement.chargeRx %}
+                <span class="charge">{{ charge }}</span>
+            </li>
+        {% endfor %}
+    </ol>
+    {% if wod.consignes %}<div class="board-consignes">{{ wod.consignes }}</div>{% endif %}
+    {% block content %}{% endblock %}
+</article>

@@ -1,0 +1,6 @@
+{% props difficulte %}
+<span class="flammes" title="Difficulté : {{ difficulte.label }}" aria-label="Difficulté : {{ difficulte.label }}">
+    {%- for i in 1..3 -%}
+        {{ ux_icon('lucide:flame', {class: i > difficulte.intensite ? 'off' : '', 'aria-hidden': 'true'}) }}
+    {%- endfor -%}
+</span>

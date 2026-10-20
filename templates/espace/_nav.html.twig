@@ -1,0 +1,8 @@
+{% set route = app.current_route %}
+<nav class="tabs mb-2" aria-label="Mon espace">
+    <a href="{{ path('app_tableau_de_bord') }}" {{ route == 'app_tableau_de_bord' ? 'aria-current="page"' }}>Tableau de bord</a>
+    <a href="{{ path('app_espace_seances') }}" {{ route == 'app_espace_seances' ? 'aria-current="page"' }}>Séances</a>
+    <a href="{{ path('app_espace_favoris') }}" {{ route == 'app_espace_favoris' ? 'aria-current="page"' }}>Favoris</a>
+    <a href="{{ path('app_espace_wods') }}" {{ route == 'app_espace_wods' ? 'aria-current="page"' }}>Mes WODs</a>
+    <a href="{{ path('app_espace_profil') }}" {{ route == 'app_espace_profil' ? 'aria-current="page"' }}>Paramètres</a>
+</nav>

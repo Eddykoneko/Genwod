@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main, refonte/v2]
+  pull_request:
+
+jobs:
+  qualite:
+    name: Tests & analyse statique
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: intl, pdo_sqlite, pdo_mysql
+          coverage: none
+
+      - name: Dépendances Composer
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Style de code (PHP-CS-Fixer)
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      - name: Préparation du conteneur Symfony
+        run: php bin/console cache:warmup --env=dev
+
+      - name: Analyse statique (PHPStan niveau 8)
+        run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+        env:
+          DATABASE_URL: sqlite:///%kernel.project_dir%/var/phpstan.db
+
+      - name: Linters Symfony
+        run: |
+          php bin/console lint:twig templates
+          php bin/console lint:yaml config
+          php bin/console lint:container
+          php bin/console doctrine:schema:validate --skip-sync
+
+      - name: Tests (PHPUnit)
+        run: php bin/phpunit

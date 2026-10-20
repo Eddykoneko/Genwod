@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes séances{% endblock %}
+
+{% block body %}
+    <p class="eyebrow">Mon espace</p>
+    <h1 class="mb-2" style="font-size: clamp(1.8rem, 5vw, 2.6rem); text-transform: uppercase">Historique</h1>
+    {{ include('espace/_nav.html.twig') }}
+    <div class="card">
+        {% if seances is not empty %}
+            <ul class="list">{% for seance in seances %}{{ include('espace/_seance.html.twig') }}{% endfor %}</ul>
+        {% else %}
+            <twig:Vide icone="lucide:history" titre="Votre historique est vide">
+                <p><a class="btn btn-primary" href="{{ path('app_wod_index') }}">Trouver un WOD</a></p>
+            </twig:Vide>
+        {% endif %}
+    </div>
+{% endblock %}

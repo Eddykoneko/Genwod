@@ -1,123 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Créer un compte{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
-    
-    <h1>Inscription</h1>
-
-    <div class="container">
-
-    {{ form_start(registrationForm, {'attr': {'data-turbo-frame': 'registration-form', 'data-turbo-action': 'replace', 'data-turbo': 'false'}}) }}
-
-    <div class="form">
-        
-        <div class="input-icon mb-3 other-elements">
-            {{ form_widget(registrationForm.email, {
-                'attr': {
-                    'class': 'large-input',
-                    'placeholder': 'Email',
-                    'required': 'required',
-                    'pattern': ".+@.+\\..+",
-                    'title': 'Veuillez entrer un email valide.'}}) }}
-            {{ form_errors(registrationForm.email) }}
-        </div>
-
-        <div class="input-icon mb-3 other-elements">
-            {{ form_widget(registrationForm.prenom, {
-                'attr': {
-                    'class': 'large-input',
-                    'placeholder': 'Prenom',
-                    'required': 'required',
-                    'pattern': "^[a-zA-Z0-9]*$",
-                    'title': 'Le nom ne peut contenir que des lettres et des chiffres.'}}) }}
-            {{ form_errors(registrationForm.prenom) }}
-        </div>
-
-        <div class="input-icon mb-3 other-elements">
-            {{ form_widget(registrationForm.nom, {
-                'attr': {
-                    'class': 'large-input',
-                    'placeholder': 'Nom',
-                    'required': 'required',
-                    'pattern': "^[a-zA-Z0-9]*$",
-                    'title': 'Le prenom ne peut contenir que des lettres et des chiffres.'}}) }}
-            {{ form_errors(registrationForm.nom) }}
-        </div>
-
-        <div class="input-icon mb-3 other-elements">
-            {{ form_label(registrationForm.age) }} &nbsp;
-            {{ form_widget(registrationForm.age) }}
-        </div>
-
-        <div class="input-icon mb-3 other-elements">
-            {{ form_label(registrationForm.poids) }} &nbsp;
-            {{ form_widget(registrationForm.poids) }}
-            <span class="unit">kg</span>
-        </div>
-
-        <div class="input-icon mb-3 other-elements">
-            {{ form_label(registrationForm.taille) }} &nbsp;
-            {{ form_widget(registrationForm.taille) }}
-            <span class="unit">cm</span>
-        </div>
-
-        <div class="input-icon mb-3 other-elements">
-            {{ form_label(registrationForm.genre) }} &nbsp;
-            {{ form_widget(registrationForm.genre) }}
-        </div>
-
-
-        <div class="input-icon mb-3 other-elements">
-        {{ form_widget(registrationForm.plainPassword.first, {
-            'attr': {
-                'class': 'large-input',
-                'placeholder': 'Mot de passe',
-                'required': 'required',
-                'pattern': "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*\\-]).{14,}$",
-                'title': "Il faut que le mot de passe contienne au moins 14 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."}}) }}
-        {{ form_errors(registrationForm.plainPassword.first) }}
-        </div>
-
-        <div class="input-icon mb-3 other-elements">
-        {{ form_widget(registrationForm.plainPassword.second, {
-            'attr': {
-                'class': 'large-input',
-                'placeholder': 'Confirmer le mot de passe',
-                'required': 'required',
-                'pattern': "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*\\-]).{14,}$",
-                }}) }}
-        {{ form_errors(registrationForm.plainPassword.second) }}
-        </div>
-        {# <div id="passwordError" class="alert alert-danger" style="display: none;"></div> #}
-        
-
-        <div class="form-check mb-3 ml-5 condition">
-            {{ form_row(registrationForm.agreeTerms, {
-                label: "Accepter les conditions générales d'utilisation",
-                label_attr: {'class': 'form-check-label me-2'},
-                attr: {'class': 'form-check-input'}
-            }) }}
-        </div>
-
-    </div>
-
-    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i> &nbsp; S'inscrire</button>
-
-    {{ form_end(registrationForm) }}
-
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger">
-            {{ message }}
-        </div>
-    {% endfor %}
-
-
-    <div>
-        <p>Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Connectez-vous</a></p>
-    </div>
+<div class="card auth-card">
+    <p class="eyebrow">Rejoins la communauté</p>
+    <h1 class="mt-1 mb-2">Inscription</h1>
+    {{ form_start(form) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.pseudo) }}
+        {{ form_row(form.plainPassword) }}
+        {{ form_row(form.agreeTerms, {label: 'J\'accepte les conditions d\'utilisation et la politique de confidentialité'}) }}
+        <p class="tiny faint mb-2">Lire la <a href="{{ path('app_confidentialite') }}">politique de confidentialité</a>.</p>
+        <button class="btn btn-primary btn-block btn-lg">Créer mon compte</button>
+    {{ form_end(form) }}
+    <div class="divider">Déjà inscrit·e ?</div>
+    <a class="btn btn-outline btn-block" href="{{ path('app_login') }}">Se connecter</a>
 </div>
 {% endblock %}

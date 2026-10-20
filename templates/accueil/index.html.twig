@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Le générateur de WODs CrossFit{% endblock %}
+
+{% block main %}
+<section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container hero-grid">
+        <div>
+            <p class="eyebrow">Générateur d'entraînements CrossFit</p>
+            <h1 class="display">Ton WOD.<br><em>Généré</em> en 1 clic.</h1>
+            <p class="lead">Format, durée, difficulté, matériel disponible : Genwod compose une séance équilibrée, lance le chrono et garde la trace de chacun de tes résultats.</p>
+            <div class="hero-cta cluster">
+                <a class="btn btn-primary btn-lg" href="{{ path('app_generateur') }}">{{ ux_icon('lucide:dices') }} Générer mon WOD</a>
+                <a class="btn btn-outline btn-lg" href="{{ path('app_wod_index') }}">Parcourir les WODs</a>
+            </div>
+            <div class="stats-band">
+                <div><strong class="nums">{{ stats.wods }}</strong><span>WODs publics</span></div>
+                <div><strong class="nums">{{ stats.seances }}</strong><span>séances loggées</span></div>
+                <div><strong class="nums">{{ stats.athletes }}</strong><span>athlètes actifs</span></div>
+            </div>
+        </div>
+
+        <div>
+            {% if wodDuJour %}
+                <p class="eyebrow mb-2">{{ ux_icon('lucide:calendar-days', {class: 'icon-inline'}) }} WOD du jour · {{ 'now'|format_date('long') }}</p>
+                <twig:Tableau :wod="wodDuJour" titreTag="h2" class="reveal">
+                    <div class="cluster mt-3">
+                        <a class="btn btn-primary" href="{{ path('app_wod_show', {slug: wodDuJour.slug}) }}">{{ ux_icon('lucide:play') }} Faire ce WOD</a>
+                        <a class="btn btn-ghost" href="{{ path('app_wod_show', {slug: wodDuJour.slug}) }}#classement">{{ ux_icon('lucide:trophy') }} Classement</a>
+                    </div>
+                </twig:Tableau>
+            {% else %}
+                <div class="gen-empty">
+                    <div>{{ ux_icon('lucide:dumbbell') }}<p>Importez le catalogue pour afficher le WOD du jour :<br><code class="kbd">php bin/console app:catalogue:importer</code></p></div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <section class="section">
+        <div class="grid grid-4" style="--gap: 14px">
+            {% for f in [
+                ['lucide:sliders-horizontal', 'Sur mesure', 'For Time, AMRAP, EMOM ou Tabata, de 4 à 40 minutes, avec ton matériel.'],
+                ['lucide:timer', 'Chrono intégré', 'Décompte, intervalles EMOM et Tabata, bips sonores, écran toujours allumé.'],
+                ['lucide:chart-no-axes-column-increasing', 'Progression', 'Records personnels, série de jours, heatmap de ton activité.'],
+                ['lucide:users', 'Communauté', 'Classements par WOD et global, commentaires, favoris.'],
+            ] %}
+                <div class="card card-tight feature">
+                    <span class="feature-icon">{{ ux_icon(f[0]) }}</span>
+                    <h3>{{ f[1] }}</h3>
+                    <p class="small muted">{{ f[2] }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% if populaires is not empty %}
+        <section class="section">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">La communauté adore</p>
+                    <h2>WODs populaires</h2>
+                </div>
+                <a class="btn btn-ghost" href="{{ path('app_wod_index', {tri: 'populaires'}) }}">Tout voir {{ ux_icon('lucide:arrow-right') }}</a>
+            </div>
+            <div class="grid grid-3">
+                {% for wod in populaires %}
+                    <twig:WodCard :wod="wod" />
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="section">
+        <div class="card" style="padding: clamp(24px, 5vw, 44px); background: linear-gradient(135deg, var(--accent-soft), transparent 60%), var(--surface)">
+            <div class="grid grid-2" style="align-items:center; --gap: 28px">
+                <div>
+                    <p class="eyebrow">Comment ça marche</p>
+                    <h2 class="mt-1">3 étapes, zéro excuse</h2>
+                </div>
+                <ol class="steps">
+                    <li><div><strong>Choisis tes contraintes</strong><p class="small muted">Format, durée, intensité et le matériel à portée de main.</p></div></li>
+                    <li><div><strong>Lance le chrono</strong><p class="small muted">Plein écran, bips de départ et d'intervalle, compteur de tours.</p></div></li>
+                    <li><div><strong>Enregistre ton score</strong><p class="small muted">Gagne des points, bats tes records, grimpe au classement.</p></div></li>
+                </ol>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

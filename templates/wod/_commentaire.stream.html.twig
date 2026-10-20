@@ -1,0 +1,10 @@
+<turbo-stream action="remove" target="aucun-commentaire"></turbo-stream>
+<turbo-stream action="prepend" target="commentaires-liste">
+    <template>{{ include('wod/_commentaire.html.twig') }}</template>
+</turbo-stream>
+<turbo-stream action="replace" target="commentaire-form">
+    <template>{{ include('wod/_commentaire_form.html.twig') }}</template>
+</turbo-stream>
+<turbo-stream action="update" target="nb-commentaires">
+    <template>{{ wod.commentaires|length }}</template>
+</turbo-stream>

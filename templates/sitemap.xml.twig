@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    {% for route in ['app_accueil', 'app_generateur', 'app_wod_index', 'app_classement', 'app_a_propos'] %}
+    <url><loc>{{ url(route) }}</loc><changefreq>daily</changefreq></url>
+    {% endfor %}
+    {% for wod in wods %}
+    <url><loc>{{ url('app_wod_show', {slug: wod.slug}) }}</loc><lastmod>{{ wod.createdAt|date('Y-m-d') }}</lastmod></url>
+    {% endfor %}
+</urlset>

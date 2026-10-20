@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ wod ? wod.titre ~ ' · ' ~ wod.format : 'Générateur de WOD' }}{% endblock %}
+{% block description %}{{ wod ? 'WOD généré : ' ~ wod.format ~ ' — ' ~ (wod.lignes|map(l => l.libelle)|join(', ')) : 'Générez un WOD CrossFit sur mesure : format, durée, difficulté et matériel disponible.' }}{% endblock %}
+
+{% block body %}
+<div class="grid" style="--gap: 28px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); align-items: start">
+    <section class="card">
+        <p class="eyebrow">Générateur</p>
+        <h1 style="font-size: 2rem; text-transform: uppercase" class="mt-1 mb-2">Compose ton WOD</h1>
+
+        <form class="gen-form" method="get" action="{{ path('app_generateur') }}" data-turbo-action="advance">
+            <fieldset style="border:0;padding:0">
+                <legend class="field-label">Format</legend>
+                <div class="segmented">
+                    {% for type in types %}
+                        <label>
+                            <input type="radio" name="type" value="{{ type.value }}" {{ criteres.type == type ? 'checked' }}>
+                            <span>{{ type.label }}<small>{{ {'for_time': 'Le plus vite', 'amrap': 'Max de tours', 'emom': 'Chaque minute', 'tabata': '20 s / 10 s'}[type.value] }}</small></span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </fieldset>
+
+            <div data-controller="range">
+                <label class="field-label" for="duree">Durée</label>
+                <div class="range-wrap">
+                    <input type="range" id="duree" name="duree" min="4" max="40" step="1" value="{{ criteres.duree }}" data-range-target="input" data-action="input->range#maj">
+                    <output for="duree" data-range-target="sortie">{{ criteres.duree }} min</output>
+                </div>
+            </div>
+
+            <fieldset style="border:0;padding:0">
+                <legend class="field-label">Difficulté</legend>
+                <div class="segmented">
+                    {% for d in difficultes %}
+                        <label>
+                            <input type="radio" name="difficulte" value="{{ d.value }}" {{ criteres.difficulte == d ? 'checked' }}>
+                            <span><twig:Flammes :difficulte="d" /><small>{{ d.label }}</small></span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </fieldset>
+
+            <fieldset style="border:0;padding:0">
+                <legend class="field-label">Matériel disponible <span class="faint" style="text-transform:none;letter-spacing:0;font-weight:500">— le poids du corps est toujours inclus</span></legend>
+                <div class="chips">
+                    {% for e in equipements %}
+                        <label>
+                            <input type="checkbox" name="materiel[]" value="{{ e.value }}" {{ e in criteres.equipements ? 'checked' }}>
+                            <span>{{ e.label }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block spin-on-busy">{{ ux_icon('lucide:dices') }} {{ wod ? 'Générer un autre WOD' : 'Générer le WOD' }}</button>
+        </form>
+    </section>
+
+    <section aria-live="polite">
+        {% if wod %}
+            <twig:Tableau :wod="wod" class="reveal">
+                <div class="mt-3 stack" style="--stack: 12px">
+                    {% if app.user %}
+                        <form method="post" action="{{ path('app_generateur_enregistrer') }}" class="stack" style="--stack: 12px">
+                            {% for cle, valeur in criteres.versQuery %}
+                                {% if valeur is iterable %}
+                                    {% for v in valeur %}<input type="hidden" name="{{ cle }}[]" value="{{ v }}">{% endfor %}
+                                {% else %}
+                                    <input type="hidden" name="{{ cle }}" value="{{ valeur }}">
+                                {% endif %}
+                            {% endfor %}
+                            <input type="hidden" name="_token" value="{{ csrf_token('generateur-enregistrer') }}">
+                            <div class="form-row" style="margin:0">
+                                <label class="form-label" for="titre">Nom du WOD</label>
+                                <input type="text" id="titre" name="titre" value="{{ wod.titre }}" maxlength="80">
+                            </div>
+                            <label class="form-check"><input type="checkbox" name="public" value="1" checked> <span>Le partager dans la bibliothèque publique</span></label>
+                            <button class="btn btn-primary btn-block">{{ ux_icon('lucide:save') }} Enregistrer et lancer le chrono</button>
+                        </form>
+                    {% else %}
+                        <p class="small muted"><a href="{{ path('app_login') }}">Connectez-vous</a> pour enregistrer ce WOD, lancer le chrono et noter votre score.</p>
+                    {% endif %}
+                    <div class="cluster between">
+                        <span class="seed" title="Même graine + mêmes réglages = même WOD">graine #{{ criteres.graine }}</span>
+                        <button type="button" class="btn btn-ghost btn-sm" data-controller="partage" data-action="partage#partager" data-partage-titre-value="{{ wod.titre }} · Genwod">{{ ux_icon('lucide:share-2') }} Partager</button>
+                    </div>
+                </div>
+            </twig:Tableau>
+        {% else %}
+            <div class="gen-empty">
+                <div>
+                    {{ ux_icon('lucide:dices') }}
+                    <h2 style="font-size:1.4rem;text-transform:uppercase">Prêt à transpirer ?</h2>
+                    <p class="mt-1">Règle les paramètres puis lance la génération.<br>Chaque WOD a sa propre URL : partage-le avec ta box !</p>
+                </div>
+            </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

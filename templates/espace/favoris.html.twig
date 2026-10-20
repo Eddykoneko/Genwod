@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes favoris{% endblock %}
+
+{% block body %}
+    <p class="eyebrow">Mon espace</p>
+    <h1 class="mb-2" style="font-size: clamp(1.8rem, 5vw, 2.6rem); text-transform: uppercase">Favoris</h1>
+    {{ include('espace/_nav.html.twig') }}
+    {% if wods is not empty %}
+        <div class="grid grid-3">{% for wod in wods %}<twig:WodCard :wod="wod" />{% endfor %}</div>
+    {% else %}
+        <div class="card">
+            <twig:Vide icone="lucide:bookmark" titre="Aucun favori">
+                <p>Ajoutez des WODs à vos favoris pour les retrouver ici.</p>
+                <p><a class="btn btn-primary" href="{{ path('app_wod_index') }}">Parcourir la bibliothèque</a></p>
+            </twig:Vide>
+        </div>
+    {% endif %}
+{% endblock %}

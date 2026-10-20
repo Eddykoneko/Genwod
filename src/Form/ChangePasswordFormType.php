@@ -7,48 +7,48 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
+use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Nouveau mot de passe, avec (option) vérification du mot de passe actuel.
+ */
+/**
+ * @extends AbstractType<array<string, mixed>>
+ */
 class ChangePasswordFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-            ->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'options' => [
-                    'attr' => [
-                        'autocomplete' => 'new-password',
-                    ],
-                ],
-                'first_options' => [
-                    'constraints' => [
-                        new NotBlank([
-                            'message' => 'Entrez le nouveau mot de passe',
-                        ]),
-                        new Length([
-                            'min' => 10,
-                            'minMessage' => 'Votre mot de passe doit avoir {{ limit }} caractères minimum',
-                            // max length allowed by Symfony for security reasons
-                            'max' => 4096,
-                        ]),
-                    ],
-                    'label' => 'Nouveau mot de passe',
-                ],
-                'second_options' => [
-                    'label' => 'Confirmer le nouveau mot de passe',
-                ],
-                'invalid_message' => 'Les mots de passe doivent être identiques.',
-                // Instead of being set onto the object directly,
-                // this is read and encoded in the controller
+        if ($options['verifier_actuel']) {
+            $builder->add('currentPassword', PasswordType::class, [
+                'label' => 'Mot de passe actuel',
                 'mapped' => false,
-            ])
-        ;
+                'attr' => ['autocomplete' => 'current-password'],
+                'constraints' => [new UserPassword(message: 'Mot de passe actuel incorrect.')],
+            ]);
+        }
+
+        $builder->add('plainPassword', RepeatedType::class, [
+            'type' => PasswordType::class,
+            'mapped' => false,
+            'invalid_message' => 'Les deux mots de passe ne correspondent pas.',
+            'first_options' => [
+                'label' => 'Nouveau mot de passe',
+                'attr' => ['autocomplete' => 'new-password'],
+                'constraints' => [
+                    new Assert\NotBlank(message: 'Choisissez un mot de passe.'),
+                    new Assert\Length(min: 10, max: 4096, minMessage: 'Au moins {{ limit }} caractères.'),
+                    new Assert\PasswordStrength(minScore: Assert\PasswordStrength::STRENGTH_MEDIUM, message: 'Ce mot de passe est trop facile à deviner.'),
+                ],
+            ],
+            'second_options' => ['label' => 'Confirmation', 'attr' => ['autocomplete' => 'new-password']],
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([]);
+        $resolver->setDefaults(['verifier_actuel' => false]);
+        $resolver->setAllowedTypes('verifier_actuel', 'bool');
     }
 }

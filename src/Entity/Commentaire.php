@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CommentaireRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommentaireRepository::class)]
 class Commentaire
@@ -14,39 +15,74 @@ class Commentaire
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private ?User $auteur = null;
+
+    #[ORM\ManyToOne(inversedBy: 'commentaires')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private ?Wod $wod = null;
+
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $commentaire = null;
+    #[Assert\NotBlank(message: 'Votre commentaire est vide.')]
+    #[Assert\Length(min: 2, max: 1000)]
+    private ?string $contenu = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private \DateTimeImmutable $createdAt;
 
-    #[ORM\ManyToOne(inversedBy: 'commentaires')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user_id = null;
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
-    
-    #[ORM\ManyToOne(inversedBy: 'commentaires')]
-    #[ORM\JoinColumn(onDelete: "CASCADE", nullable: false)]
-    private ?Exercice $exercice_id = null;
+    public function __toString(): string
+    {
+        return mb_strimwidth((string) $this->contenu, 0, 60, '…');
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCommentaire(): ?string
+    public function getAuteur(): ?User
     {
-        return $this->commentaire;
+        return $this->auteur;
     }
 
-    public function setCommentaire(string $commentaire): static
+    public function setAuteur(?User $auteur): static
     {
-        $this->commentaire = $commentaire;
+        $this->auteur = $auteur;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getWod(): ?Wod
+    {
+        return $this->wod;
+    }
+
+    public function setWod(?Wod $wod): static
+    {
+        $this->wod = $wod;
+
+        return $this;
+    }
+
+    public function getContenu(): ?string
+    {
+        return $this->contenu;
+    }
+
+    public function setContenu(string $contenu): static
+    {
+        $this->contenu = $contenu;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -57,37 +93,4 @@ class Commentaire
 
         return $this;
     }
-
-    public function getUserId(): ?User
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(?User $user_id): static
-    {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
-
-    public function getExerciceId(): ?Exercice
-    {
-        return $this->exercice_id;
-    }
-
-    public function setExerciceId(?Exercice $exercice_id): static
-    {
-        $this->exercice_id = $exercice_id;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of user_email
-     */ 
-    public function getUser_email()
-    {
-        return $this->user_id ? $this->user_id->getEmail() : null;
-    }
-
 }

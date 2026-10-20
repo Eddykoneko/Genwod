@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Politique de confidentialité{% endblock %}
+
+{% block body %}
+<div class="container-narrow prose" style="margin-inline:auto">
+    <h1 style="text-transform:uppercase">Confidentialité</h1>
+    <p class="muted">En bref : Genwod collecte le strict nécessaire pour faire fonctionner votre compte, ne revend rien et ne contient aucun traceur publicitaire.</p>
+
+    <h2>Données collectées</h2>
+    <ul>
+        <li><strong>Compte</strong> : adresse e-mail, pseudo, mot de passe (stocké sous forme hachée, jamais en clair).</li>
+        <li><strong>Profil (facultatif)</strong> : niveau, bio, taille et poids. Le poids n'est jamais affiché publiquement.</li>
+        <li><strong>Activité</strong> : séances enregistrées, WODs créés, favoris, « j'aime » et commentaires.</li>
+    </ul>
+
+    <h2>Finalités et base légale</h2>
+    <p>Ces données servent uniquement à fournir le service (exécution du contrat) : authentification, historique, classements. Le pseudo, les scores et les commentaires sont publics par nature.</p>
+
+    <h2>Cookies</h2>
+    <p>Seuls des cookies strictement nécessaires sont utilisés : session, protection CSRF et « rester connecté ». Ils ne nécessitent pas de consentement. Le choix du thème clair/sombre est mémorisé dans votre navigateur (stockage local).</p>
+
+    <h2>Durée de conservation</h2>
+    <p>Les données sont conservées tant que le compte existe. Les demandes de réinitialisation de mot de passe expirent après une heure.</p>
+
+    <h2>Vos droits</h2>
+    <p>Depuis <a href="{{ path('app_espace_profil') }}">vos paramètres</a>, vous pouvez à tout moment <strong>exporter</strong> l'ensemble de vos données (format JSON) ou <strong>supprimer</strong> définitivement votre compte. Pour toute autre demande : <a href="mailto:{{ editeur.contact }}">{{ editeur.contact }}</a>. Vous pouvez aussi saisir la CNIL.</p>
+</div>
+{% endblock %}

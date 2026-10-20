@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin
+Disallow: /mon-espace
+Disallow: /_components
+Sitemap: /sitemap.xml

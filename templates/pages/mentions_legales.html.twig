@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions légales{% endblock %}
+
+{% block body %}
+<div class="container-narrow prose" style="margin-inline:auto">
+    <h1 style="text-transform:uppercase">Mentions légales</h1>
+
+    <h2>Édition du site</h2>
+    <p>Éditeur et directeur de la publication : {{ editeur.nom }}<br>Contact : <a href="mailto:{{ editeur.contact }}">{{ editeur.contact }}</a></p>
+    <p>Hébergeur : {{ editeur.hebergeur }}</p>
+
+    <h2>Propriété intellectuelle</h2>
+    <p>Les textes, graphismes, logos et le code de Genwod sont la propriété de {{ editeur.nom }}, sauf mention contraire. Toute reproduction sans autorisation préalable est interdite (articles L.335-2 et suivants du Code de la propriété intellectuelle). Les noms des WODs de référence (Cindy, Helen, Grace, Karen) appartiennent à la culture CrossFit et sont cités à titre informatif.</p>
+
+    <h2>Responsabilité</h2>
+    <p>Les entraînements proposés le sont à titre indicatif. Adaptez toujours l'intensité à votre condition physique et demandez l'avis d'un professionnel de santé en cas de doute. L'éditeur ne saurait être tenu responsable d'une blessure liée à la pratique.</p>
+    <p>Les commentaires sont modérés : tout contenu contraire à la loi (injure, diffamation, contenu haineux…) peut être supprimé sans préavis.</p>
+
+    <h2>Données personnelles et cookies</h2>
+    <p>Voir la <a href="{{ path('app_confidentialite') }}">politique de confidentialité</a>.</p>
+
+    <h2>Droit applicable</h2>
+    <p>Le site est soumis au droit français. Tout litige relève des tribunaux compétents de Lyon.</p>
+</div>
+{% endblock %}

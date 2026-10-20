@@ -1,61 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <title>{% block title %}Générateur de WODs CrossFit{% endblock %} · Genwod</title>
+        <meta name="description" content="{% block description %}Genwod génère des entraînements CrossFit (WOD) adaptés à votre niveau et à votre matériel. Chrono intégré, suivi de vos séances et classements.{% endblock %}">
+        <meta name="theme-color" content="#0d0e10">
+        <meta property="og:site_name" content="Genwod">
+        <meta property="og:title" content="{{ block('title') }} · Genwod">
+        <meta property="og:description" content="{{ block('description') }}">
+        <meta property="og:type" content="website">
+        <meta property="og:image" content="{{ absolute_url(asset('img/logo.png')) }}">
+        <link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ app.request.pathInfo }}">
         <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset('/styles/app.css') }}" as="style">
-        {% endblock %}
-
+        <link rel="apple-touch-icon" href="{{ asset('img/logo.png') }}">
+        <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+        {# Applique le thème choisi avant le premier rendu (évite le flash). #}
+        <script>try{var t=localStorage.getItem('genwod-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
         {% block javascripts %}
-{% block importmap %}{{ importmap('app') }}{% endblock %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
+    <body class="has-tabbar">
+        <a class="sr-only" href="#contenu">Aller au contenu</a>
+        {{ include('_nav.html.twig') }}
+        {{ include('_flashes.html.twig') }}
 
-    {% if is_granted('ROLE_ADMIN') %}
-        {# Si l'utilisateur est un admin, incluez la navbar pour les admins #}
-        {{ include('adminNavbar.html.twig') }}
-
-    {% elseif is_granted('ROLE_USER') %}
-        {# Si l'utilisateur est connecté mais n'est pas un admin, incluez la navbar pour les utilisateurs #}
-        {{ include('userNavbar.html.twig') }}
-
-    {% else %}
-        {# Si l'utilisateur n'est pas connecté, incluez la navbar pour les visiteurs #}
-        {{ include('navbar.html.twig') }}
-
-    {% endif %}
-
-    <div class="main-container">
-
-            {% block header %}{% endblock %}
-
-    <div class="content">
-
-            {% block body %}{% endblock %}
-            
-    </div>
-    </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js?v=1.1." integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    </body>
-
-    <div class="footer">
-    {% block footer %}
-            <div class="row">
-                <div class="col-12">
-                    <p class="text-white">©William LUONG</p>
-                    <a href=" {{ path('app_mentions_legales') }}">Mentions Légales</a> &nbsp;|&nbsp;
-                    <a href=" {{ path('app_confidentialite') }}">Politique de confidentialité</a>
+        <main id="contenu">
+            {% block main %}
+                <div class="container">
+                    {% block body %}{% endblock %}
                 </div>
-            </div>
-    {% endblock %}
-    </div>
+            {% endblock %}
+        </main>
 
-
+        {{ include('_footer.html.twig') }}
+        {{ include('_tabbar.html.twig') }}
+    </body>
 </html>

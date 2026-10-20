@@ -1,5 +1,15 @@
 twig:
     file_name_pattern: '*.twig'
+    form_themes: ['form/theme.html.twig']
+    globals:
+        # Informations légales affichées dans les mentions légales (à compléter).
+        editeur:
+            nom: 'William Luong'
+            contact: '%env(default:editeur_contact_defaut:EDITEUR_CONTACT)%'
+            hebergeur: 'O2Switch — 222 boulevard Gustave Flaubert, 63000 Clermont-Ferrand'
+    date:
+        format: 'd/m/Y H:i'
+        timezone: 'Europe/Paris'
 
 when@test:
     twig:

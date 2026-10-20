@@ -1,0 +1,7 @@
+{% extends 'emails/_layout.html.twig' %}
+{% block contenu %}
+    <h1 style="font-size:22px;margin:0 0 12px">Bienvenue {{ pseudo }} 💪</h1>
+    <p>Merci pour votre inscription ! Confirmez votre adresse e-mail en cliquant sur le bouton ci-dessous :</p>
+    <p style="margin:24px 0"><a href="{{ lien }}" style="background:#ff5a1f;color:#ffffff;padding:13px 22px;border-radius:999px;text-decoration:none;font-weight:bold">Confirmer mon adresse</a></p>
+    <p style="color:#5b616b;font-size:13px">Ce lien expire dans {{ expiration|date('%h') }} heure(s).</p>
+{% endblock %}

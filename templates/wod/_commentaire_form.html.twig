@@ -1,0 +1,6 @@
+<div id="commentaire-form">
+    {{ form_start(form, {attr: {class: 'stack', style: '--stack: 10px'}}) }}
+        {{ form_row(form.contenu) }}
+        <div class="cluster between"><span class="tiny faint">Restez bienveillant·e 💪</span><button class="btn btn-primary btn-sm">{{ ux_icon('lucide:send') }} Publier</button></div>
+    {{ form_end(form) }}
+</div>

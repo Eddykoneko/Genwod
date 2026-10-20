@@ -1,0 +1,6 @@
+/* Couleur d'accent Genwod dans EasyAdmin 5 (les styles non « layered » priment). */
+:root,
+.ea-dark-scheme,
+.ea-light-scheme {
+    --ea-primary: #f04a0e;
+}

@@ -1,0 +1,6 @@
+{% props label, valeur, icone = 'lucide:activity', sous = null %}
+<div {{ attributes.defaults({class: 'stat'}) }}>
+    <span class="stat-label">{{ ux_icon(icone) }} {{ label }}</span>
+    <strong class="stat-value">{{ valeur }}</strong>
+    {% if sous %}<span class="stat-sub">{{ sous }}</span>{% endif %}
+</div>

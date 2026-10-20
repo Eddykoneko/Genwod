@@ -1,0 +1,10 @@
+{
+    "name": "Genwod — générateur de WODs",
+    "short_name": "Genwod",
+    "lang": "fr",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0d0e10",
+    "theme_color": "#0d0e10",
+    "icons": [{ "src": "/img/logo.png", "sizes": "140x140", "type": "image/png" }]
+}

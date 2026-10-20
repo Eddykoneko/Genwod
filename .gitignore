@@ -1,9 +1,3 @@
-
-###> macOS ###
-.DS_Store
-**/.DS_Store
-###< macOS ###
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -16,15 +10,23 @@
 
 ###> phpunit/phpunit ###
 /phpunit.xml
-.phpunit.result.cache
+/.phpunit.cache/
 ###< phpunit/phpunit ###
-
-###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
-###< symfony/phpunit-bridge ###
 
 ###> symfony/asset-mapper ###
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
+
+###> phpstan ###
+/phpstan.neon
+###< phpstan ###
+
+.DS_Store
+/.idea/
+/.vscode/

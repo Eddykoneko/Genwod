@@ -1,0 +1,7 @@
+{% props user, taille = null, lien = true %}
+{% set classe = 'avatar' ~ (taille ? ' avatar-' ~ taille : '') %}
+{% if lien and user %}
+    <a href="{{ path('app_athlete', {pseudo: user.pseudo}) }}" {{ attributes.defaults({class: classe, style: '--h: ' ~ user.teinteAvatar, title: user.pseudo}) }}>{{ user.initiales }}</a>
+{% else %}
+    <span {{ attributes.defaults({class: classe, style: '--h: ' ~ (user ? user.teinteAvatar : 0)}) }}>{{ user ? user.initiales : '?' }}</span>
+{% endif %}

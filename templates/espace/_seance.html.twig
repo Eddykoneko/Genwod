@@ -1,0 +1,11 @@
+<li>
+    <span class="badge badge-type type-{{ seance.wod.type.value }}" style="min-width:74px;justify-content:center">{{ seance.wod.type.label }}</span>
+    <div class="grow">
+        <a class="title" href="{{ path('app_wod_show', {slug: seance.wod.slug}) }}">{{ seance.wod.titre }}</a>
+        <span class="tiny faint">{{ seance.realiseeLe|format_date('medium') }} · {{ seance.mode.label }}{% if seance.ressenti %} · ressenti {{ seance.ressenti }}/5{% endif %}</span>
+    </div>
+    <div style="text-align:right">
+        <strong class="nums">{{ seance.scoreLisible }}</strong>
+        <div class="tiny accent nums">+{{ seance.points }} pts</div>
+    </div>
+</li>

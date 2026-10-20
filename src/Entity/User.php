@@ -2,16 +2,21 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use App\Enum\Niveau;
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[ORM\Table(name: '`user`')]
+#[UniqueEntity(fields: ['email'], message: 'Un compte existe déjà avec cette adresse e-mail.')]
+#[UniqueEntity(fields: ['pseudo'], message: 'Ce pseudo est déjà pris.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -20,63 +25,65 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Email(message: 'Veuillez saisir une adresse e-mail valide.')]
+    #[Assert\Length(max: 180)]
     private ?string $email = null;
 
+    #[ORM\Column(length: 30, unique: true)]
+    #[Assert\NotBlank(message: 'Choisissez un pseudo.')]
+    #[Assert\Length(min: 3, max: 30)]
+    #[Assert\Regex(pattern: '/^[\p{L}0-9_.-]+$/u', message: 'Lettres, chiffres, points, tirets et underscores uniquement.')]
+    private ?string $pseudo = null;
+
+    /** @var list<string> */
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private bool $isVerified = false;
 
-    #[ORM\Column]
-    private ?int $age = null;
+    #[ORM\Column(length: 20, nullable: true, enumType: Niveau::class)]
+    private ?Niveau $niveau = Niveau::Intermediaire;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 160, nullable: true)]
+    #[Assert\Length(max: 160)]
+    private ?string $bio = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Assert\Range(min: 100, max: 230)]
+    private ?int $taille = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Assert\Range(min: 30, max: 250)]
     private ?int $poids = null;
 
     #[ORM\Column]
-    private ?int $taille = null;
+    private \DateTimeImmutable $createdAt;
 
-    #[ORM\Column(length: 255)]
-    private ?string $genre = null;
+    /** @var Collection<int, Seance> */
+    #[ORM\OneToMany(targetEntity: Seance::class, mappedBy: 'athlete', orphanRemoval: true)]
+    #[ORM\OrderBy(['realiseeLe' => 'DESC', 'id' => 'DESC'])]
+    private Collection $seances;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: HistoriqueExercice::class, cascade: ['remove'])]
-    private Collection $historiqueExercices;
-
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Leaderboard::class, cascade: ['remove'])]
-    private Collection $leaderboards;
-
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: LikeDislike::class, cascade: ['remove'])]
-    private Collection $likeDislikes;
-
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Commentaire::class, cascade: ['remove'])]
-    private Collection $commentaires;
-
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Favoris::class, cascade: ['remove'])]
+    /** @var Collection<int, Favori> */
+    #[ORM\OneToMany(targetEntity: Favori::class, mappedBy: 'user', orphanRemoval: true)]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $favoris;
-
-    #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
-
-    #[ORM\Column(length: 255)]
-    private ?string $nom = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $prenom = null;
 
     public function __construct()
     {
-        $this->historiqueExercices = new ArrayCollection();
-        $this->leaderboards = new ArrayCollection();
-        $this->likeDislikes = new ArrayCollection();
-        $this->commentaires = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->seances = new ArrayCollection();
         $this->favoris = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->pseudo;
     }
 
     public function getId(): ?int
@@ -91,33 +98,55 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setEmail(string $email): static
     {
-        $this->email = $email;
+        $this->email = mb_strtolower(trim($email));
 
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUserIdentifier(): string
+    public function getPseudo(): ?string
     {
-        return (string) $this->email;
+        return $this->pseudo;
     }
 
-    /**
-     * @see UserInterface
-     */
+    public function setPseudo(string $pseudo): static
+    {
+        $this->pseudo = trim($pseudo);
+
+        return $this;
+    }
+
+    /** Deux lettres affichées dans l'avatar généré. */
+    public function getInitiales(): string
+    {
+        $pseudo = (string) $this->pseudo;
+
+        return mb_strtoupper(mb_substr($pseudo, 0, 2));
+    }
+
+    /** Teinte stable (0-359) dérivée du pseudo, pour colorer l'avatar. */
+    public function getTeinteAvatar(): int
+    {
+        return crc32((string) $this->pseudo) % 360;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        if (null === $this->email || '' === $this->email) {
+            throw new \LogicException('Un utilisateur doit avoir une adresse e-mail.');
+        }
+
+        return $this->email;
+    }
+
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        return array_values(array_unique($roles));
     }
 
+    /** @param list<string> $roles */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
@@ -125,10 +154,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): string
+    public function isAdmin(): bool
+    {
+        return \in_array('ROLE_ADMIN', $this->roles, true);
+    }
+
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -140,223 +171,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
+    /** Évite de sérialiser le hash complet en session (recommandation Symfony 7.3+). */
+    public function __serialize(): array
+    {
+        $data = (array) $this;
+        $data["\0".self::class."\0password"] = hash('crc32c', (string) $this->password);
+
+        return $data;
+    }
+
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getAge(): ?int
-    {
-        return $this->age;
-    }
-
-    public function setAge(int $age): static
-    {
-        $this->age = $age;
-
-        return $this;
-    }
-
-    public function getPoids(): ?int
-    {
-        return $this->poids;
-    }
-
-    public function setPoids(int $poids): static
-    {
-        $this->poids = $poids;
-
-        return $this;
-    }
-
-    public function getTaille(): ?int
-    {
-        return $this->taille;
-    }
-
-    public function setTaille(int $taille): static
-    {
-        $this->taille = $taille;
-
-        return $this;
-    }
-
-    public function getGenre(): ?string
-    {
-        return $this->genre;
-    }
-
-    public function setGenre(string $genre): static
-    {
-        $this->genre = $genre;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, HistoriqueExercice>
-     */
-    public function getHistoriqueExercices(): Collection
-    {
-        return $this->historiqueExercices;
-    }
-
-    public function addHistoriqueExercice(HistoriqueExercice $historiqueExercice): static
-    {
-        if (!$this->historiqueExercices->contains($historiqueExercice)) {
-            $this->historiqueExercices->add($historiqueExercice);
-            $historiqueExercice->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeHistoriqueExercice(HistoriqueExercice $historiqueExercice): static
-    {
-        if ($this->historiqueExercices->removeElement($historiqueExercice)) {
-            // set the owning side to null (unless already changed)
-            if ($historiqueExercice->getUserId() === $this) {
-                $historiqueExercice->setUserId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Leaderboard>
-     */
-    public function getLeaderboards(): Collection
-    {
-        return $this->leaderboards;
-    }
-
-    public function addLeaderboard(Leaderboard $leaderboard): static
-    {
-        if (!$this->leaderboards->contains($leaderboard)) {
-            $this->leaderboards->add($leaderboard);
-            $leaderboard->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLeaderboard(Leaderboard $leaderboard): static
-    {
-        if ($this->leaderboards->removeElement($leaderboard)) {
-            // set the owning side to null (unless already changed)
-            if ($leaderboard->getUserId() === $this) {
-                $leaderboard->setUserId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, LikeDislike>
-     */
-    public function getLikeDislikes(): Collection
-    {
-        return $this->likeDislikes;
-    }
-
-    public function addLikeDislike(LikeDislike $likeDislike): static
-    {
-        if (!$this->likeDislikes->contains($likeDislike)) {
-            $this->likeDislikes->add($likeDislike);
-            $likeDislike->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLikeDislike(LikeDislike $likeDislike): static
-    {
-        if ($this->likeDislikes->removeElement($likeDislike)) {
-            // set the owning side to null (unless already changed)
-            if ($likeDislike->getUserId() === $this) {
-                $likeDislike->setUserId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Commentaire>
-     */
-    public function getCommentaires(): Collection
-    {
-        return $this->commentaires;
-    }
-
-    public function addCommentaire(Commentaire $commentaire): static
-    {
-        if (!$this->commentaires->contains($commentaire)) {
-            $this->commentaires->add($commentaire);
-            $commentaire->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCommentaire(Commentaire $commentaire): static
-    {
-        if ($this->commentaires->removeElement($commentaire)) {
-            // set the owning side to null (unless already changed)
-            if ($commentaire->getUserId() === $this) {
-                $commentaire->setUserId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Favoris>
-     */
-    public function getFavoris(): Collection
-    {
-        return $this->favoris;
-    }
-
-    public function addFavori(Favoris $favori): static
-    {
-        if (!$this->favoris->contains($favori)) {
-            $this->favoris->add($favori);
-            $favori->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFavori(Favoris $favori): static
-    {
-        if ($this->favoris->removeElement($favori)) {
-            // set the owning side to null (unless already changed)
-            if ($favori->getUserId() === $this) {
-                $favori->setUserId(null);
-            }
-        }
-
-        return $this;
     }
 
     public function isVerified(): bool
@@ -371,39 +196,75 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getNom(): ?string
+    public function getNiveau(): ?Niveau
     {
-        return $this->nom;
+        return $this->niveau;
     }
 
-    public function setNom(string $nom): static
+    public function setNiveau(?Niveau $niveau): static
     {
-        $this->nom = $nom;
+        $this->niveau = $niveau;
 
         return $this;
     }
 
-    public function getPrenom(): ?string
+    public function getBio(): ?string
     {
-        return $this->prenom;
+        return $this->bio;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setBio(?string $bio): static
     {
-        $this->prenom = $prenom;
+        $this->bio = $bio;
 
         return $this;
     }
 
-    public function getScore(): int
+    public function getTaille(): ?int
     {
-        $score = 0;
+        return $this->taille;
+    }
 
-        // Parcourir les HistoriqueExercice de l'utilisateur
-        foreach ($this->getHistoriqueExercices() as $historiqueExercice) {
-            $score += $historiqueExercice->getNombreRepetition();
-        }
+    public function setTaille(?int $taille): static
+    {
+        $this->taille = $taille;
 
-        return $score;
+        return $this;
+    }
+
+    public function getPoids(): ?int
+    {
+        return $this->poids;
+    }
+
+    public function setPoids(?int $poids): static
+    {
+        $this->poids = $poids;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /** @return Collection<int, Seance> */
+    public function getSeances(): Collection
+    {
+        return $this->seances;
+    }
+
+    /** @return Collection<int, Favori> */
+    public function getFavoris(): Collection
+    {
+        return $this->favoris;
     }
 }

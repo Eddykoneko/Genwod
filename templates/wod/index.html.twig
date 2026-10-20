@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bibliothèque de WODs{% endblock %}
+
+{% block body %}
+    <div class="section-head">
+        <div>
+            <p class="eyebrow">Bibliothèque</p>
+            <h1 style="font-size: clamp(2rem, 5vw, 2.8rem); text-transform: uppercase">Tous les WODs</h1>
+        </div>
+        <a class="btn btn-primary" href="{{ path('app_generateur') }}">{{ ux_icon('lucide:dices') }} En générer un</a>
+    </div>
+    <twig:WodRecherche />
+{% endblock %}

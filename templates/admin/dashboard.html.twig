@@ -1,0 +1,38 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Tableau de bord{% endblock %}
+
+{% block main %}
+    <div class="row g-3 mb-4">
+        {% for c in chiffres %}
+            <div class="col-6 col-lg-3">
+                <div class="card h-100"><div class="card-body">
+                    <div class="text-muted small text-uppercase fw-bold">{{ c[0] }}</div>
+                    <div class="fs-2 fw-bold mt-1">{{ c[1] }}</div>
+                </div></div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row g-3">
+        <div class="col-lg-7">
+            <div class="card"><div class="card-body">
+                <h2 class="h5 mb-3">Derniers commentaires</h2>
+                <table class="table">
+                    {% for c in derniersCommentaires %}
+                        <tr><td><strong>{{ c.auteur.pseudo }}</strong> sur <em>{{ c.wod.titre }}</em><div class="text-muted small">{{ c.contenu|u.truncate(120, '…') }}</div></td><td class="text-end text-muted small text-nowrap">{{ c.createdAt|date('d/m H:i') }}</td></tr>
+                    {% else %}
+                        <tr><td class="text-muted">Aucun commentaire.</td></tr>
+                    {% endfor %}
+                </table>
+            </div></div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card"><div class="card-body">
+                <h2 class="h5 mb-3">Top 5 (tous temps)</h2>
+                <ol class="mb-0">
+                    {% for l in classement %}<li><strong>{{ l.pseudo }}</strong> — {{ l.points }} pts ({{ l.seances }} séances)</li>{% else %}<li class="text-muted">Aucune séance.</li>{% endfor %}
+                </ol>
+            </div></div>
+        </div>
+    </div>
+{% endblock %}

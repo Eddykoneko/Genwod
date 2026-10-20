@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes WODs{% endblock %}
+
+{% block body %}
+    <p class="eyebrow">Mon espace</p>
+    <h1 class="mb-2" style="font-size: clamp(1.8rem, 5vw, 2.6rem); text-transform: uppercase">Mes WODs</h1>
+    {{ include('espace/_nav.html.twig') }}
+    {% if wods is not empty %}
+        <div class="grid grid-3">{% for wod in wods %}<twig:WodCard :wod="wod" />{% endfor %}</div>
+    {% else %}
+        <div class="card">
+            <twig:Vide icone="lucide:dices" titre="Vous n'avez encore rien généré">
+                <p><a class="btn btn-primary" href="{{ path('app_generateur') }}">{{ ux_icon('lucide:dices') }} Ouvrir le générateur</a></p>
+            </twig:Vide>
+        </div>
+    {% endif %}
+{% endblock %}

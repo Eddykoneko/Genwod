@@ -1,0 +1,16 @@
+<div class="comment" id="commentaire-{{ commentaire.id }}">
+    <twig:Avatar :user="commentaire.auteur" />
+    <div class="comment-body">
+        <div class="comment-meta">
+            <a href="{{ path('app_athlete', {pseudo: commentaire.auteur.pseudo}) }}">{{ commentaire.auteur.pseudo }}</a>
+            <time class="faint tiny" datetime="{{ commentaire.createdAt|date('c') }}">{{ commentaire.createdAt|format_datetime('medium', 'short') }}</time>
+            {% if is_granted('COMMENTAIRE_SUPPRIMER', commentaire) %}
+                <form method="post" action="{{ path('app_commentaire_supprimer', {id: commentaire.id}) }}" class="inline-form" style="margin-left:auto" data-turbo-confirm="Supprimer ce commentaire ?">
+                    <input type="hidden" name="_token" value="{{ csrf_token('supprimer-commentaire-' ~ commentaire.id) }}">
+                    <button class="btn btn-ghost btn-sm btn-icon" aria-label="Supprimer le commentaire">{{ ux_icon('lucide:trash-2') }}</button>
+                </form>
+            {% endif %}
+        </div>
+        <p>{{ commentaire.contenu }}</p>
+    </div>
+</div>

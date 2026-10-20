@@ -1,86 +1,39 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guide pour travailler sur ce dépôt (Genwod v2, branche `refonte/v2`).
 
 ## Stack
 
-- **Symfony 7.0** (PHP >= 8.2) with Doctrine ORM
-- **PostgreSQL** (via Docker)
-- **Twig** templates with Symfony UX Turbo and Stimulus
-- **Symfony AssetMapper** (no Webpack/Encore)
+- Symfony 7.4 LTS, PHP 8.4+, Doctrine ORM 3, MySQL 8 (dev/prod), SQLite (tests)
+- Twig + Twig Components + Live Components, Turbo, Stimulus, AssetMapper (pas de Node)
+- EasyAdmin 5, UX Icons (Lucide, icônes figées dans `assets/icons/`)
 
-## Common Commands
+## Commandes
 
 ```bash
-# Start the database
-docker compose up -d
-
-# Install dependencies
-composer install
-
-# Run database migrations
 php bin/console doctrine:migrations:migrate
-
-# Create a new migration after entity changes
-php bin/console doctrine:migrations:diff
-
-# Clear cache
-php bin/console cache:clear
-
-# Run tests
-php bin/phpunit
-
-# Run a single test file
-php bin/phpunit tests/path/to/TestFile.php
+php bin/console app:catalogue:importer          # données de référence, idempotent
+php bin/console doctrine:fixtures:load          # démo : admin@genwod.fr / lea@genwod.fr, mdp genwod-demo-2026
+php bin/phpunit                                 # tests (SQLite, base remise à zéro par Foundry)
+vendor/bin/phpstan analyse --memory-limit=1G    # niveau 8 (nécessite var/cache/dev : cache:warmup)
+vendor/bin/php-cs-fixer fix                     # règles @Symfony
+php bin/console ux:icons:lock                   # après avoir utilisé une nouvelle icône
 ```
+
+## Conventions
+
+- Code métier en **français** (entités, méthodes, routes, templates), noms de relations clairs (`athlete`, `wod`, `auteur`).
+- Les listes fermées sont des **enums PHP** (`src/Enum`) qui implémentent `TranslatableInterface` : leur libellé s'affiche automatiquement dans les formulaires et EasyAdmin.
+- Toute action qui modifie des données passe en **POST + CSRF** ; les droits fins passent par des **Voters** (`WOD_VOIR`, `WOD_GERER`, `COMMENTAIRE_SUPPRIMER`).
+- Interactions sans rechargement : réponses **Turbo Stream** (`*.stream.html.twig`) avec repli en redirection classique.
+- Les formulaires invalides renvoient un **422** (nécessaire pour Turbo).
+- Composants Twig anonymes dans `templates/components/` ; le seul composant PHP est le Live Component `WodRecherche`.
+- Éviter le N+1 sur les listes de WODs : `WodRepository::prechargerLignes()`.
 
 ## Architecture
 
-### Entities and Relationships
-
-The central entity is **Exercice** (fitness exercise), which has OneToMany relationships to:
-- `HistoriqueExercice` — user completion records (stores `nombreRepetition`)
-- `Leaderboard` — per-exercise scores per user
-- `LikeDislike` — like/dislike votes per user
-- `Commentaire` — user comments
-- `Favoris` — user bookmarks
-
-**User** implements `UserInterface` and `PasswordAuthenticatedUserInterface`. User score (`getScore()`) is computed dynamically by summing `nombreRepetition` across all `HistoriqueExercice` records. User profiles include: nom, prenom, email, age, poids, taille, genre.
-
-### Controller Structure
-
-Controllers are split between public-facing and admin:
-- **Public**: `ExerciceController`, `HistoriqueExerciceController`, `LeaderboardController`, `RechercheExerciceController`, `CommentaireController`, `FavoriController`, `LikeDislikeController`, `UserController`, `HomeController`
-- **Admin** (require `ROLE_ADMIN`, prefixed `/admin/`): `AdminExerciceController`, `AdminUserController`, `AdminCommentaireController`, `AdminFavorisController`, `AdminHistoriqueExerciceController`, `AdminLeaderboardController`, `AdminLikeDislikeController`
-- **Auth**: `SecurityController`, `RegistrationController`, `ResetPasswordController`
-
-### Security
-
-- Custom `LoginFormAuthenticator` at `src/Security/LoginFormAuthenticator.php` using email/password
-- Routes under `/admin` require `ROLE_ADMIN`
-- Routes under `/user` require `ROLE_USER`
-- Email verification via `symfonycasts/verify-email-bundle`
-- Password reset via `symfonycasts/reset-password-bundle`
-- Login redirects to `app_home` on success
-
-### Naming Convention Note
-
-Entity relationship properties use `_id` suffix (e.g., `$user_id`, `$exercice_id`) even though they hold full entity objects, not raw IDs. This is a project-specific convention — getters/setters follow the same pattern (`getUserId()`, `setExerciceId()`).
-
-### Key Repository Methods
-
-- `ExerciceRepository::findBySearch(?string $searchTexte, ?int $dureeMin, ?int $dureeMax)` — full-text search on type/description with duration filter
-- `ExerciceRepository::findRandom(SessionInterface $session)` — returns a random exercise, avoiding the last shown (stored in session)
-- `LeaderboardRepository::findGlobalLeaderboard()` — aggregates scores across all exercises, grouped by user
-
-### Templates
-
-Templates mirror the controller structure. Shared layout pieces:
-- `templates/base.html.twig` — main layout
-- `templates/navbar.html.twig` — user-facing navbar
-- `templates/adminNavbar.html.twig` — admin navbar
-- `templates/userNavbar.html.twig` — authenticated user navbar
-
-### Database
-
-PostgreSQL via Docker Compose (`compose.yaml`). Connection configured via `DATABASE_URL` in `.env`.
+- `WodGenerator` : génération déterministe (graine) depuis le catalogue `Mouvement`. Règles : matériel disponible, alternance des familles, ≤ 1 cardio, ≤ 1 gainage, volumes arrondis.
+- `Seance` est l'unique source des scores ; le classement par WOD et les records sont calculés depuis elle (`SeanceRepository`). Les points sont figés à l'enregistrement (`EnregistreurSeance` + `Points`).
+- `Statistiques` : série de jours consécutifs et heatmap.
+- `config/donnees/catalogue.php` : catalogue de mouvements et WODs officiels.
+- `app:import-v1` : reprise des données de la v1 (schéma avec colonnes `user_id_id` / `exercice_id_id`).

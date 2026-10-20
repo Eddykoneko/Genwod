@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Le concept{% endblock %}
+
+{% block body %}
+<div class="container-narrow" style="margin-inline:auto">
+    <p class="eyebrow">Le concept</p>
+    <h1 class="display mt-1" style="font-size: clamp(2.4rem, 7vw, 4rem)">Moins de prise de tête,<br><span class="accent">plus de sueur.</span></h1>
+    <p class="muted mt-2" style="font-size:1.12rem">Genwod est né d'un constat simple : trouver un WOD adapté à son niveau, à son temps disponible et au matériel sous la main prend souvent plus de temps que la séance elle-même.</p>
+
+    <div class="grid grid-2 mt-4">
+        {% for f in [
+            ['lucide:dices', 'Un vrai générateur', 'Un catalogue de mouvements classés par famille (cardio, gymnastique, haltérophilie…). Le générateur équilibre la séance, adapte les volumes à la difficulté et arrondit aux valeurs habituelles (21-15-9, 400 m…).'],
+            ['lucide:timer', 'Un chrono pensé pour la box', 'Décompte de 10 secondes, bips de départ et de fin d\'intervalle, écran qui reste allumé, compteur de tours. Le score est ensuite reporté automatiquement.'],
+            ['lucide:trophy', 'Une progression visible', 'Chaque séance rapporte des points. Records personnels, séries de jours consécutifs et heatmap d\'activité gardent la motivation au plus haut.'],
+            ['lucide:shield-check', 'Respect de vos données', 'Pas de traceur publicitaire. Vous pouvez exporter vos données ou supprimer votre compte à tout moment, en un clic.'],
+        ] %}
+            <div class="card feature">
+                <span class="feature-icon">{{ ux_icon(f[0]) }}</span>
+                <h3>{{ f[1] }}</h3>
+                <p class="small muted">{{ f[2] }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="card mt-4 prose">
+        <h2 style="margin-top:0">Les formats</h2>
+        {% for type in enum('App\\Enum\\WodType').cases %}
+            <p><strong>{{ type.label }}</strong> — {{ type.explication }}</p>
+        {% endfor %}
+    </div>
+
+    <div class="card mt-3 prose">
+        <h2 style="margin-top:0">L'histoire du projet</h2>
+        <p>Genwod a d'abord été mon projet de soutenance pour le titre professionnel <strong>Développeur Web et Web Mobile (DWWM)</strong>, développé avec Symfony 7.0.</p>
+        <p>Cette seconde version reprend l'idée de départ et la pousse beaucoup plus loin : Symfony 7.4 LTS, générateur algorithmique, Live Components, Turbo, administration EasyAdmin, tests automatisés et analyse statique.</p>
+    </div>
+
+    <div class="text-center mt-4">
+        <a class="btn btn-primary btn-lg" href="{{ path('app_generateur') }}">{{ ux_icon('lucide:dices') }} Essayer le générateur</a>
+    </div>
+</div>
+{% endblock %}

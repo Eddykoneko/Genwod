@@ -1,0 +1,11 @@
+{% props semaines %}
+<div class="heatmap-scroll">
+    <div class="heatmap" role="img" aria-label="Activité des {{ semaines|length }} dernières semaines">
+        {% for semaine in semaines %}
+            {% for jour in semaine %}
+                <i data-n="{{ min(jour.nb, 3) }}" class="{{ jour.futur ? 'futur' }}" title="{{ jour.date|format_date('medium') }} : {{ jour.nb }} séance(s)"></i>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+<div class="heatmap-legend">Moins <i style="background:var(--heat-0)"></i><i style="background:var(--heat-1)"></i><i style="background:var(--heat-2)"></i><i style="background:var(--heat-3)"></i> Plus</div>

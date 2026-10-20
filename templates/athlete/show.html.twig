@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ athlete.pseudo }} · profil d'athlète{% endblock %}
+
+{% block body %}
+    <section class="card" style="background: linear-gradient(135deg, hsl({{ athlete.teinteAvatar }} 70% 40% / .18), transparent 60%), var(--surface)">
+        <div class="cluster" style="--gap: 20px">
+            <twig:Avatar :user="athlete" taille="lg" :lien="false" />
+            <div>
+                <h1 style="font-size: clamp(1.8rem, 5vw, 2.6rem); text-transform: uppercase">{{ athlete.pseudo }}</h1>
+                <p class="muted small">
+                    {% if athlete.niveau %}{{ athlete.niveau.label }} · {% endif %}membre depuis {{ athlete.createdAt|format_date('long')|split(' ')|slice(1)|join(' ') }}
+                </p>
+                {% if athlete.bio %}<p class="mt-1">{{ athlete.bio }}</p>{% endif %}
+            </div>
+        </div>
+    </section>
+
+    <div class="grid grid-4 mt-3" style="--gap: 12px">
+        <twig:Stat label="Séances" :valeur="resume.total.seances" icone="lucide:activity" />
+        <twig:Stat label="Points" :valeur="resume.total.points" icone="lucide:zap" />
+        <twig:Stat label="Série actuelle" :valeur="resume.serie ~ ' j'" icone="lucide:flame" />
+        <twig:Stat label="Meilleure série" :valeur="resume.meilleureSerie ~ ' j'" icone="lucide:award" />
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-head"><h2>Activité</h2></div>
+        <twig:Heatmap :semaines="heatmap" />
+    </div>
+
+    <div class="grid grid-2 mt-3" style="align-items:start">
+        <section class="card">
+            <div class="card-head"><h2>Records</h2></div>
+            {% if records is not empty %}
+                <ul class="list">
+                    {% for r in records %}
+                        <li>
+                            <div class="grow"><a class="title" href="{{ path('app_wod_show', {slug: r.wod.slug}) }}">{{ r.wod.titre }}</a><span class="tiny faint">{{ r.wod.format }}</span></div>
+                            <strong class="nums">{{ r.scoreLisible }}</strong>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="small faint">Aucun résultat pour le moment.</p>
+            {% endif %}
+        </section>
+        <section>
+            <h2 class="mb-2" style="font-size:1.05rem;text-transform:uppercase">WODs créés</h2>
+            {% if wods is not empty %}
+                <div class="grid" style="--gap: 12px">{% for wod in wods|slice(0, 4) %}<twig:WodCard :wod="wod" />{% endfor %}</div>
+            {% else %}
+                <p class="small faint">Aucun WOD public.</p>
+            {% endif %}
+        </section>
+    </div>
+{% endblock %}

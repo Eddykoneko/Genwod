@@ -4,127 +4,60 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints\IsTrue;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @extends AbstractType<User>
+ */
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('email', EmailType::class, [
-                'constraints' => [
-                    new Email([
-                        'message' => 'Veuillez entrer un email valide.',
-                    ]),
-                ],
+                'label' => 'Adresse e-mail',
+                'attr' => ['autocomplete' => 'email', 'placeholder' => 'vous@exemple.fr'],
             ])
-            ->add('nom', null, [
-                'constraints' => [
-                    new Regex([
-                        'pattern' => "/^[a-zA-Z0-9]*$/",
-                        'message' => "Le nom ne peut contenir que des lettres et des chiffres."
-                    ])
-                ],
-            ])
-            ->add('prenom', null, [
-                'constraints' => [
-                    new Regex([
-                        'pattern' => "/^[a-zA-Z0-9]*$/",
-                        'message' => "Le prenom ne peut contenir que des lettres et des chiffres."
-                    ])
-                ],
-            ])
-            ->add('age', ChoiceType::class, [
-                'choices' => $this->getAgeChoices(),
-                'placeholder' => 'Choisir un âge',
-            ])
-            ->add('poids', ChoiceType::class, [
-                'choices' => $this->getPoidsChoices(),
-                'placeholder' => 'Choisir un poids',
-            ])
-            ->add('taille', ChoiceType::class, [
-                'choices' => $this->getTailleChoices(),
-                'placeholder' => 'Choisir une taille',
-            ])
-            ->add('genre', ChoiceType::class, [
-                'choices'  => [
-                    'Homme' => 'Homme',
-                    'Femme' => 'Femme',
-                    'Autre' => 'Autre',
-                ],
-            ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'Veuillez acceptez les conditions générales.',
-                    ]),
-                ],
+            ->add('pseudo', TextType::class, [
+                'label' => 'Pseudo',
+                'help' => 'Affiché dans les classements. 3 à 30 caractères.',
+                'attr' => ['autocomplete' => 'username', 'placeholder' => 'ex. RowingQueen'],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,
-                'options' => ['attr' => ['autocomplete' => 'new-password']],
+                'invalid_message' => 'Les deux mots de passe ne correspondent pas.',
                 'first_options' => [
                     'label' => 'Mot de passe',
+                    'help' => '10 caractères minimum. Une phrase de passe est idéale.',
+                    'attr' => ['autocomplete' => 'new-password', 'data-controller' => 'force-mdp'],
                     'constraints' => [
-                        new Regex([
-                            'pattern' => "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/",
-                            'message' => "Il faut que le mot de passe contienne au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."
-                        ])
+                        new Assert\NotBlank(message: 'Choisissez un mot de passe.'),
+                        new Assert\Length(min: 10, max: 4096, minMessage: 'Au moins {{ limit }} caractères.'),
+                        new Assert\PasswordStrength(minScore: Assert\PasswordStrength::STRENGTH_MEDIUM, message: 'Ce mot de passe est trop facile à deviner.'),
                     ],
                 ],
                 'second_options' => [
-                    'label' => 'Confirmation du mot de passe',
+                    'label' => 'Confirmation',
+                    'attr' => ['autocomplete' => 'new-password'],
                 ],
-                'invalid_message' => 'Les mots de passe doivent correspondre.',
             ])
-            ;
-    }
-
-    private function getAgeChoices()
-    {
-        $ages = [];
-        for ($i = 10; $i <= 80; $i++) {
-            $ages[$i] = $i;
-        }
-        return $ages;
-    }
-
-    private function getPoidsChoices()
-    {
-        $poids = [];
-        for ($i = 40; $i <= 150; $i++) {
-            $poids[$i] = $i;
-        }
-        return $poids;
-    }
-
-    private function getTailleChoices()
-    {
-        $tailles = [];
-        for ($i = 100; $i <= 200; $i++) {
-            $tailles[$i] = $i;
-        }
-        return $tailles;
+            ->add('agreeTerms', CheckboxType::class, [
+                'mapped' => false,
+                'label' => 'J\'accepte les conditions d\'utilisation et la politique de confidentialité',
+                'constraints' => [new Assert\IsTrue(message: 'Vous devez accepter les conditions pour vous inscrire.')],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'data_class' => User::class,
-        ]);
+        $resolver->setDefaults(['data_class' => User::class]);
     }
 }

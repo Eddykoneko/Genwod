@@ -1,0 +1,12 @@
+{% set route = app.current_route %}
+<nav class="tabbar" aria-label="Navigation mobile">
+    <a href="{{ path('app_accueil') }}" {{ route == 'app_accueil' ? 'aria-current="page"' }}>{{ ux_icon('lucide:house') }}<span>Accueil</span></a>
+    <a href="{{ path('app_wod_index') }}" {{ route starts with 'app_wod' ? 'aria-current="page"' }}>{{ ux_icon('lucide:library') }}<span>WODs</span></a>
+    <a href="{{ path('app_generateur') }}" class="tab-generer" {{ route starts with 'app_generateur' ? 'aria-current="page"' }}><span class="tab-fab">{{ ux_icon('lucide:dices') }}</span><span>Générer</span></a>
+    <a href="{{ path('app_classement') }}" {{ route == 'app_classement' ? 'aria-current="page"' }}>{{ ux_icon('lucide:trophy') }}<span>Classement</span></a>
+    {% if app.user %}
+        <a href="{{ path('app_tableau_de_bord') }}" {{ route starts with 'app_espace' or route == 'app_tableau_de_bord' ? 'aria-current="page"' }}>{{ ux_icon('lucide:circle-user-round') }}<span>Moi</span></a>
+    {% else %}
+        <a href="{{ path('app_login') }}" {{ route == 'app_login' ? 'aria-current="page"' }}>{{ ux_icon('lucide:log-in') }}<span>Connexion</span></a>
+    {% endif %}
+</nav>
