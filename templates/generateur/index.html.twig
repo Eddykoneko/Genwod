@@ -32,7 +32,7 @@
 
             <fieldset style="border:0;padding:0">
                 <legend class="field-label">Difficulté</legend>
-                <div class="segmented">
+                <div class="segmented segmented-3">
                     {% for d in difficultes %}
                         <label>
                             <input type="radio" name="difficulte" value="{{ d.value }}" {{ criteres.difficulte == d ? 'checked' }}>
