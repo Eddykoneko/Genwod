@@ -5,6 +5,10 @@
             <input type="search" data-model="debounce(300)|q" placeholder="Titre, mouvement… ex. « burpees », « Cindy »" aria-label="Rechercher un WOD" autocomplete="off">
         </div>
         <div class="filters-row">
+            <select data-model="benchmark" aria-label="Origine">
+                <option value="">Tous les WODs</option>
+                {% for b in this.benchmarks %}<option value="{{ b.value }}" {{ benchmark == b ? 'selected' }}>{{ b.label }}</option>{% endfor %}
+            </select>
             <select data-model="type" aria-label="Format">
                 <option value="">Tous les formats</option>
                 {% for t in this.types %}<option value="{{ t.value }}" {{ type == t ? 'selected' }}>{{ t.label }}</option>{% endfor %}
@@ -22,7 +26,7 @@
                 <option value="populaires" {{ tri == 'populaires' ? 'selected' }}>Plus aimés</option>
                 <option value="courts" {{ tri == 'courts' ? 'selected' }}>Plus courts</option>
             </select>
-            {% if q or type or difficulte or dureeMax %}
+            {% if q or type or difficulte or dureeMax or benchmark %}
                 <button type="button" class="btn btn-ghost btn-sm" data-action="live#action" data-live-action-param="reinitialiser">{{ ux_icon('lucide:x') }} Effacer</button>
             {% endif %}
         </div>

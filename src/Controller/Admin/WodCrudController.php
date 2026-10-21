@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Wod;
+use App\Enum\Benchmark;
 use App\Enum\Difficulte;
 use App\Enum\WodType;
 use App\Form\Admin\WodMouvementType;
@@ -53,6 +54,7 @@ final class WodCrudController extends AbstractCrudController
             ->add(ChoiceFilter::new('type')->setChoices(WodType::choices()))
             ->add(ChoiceFilter::new('difficulte')->setChoices(Difficulte::choices()))
             ->add(BooleanFilter::new('officiel'))
+            ->add(ChoiceFilter::new('benchmark')->setChoices(['The Girls' => Benchmark::Girl, 'Hero WOD' => Benchmark::Hero, 'Classique' => Benchmark::Classique]))
             ->add(BooleanFilter::new('public'));
     }
 
@@ -67,6 +69,9 @@ final class WodCrudController extends AbstractCrudController
         });
         yield IntegerField::new('duree', 'Durée (min)');
         yield IntegerField::new('tours')->setHelp('For Time uniquement (1 = chipper).')->hideOnIndex();
+        yield TextField::new('schemaReps', 'Schéma de répétitions')->setHelp('For Time, ex. « 21-15-9 » : remplace les quantités des lignes.')->hideOnIndex();
+        yield BooleanField::new('toutChaqueMinute', 'EMOM : tout chaque minute')->hideOnIndex();
+        yield ChoiceField::new('benchmark', 'Benchmark')->renderAsBadges();
         yield TextareaField::new('consignes')->hideOnIndex();
         yield CollectionField::new('lignes', 'Mouvements')
             ->setEntryType(WodMouvementType::class)

@@ -5,14 +5,14 @@
         <twig:TypeBadge :type="wod.type" />
         <span class="badge">{{ ux_icon('lucide:timer') }} {{ wod.duree }} min</span>
         <span class="badge"><twig:Flammes :difficulte="wod.difficulte" /> {{ wod.difficulte.label }}</span>
-        {% if wod.officiel %}<span class="badge badge-accent">{{ ux_icon('lucide:badge-check') }} Officiel</span>{% endif %}
+        {% if wod.benchmark %}<span class="badge badge-accent">{{ ux_icon(wod.benchmark.value == 'hero' ? 'lucide:medal' : 'lucide:badge-check') }} {{ wod.benchmark.label }}</span>{% endif %}
     </div>
     <{{ titreTag }} class="board-title">{{ wod.titre }}</{{ titreTag }}>
     <p class="board-format">{{ wod.format }}</p>
     <ol class="board-lines">
         {% for ligne in wod.lignes %}
             <li>
-                <span class="qte">{{ wod.type.value == 'tabata' ? '8×' : ligne.unite.format(ligne.quantite) }}</span>
+                <span class="qte">{{ ligne.quantiteLisible }}</span>
                 <span class="mvt">{{ ligne.mouvement.nom }}{% if ligne.mouvement.description %}<small>{{ ligne.mouvement.description }}</small>{% endif %}</span>
                 {% set charge = ligne.note ?? ligne.mouvement.chargeRx %}
                 <span class="charge">{{ charge }}</span>

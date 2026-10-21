@@ -17,7 +17,12 @@ final class CatalogueEnMemoire
     {
         $donnees = require \dirname(__DIR__, 2).'/config/donnees/catalogue.php';
         $mouvements = [];
-        foreach ($donnees['mouvements'] as $i => [$slug, $nom, $categorie, $equipement, $unite, $volume, $charge, $technique]) {
+        foreach ($donnees['mouvements'] as $i => $ligne) {
+            [$slug, $nom, $categorie, $equipement, $unite, $volume, $charge, $technique] = $ligne;
+            // Comme MouvementRepository::findBy(['actif' => true]) : les mouvements réservés sont exclus.
+            if (false === ($ligne[9] ?? true)) {
+                continue;
+            }
             $mouvement = (new Mouvement())
                 ->setSlug($slug)
                 ->setNom($nom)

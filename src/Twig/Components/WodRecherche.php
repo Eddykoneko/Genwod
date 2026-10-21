@@ -2,6 +2,7 @@
 
 namespace App\Twig\Components;
 
+use App\Enum\Benchmark;
 use App\Enum\Difficulte;
 use App\Enum\WodType;
 use App\Model\Page;
@@ -32,6 +33,9 @@ final class WodRecherche
     public ?Difficulte $difficulte = null;
 
     #[LiveProp(writable: true, url: true, onUpdated: 'retourPremierePage')]
+    public ?Benchmark $benchmark = null;
+
+    #[LiveProp(writable: true, url: true, onUpdated: 'retourPremierePage')]
     public ?int $dureeMax = null;
 
     #[LiveProp(writable: true, url: true, onUpdated: 'retourPremierePage')]
@@ -51,6 +55,7 @@ final class WodRecherche
             q: '' !== trim($this->q) ? mb_substr($this->q, 0, 60) : null,
             type: $this->type,
             difficulte: $this->difficulte,
+            benchmark: $this->benchmark,
             dureeMax: null !== $this->dureeMax ? max(1, min(90, $this->dureeMax)) : null,
             tri: \in_array($this->tri, WodFiltre::TRIS, true) ? $this->tri : 'recents',
             page: max(1, $this->page),
@@ -70,6 +75,7 @@ final class WodRecherche
         $this->type = null;
         $this->difficulte = null;
         $this->dureeMax = null;
+        $this->benchmark = null;
         $this->tri = 'recents';
         $this->page = 1;
     }
@@ -84,6 +90,12 @@ final class WodRecherche
     public function getTypes(): array
     {
         return WodType::cases();
+    }
+
+    /** @return list<Benchmark> */
+    public function getBenchmarks(): array
+    {
+        return Benchmark::cases();
     }
 
     /** @return list<Difficulte> */

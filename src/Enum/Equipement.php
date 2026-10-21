@@ -17,6 +17,7 @@ enum Equipement: string implements TranslatableInterface
     case Box = 'box';
     case MedecineBall = 'medecine_ball';
     case Velo = 'velo';
+    case Anneaux = 'anneaux';
 
     public function label(): string
     {
@@ -31,6 +32,7 @@ enum Equipement: string implements TranslatableInterface
             self::Box => 'Box',
             self::MedecineBall => 'Medecine ball',
             self::Velo => 'Assault bike',
+            self::Anneaux => 'Anneaux',
         };
     }
 

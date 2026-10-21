@@ -24,6 +24,17 @@
     </div>
 
     <div class="card mt-4 prose">
+        <h2 style="margin-top:0">Les WODs de référence</h2>
+        <p>La bibliothèque officielle ne contient que des WODs reconnus par toute la communauté CrossFit, qui servent de points de repère pour mesurer sa progression :</p>
+        <ul>
+            <li><strong>The Girls</strong> — les benchmarks historiques : Fran, Grace, Cindy, Helen, Diane, Annie, Karen…</li>
+            <li><strong>Hero WODs</strong> — des séances longues et exigeantes, dédiées à des militaires et secouristes morts en service : Murph, DT, JT, Nate.</li>
+            <li><strong>Classiques</strong> — comme Tabata Something Else.</li>
+        </ul>
+        <p><a href="{{ path('app_wod_index', {benchmark: 'girl'}) }}">Voir les Girls</a> · <a href="{{ path('app_wod_index', {benchmark: 'hero'}) }}">Voir les Hero WODs</a></p>
+    </div>
+
+    <div class="card mt-3 prose">
         <h2 style="margin-top:0">Les formats</h2>
         {% for type in enum('App\\Enum\\WodType').cases %}
             <p><strong>{{ type.label }}</strong> — {{ type.explication }}</p>

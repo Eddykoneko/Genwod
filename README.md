@@ -11,7 +11,7 @@ Genwod génère des entraînements CrossFit (*Workout Of the Day*) adaptés au f
 |---|---|
 | 🎲 **Générateur** | For Time, AMRAP, EMOM, Tabata, de 4 à 40 min. Sélection équilibrée par familles de mouvements, volumes adaptés à la difficulté et arrondis aux valeurs « naturelles » (15, 21, 400 m…). Déterministe : chaque WOD a une **URL partageable** (graine). |
 | ⏱️ **Chrono intégré** | Décompte de 10 s, intervalles EMOM et Tabata, bips (Web Audio), écran maintenu allumé (Wake Lock), compteur de tours. Le score est **reporté automatiquement** dans le formulaire. |
-| 📚 **Bibliothèque** | Recherche « live » (Live Component) dans les titres, consignes et mouvements, avec filtres reflétés dans l'URL. 14 WODs officiels, dont les benchmarks Cindy, Helen, Grace et Karen. |
+| 📚 **Bibliothèque** | Recherche « live » (Live Component) dans les titres, consignes et mouvements, avec filtres reflétés dans l'URL. **23 WODs de référence de la communauté CrossFit** : les Girls (Fran, Grace, Cindy, Helen, Diane, Annie…), des Hero WODs (Murph, DT, JT, Nate) et Tabata Something Else. Le WOD du jour est tiré parmi eux. |
 | 🏆 **Classements** | Par WOD (meilleur score par athlète, RX avant Scaled) et global par points (semaine, mois, tout). Détection des **records personnels**. |
 | 📈 **Tableau de bord** | Séances, points, série de jours consécutifs, part de séances en RX, heatmap d'activité sur 18 semaines, records. Profil public d'athlète. |
 | 💬 **Communauté** | « J'aime », favoris et commentaires sans rechargement (Turbo Streams). |
@@ -23,7 +23,7 @@ Genwod génère des entraînements CrossFit (*Workout Of the Day*) adaptés au f
 | v1 (soutenance DWWM) | v2 |
 |---|---|
 | Symfony 7.0, Doctrine ORM 2 | **Symfony 7.4 LTS**, Doctrine ORM 3, PHP 8.4 |
-| « Générateur » = tirage aléatoire d'un exercice en base | **Algorithme de génération** à partir d'un catalogue de 39 mouvements |
+| « Générateur » = tirage aléatoire d'un exercice en base | **Algorithme de génération** à partir d'un catalogue de 47 mouvements, et 23 benchmarks CrossFit officiels |
 | `Exercice` en texte libre, `HistoriqueExercice` + `Leaderboard` dupliqués | Modèle structuré : `Wod` → `WodMouvement` → `Mouvement`, `Seance` unique source des scores |
 | Propriétés `user_id` / `exercice_id` contenant des objets | Nommage clair (`athlete`, `wod`), **enums PHP** typées |
 | 7 contrôleurs CRUD admin générés | **EasyAdmin 5** |
@@ -51,7 +51,7 @@ docker compose up -d
 # Adapter DATABASE_URL dans .env.local si besoin, puis :
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
-php bin/console app:catalogue:importer      # mouvements + WODs officiels (idempotent)
+php bin/console app:catalogue:importer      # mouvements + WODs de référence (idempotent)
 
 # Données de démonstration (optionnel)
 php bin/console doctrine:fixtures:load
@@ -85,7 +85,7 @@ src/
 └── Twig/Components/    WodRecherche (Live Component)
 templates/components/   WodCard, Tableau, Flammes, Avatar, Stat, Heatmap… (composants anonymes)
 assets/controllers/     chrono, theme, partage, force-mdp… (Stimulus)
-config/donnees/         catalogue.php — données de référence (mouvements, WODs officiels)
+config/donnees/         catalogue.php — données de référence (mouvements, WODs de référence CrossFit)
 ```
 
 ### Le générateur en bref

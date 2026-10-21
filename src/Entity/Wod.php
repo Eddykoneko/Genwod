@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\Benchmark;
 use App\Enum\Difficulte;
 use App\Enum\WodType;
 use App\Repository\WodRepository;
@@ -44,9 +45,22 @@ class Wod
     #[Assert\Range(min: 1, max: 20)]
     private ?int $tours = null;
 
+    /** Schéma de répétitions d'un For Time, ex. « 21-15-9 » (chaque mouvement suit ce schéma). */
+    #[ORM\Column(length: 40, nullable: true)]
+    #[Assert\Regex(pattern: '/^\d+(-\d+)+$/', message: 'Format attendu : 21-15-9')]
+    private ?string $schemaReps = null;
+
+    /** EMOM « circuit » : tous les mouvements chaque minute (ex. Chelsea), au lieu d'une alternance. */
+    #[ORM\Column]
+    private bool $toutChaqueMinute = false;
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\Length(max: 2000)]
     private ?string $consignes = null;
+
+    /** Famille du WOD de référence (Girls, Hero…), null pour un WOD de la communauté Genwod. */
+    #[ORM\Column(length: 20, nullable: true, enumType: Benchmark::class)]
+    private ?Benchmark $benchmark = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
@@ -97,9 +111,13 @@ class Wod
     public function getFormat(): string
     {
         return match ($this->type) {
-            WodType::ForTime => ($this->tours > 1 ? $this->tours.' tours ' : '').'For Time · cap '.$this->duree.' min',
+            WodType::ForTime => match (true) {
+                null !== $this->schemaReps => $this->schemaReps.' For Time · cap '.$this->duree.' min',
+                $this->tours > 1 => $this->tours.' tours For Time · cap '.$this->duree.' min',
+                default => 'For Time · cap '.$this->duree.' min',
+            },
             WodType::Amrap => 'AMRAP '.$this->duree.' min',
-            WodType::Emom => 'EMOM '.$this->duree.' min',
+            WodType::Emom => 'EMOM '.$this->duree.' min'.($this->toutChaqueMinute ? ' · tout chaque minute' : ''),
             WodType::Tabata => 'Tabata · '.\count($this->lignes).' × 4 min',
         };
     }
@@ -177,6 +195,42 @@ class Wod
     public function setTours(?int $tours): static
     {
         $this->tours = $tours;
+
+        return $this;
+    }
+
+    public function getSchemaReps(): ?string
+    {
+        return $this->schemaReps;
+    }
+
+    public function setSchemaReps(?string $schemaReps): static
+    {
+        $this->schemaReps = $schemaReps;
+
+        return $this;
+    }
+
+    public function isToutChaqueMinute(): bool
+    {
+        return $this->toutChaqueMinute;
+    }
+
+    public function setToutChaqueMinute(bool $toutChaqueMinute): static
+    {
+        $this->toutChaqueMinute = $toutChaqueMinute;
+
+        return $this;
+    }
+
+    public function getBenchmark(): ?Benchmark
+    {
+        return $this->benchmark;
+    }
+
+    public function setBenchmark(?Benchmark $benchmark): static
+    {
+        $this->benchmark = $benchmark;
 
         return $this;
     }

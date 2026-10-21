@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Tests\Unit;
+
+use App\Entity\Mouvement;
+use App\Entity\Wod;
+use App\Entity\WodMouvement;
+use App\Enum\WodType;
+use PHPUnit\Framework\TestCase;
+
+final class WodFormatTest extends TestCase
+{
+    public function testSchemaDeRepetitions(): void
+    {
+        $fran = (new Wod())->setTitre('Fran')->setType(WodType::ForTime)->setDuree(10)->setSchemaReps('21-15-9');
+        $fran->addLigne($ligne = (new WodMouvement())->setMouvement((new Mouvement())->setNom('Thrusters'))->setQuantite(21)->setNote('43/30 kg'));
+
+        self::assertSame('21-15-9 For Time · cap 10 min', $fran->getFormat());
+        self::assertSame('21-15-9 Thrusters (43/30 kg)', $ligne->getLibelle());
+    }
+
+    public function testEmomToutChaqueMinute(): void
+    {
+        $chelsea = (new Wod())->setType(WodType::Emom)->setDuree(30)->setToutChaqueMinute(true);
+
+        self::assertSame('EMOM 30 min · tout chaque minute', $chelsea->getFormat());
+    }
+
+    public function testTabataSansQuantite(): void
+    {
+        $tabata = (new Wod())->setType(WodType::Tabata);
+        $tabata->addLigne($ligne = (new WodMouvement())->setMouvement((new Mouvement())->setNom('Squats'))->setQuantite(8));
+
+        self::assertSame('8× Squats', $ligne->getLibelle());
+    }
+}

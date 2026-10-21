@@ -2,6 +2,7 @@
 
 namespace App\Tests\Functional;
 
+use App\Repository\WodRepository;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 final class PagesPubliquesTest extends AppWebTestCase
@@ -38,6 +39,27 @@ final class PagesPubliquesTest extends AppWebTestCase
         self::assertSelectorTextContains('h1', 'Cindy');
         self::assertSelectorTextContains('.board-format', 'AMRAP 20 min');
         self::assertSelectorCount(3, '.board-lines li');
+    }
+
+    /** La sélection officielle ne contient que des WODs de référence de la communauté CrossFit. */
+    public function testLaSelectionOfficielleNeContientQueDesBenchmarks(): void
+    {
+        $officiels = static::getContainer()->get(WodRepository::class)->findBy(['officiel' => true]);
+
+        self::assertCount(23, $officiels);
+        foreach ($officiels as $wod) {
+            self::assertNotNull($wod->getBenchmark(), (string) $wod->getTitre());
+            self::assertNotEmpty($wod->getLignes(), (string) $wod->getTitre());
+        }
+        self::assertSame('21-15-9 For Time · cap 10 min', $this->wod('Fran')->getFormat());
+    }
+
+    public function testFiltrerLesHeroWods(): void
+    {
+        $this->client->request('GET', '/wods?benchmark=hero');
+
+        self::assertSelectorTextContains('.results', 'Murph');
+        self::assertSelectorTextNotContains('.results', 'Cindy');
     }
 
     public function testUnWodInexistantDonneUne404(): void

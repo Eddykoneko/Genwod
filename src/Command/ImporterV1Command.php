@@ -141,7 +141,8 @@ final class ImporterV1Command
                 ->setDifficulte($difficulte)
                 ->setDuree(max(1, min(90, (int) ($ligne['duree'] ?? 15) ?: 15)))
                 ->setConsignes(trim((string) ($ligne['description'] ?? '')) ?: null)
-                ->setOfficiel(true)
+                // Pas un benchmark reconnu : publié comme WOD communautaire, hors sélection officielle.
+                ->setOfficiel(false)
                 ->setCreatedAt(new \DateTimeImmutable((string) ($ligne['created_at'] ?? 'now')));
             $this->em->persist($wod);
             $wods[(int) $ligne['id']] = $wod;

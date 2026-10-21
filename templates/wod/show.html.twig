@@ -7,7 +7,7 @@
 <div data-controller="chrono"
      data-chrono-type-value="{{ wod.type.value }}"
      data-chrono-duree-value="{{ wod.duree }}"
-     data-chrono-lignes-value="{{ wod.lignes|map(l => wod.type.value == 'tabata' ? l.mouvement.nom : l.libelle)|json_encode|e('html_attr') }}">
+     data-chrono-lignes-value="{{ (wod.toutChaqueMinute ? [wod.lignes|map(l => l.libelle)|join(' · ')] : wod.lignes|map(l => wod.type.value == 'tabata' ? l.mouvement.nom : l.libelle))|json_encode|e('html_attr') }}">
 <div class="layout-aside">
     <div class="stack" style="--stack: 24px">
         <twig:Tableau :wod="wod">

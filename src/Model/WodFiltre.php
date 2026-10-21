@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Enum\Benchmark;
 use App\Enum\Difficulte;
 use App\Enum\WodType;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,6 +19,7 @@ final class WodFiltre
         public ?string $q = null,
         public ?WodType $type = null,
         public ?Difficulte $difficulte = null,
+        public ?Benchmark $benchmark = null,
         #[Assert\Range(min: 1, max: 90)]
         public ?int $dureeMax = null,
         #[Assert\Choice(choices: self::TRIS)]
@@ -29,6 +31,6 @@ final class WodFiltre
 
     public function estActif(): bool
     {
-        return null !== $this->q || null !== $this->type || null !== $this->difficulte || null !== $this->dureeMax;
+        return null !== $this->q || null !== $this->type || null !== $this->difficulte || null !== $this->dureeMax || null !== $this->benchmark;
     }
 }

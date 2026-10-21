@@ -40,6 +40,9 @@ class WodRepository extends ServiceEntityRepository
         if (null !== $filtre->difficulte) {
             $qb->andWhere('w.difficulte = :difficulte')->setParameter('difficulte', $filtre->difficulte);
         }
+        if (null !== $filtre->benchmark) {
+            $qb->andWhere('w.benchmark = :benchmark')->setParameter('benchmark', $filtre->benchmark);
+        }
         if (null !== $filtre->dureeMax) {
             $qb->andWhere('w.duree <= :dureeMax')->setParameter('dureeMax', $filtre->dureeMax);
         }
@@ -58,7 +61,7 @@ class WodRepository extends ServiceEntityRepository
     }
 
     /**
-     * Le WOD du jour : choisi de façon déterministe parmi les WODs officiels,
+     * Le WOD du jour : choisi de façon déterministe parmi les WODs de référence (officiels),
      * pour que tout le monde voie le même WOD à la même date.
      */
     public function wodDuJour(\DateTimeImmutable $date): ?Wod

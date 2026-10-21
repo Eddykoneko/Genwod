@@ -16,7 +16,7 @@
     </ul>
     <footer>
         <span>
-            {% if wod.officiel %}{{ ux_icon('lucide:badge-check', {class: 'icon-inline', style: 'color: var(--accent)'}) }} Officiel
+            {% if wod.benchmark %}{{ ux_icon(wod.benchmark.value == 'hero' ? 'lucide:medal' : 'lucide:badge-check', {class: 'icon-inline', style: 'color: var(--accent)'}) }} {{ wod.benchmark.label }}
             {% elseif wod.auteur %}par {{ wod.auteur.pseudo }}
             {% else %}Généré{% endif %}
         </span>

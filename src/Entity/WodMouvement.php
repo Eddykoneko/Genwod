@@ -52,13 +52,23 @@ class WodMouvement
             return '';
         }
 
-        // En Tabata, on fait un maximum de répétitions : pas de quantité imposée.
-        $libelle = WodType::Tabata === $this->wod?->getType()
-            ? ($mouvement->getNom() ?? '')
-            : $this->getUnite()->format($this->quantite).' '.$mouvement->getNom();
+        $libelle = $this->getQuantiteLisible().' '.$mouvement->getNom();
         $charge = $this->note ?? $mouvement->getChargeRx();
 
         return null !== $charge ? $libelle.' ('.$charge.')' : $libelle;
+    }
+
+    /**
+     * Quantité affichée : le schéma du WOD (« 21-15-9 »), « 8× » en Tabata
+     * (maximum de répétitions sur chaque intervalle), sinon la quantité et son unité.
+     */
+    public function getQuantiteLisible(): string
+    {
+        return match (true) {
+            null !== $this->wod?->getSchemaReps() => (string) $this->wod->getSchemaReps(),
+            WodType::Tabata === $this->wod?->getType() => '8×',
+            default => $this->getUnite()->format($this->quantite),
+        };
     }
 
     public function getUnite(): Unite
