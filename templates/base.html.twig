@@ -17,6 +17,8 @@
         <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
         {# Applique le thème choisi avant le premier rendu (évite le flash). #}
         <script>try{var t=localStorage.getItem('genwod-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+        {# Design d'aperçu (?design=… ou choix mémorisé), appliqué avant le premier rendu. #}
+        <script>try{var d=new URLSearchParams(location.search).get('design');if(d!==null)localStorage.setItem('genwod-design',d);d=localStorage.getItem('genwod-design');if(d)document.documentElement.dataset.design=d}catch(e){}</script>
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
@@ -36,5 +38,6 @@
 
         {{ include('_footer.html.twig') }}
         {{ include('_tabbar.html.twig') }}
+        {{ include('_design_switcher.html.twig') }}
     </body>
 </html>

@@ -1,0 +1,139 @@
+/* ==========================================================================
+   Design « Éditorial » — magazine de sport
+   Papier clair, titres serif, rouge, filets fins, mise en page aérée.
+   ========================================================================== */
+
+:root[data-design="editorial"],
+:root[data-design="editorial"][data-theme] {
+    --bg: #f3eee4;
+    --bg-elev: #faf7f1;
+    --surface: transparent;
+    --surface-2: #ebe4d6;
+    --surface-3: #ddd4c2;
+    --border: #cfc6b4;
+    --border-strong: #1c1a17;
+    --text: #1c1a17;
+    --text-muted: #5f584c;
+    --text-faint: #8d8576;
+    --accent: #c8102e;
+    --accent-hover: #a50d26;
+    --accent-ink: #ffffff;
+    --accent-soft: rgb(200 16 46 / 0.08);
+    --lime: #1c1a17;
+    --lime-soft: rgb(28 26 23 / 0.07);
+    --cyan: #1d4e89;
+    --cyan-soft: rgb(29 78 137 / 0.08);
+    --success: #2e6b3a;
+    --success-soft: rgb(46 107 58 / 0.1);
+    --danger: #c8102e;
+    --danger-soft: rgb(200 16 46 / 0.08);
+    --gold: #a07a1c;
+    --silver: #6e7378;
+    --bronze: #8a5a32;
+    --heat-0: #e5ddcd;
+    --heat-1: #e9a5ae;
+    --heat-2: #d4566a;
+    --heat-3: #c8102e;
+    --radius-sm: 2px;
+    --radius: 2px;
+    --radius-lg: 2px;
+    --shadow: none;
+    --ring: 0 0 0 2px #f3eee4, 0 0 0 4px #c8102e;
+    --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
+    --font: "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+    color-scheme: light;
+}
+
+[data-design="editorial"] .nav-end [data-controller="theme"] { display: none; }
+
+/* Typographie : serif, minuscules, italiques rouges */
+[data-design="editorial"] h1, [data-design="editorial"] h2, [data-design="editorial"] h3 { font-weight: 600; letter-spacing: -0.015em; text-transform: none !important; }
+[data-design="editorial"] .display { text-transform: none; font-weight: 600; letter-spacing: -0.03em; line-height: 1.02; }
+[data-design="editorial"] .hero h1 { font-size: clamp(2.8rem, 8vw, 5.6rem); }
+[data-design="editorial"] .hero h1 em, [data-design="editorial"] .accent { font-style: italic; color: var(--accent); }
+[data-design="editorial"] .hero .lead { font-family: var(--font-display); font-size: 1.3rem; font-style: italic; color: var(--text-muted); }
+[data-design="editorial"] .hero-glow { display: none; }
+[data-design="editorial"] .eyebrow { color: var(--accent); letter-spacing: 0.22em; font-size: 0.7rem; border-top: 2px solid var(--text); padding-top: 8px; display: inline-block; }
+
+/* En-tête façon « une » de journal */
+[data-design="editorial"] .topbar { background: var(--bg); backdrop-filter: none; border-bottom: 3px double var(--text); }
+[data-design="editorial"] .brand { font-family: var(--font-display); font-weight: 700; text-transform: none; font-size: 1.6rem; letter-spacing: -0.02em; }
+[data-design="editorial"] .brand img { border-radius: 50%; filter: grayscale(1); }
+[data-design="editorial"] .brand span b { color: var(--accent); font-style: italic; }
+[data-design="editorial"] .nav-links a { border-radius: 0; color: var(--text); font-weight: 500; }
+[data-design="editorial"] .nav-links a:hover { background: none; text-decoration: underline; text-decoration-color: var(--accent); }
+[data-design="editorial"] .nav-links a[aria-current="page"] { background: none; box-shadow: inset 0 -2px 0 var(--accent); }
+[data-design="editorial"] .tabbar { background: var(--bg-elev); border-top: 1px solid var(--text); backdrop-filter: none; }
+[data-design="editorial"] .tabbar .tab-generer span.tab-fab { border-radius: 50%; box-shadow: none; }
+
+/* Boutons : rectangles noirs, liens soulignés */
+[data-design="editorial"] .btn { border-radius: 0; font-weight: 600; letter-spacing: 0.01em; }
+[data-design="editorial"] .btn-primary { --btn-bg: var(--text); --btn-fg: #fff; box-shadow: none; }
+[data-design="editorial"] .btn-primary:hover { --btn-bg: var(--accent); }
+[data-design="editorial"] .btn-outline { --btn-border: var(--text); }
+[data-design="editorial"] .btn-ghost { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--border); }
+
+/* Cartes sans boîte : de simples filets */
+[data-design="editorial"] .card,
+[data-design="editorial"] .stat,
+[data-design="editorial"] .wod-card { background: transparent; border: 0; border-top: 2px solid var(--text); border-radius: 0; box-shadow: none; padding-inline: 0; }
+[data-design="editorial"] .card-flush { border-top: 2px solid var(--text); }
+[data-design="editorial"] .card-head h2, [data-design="editorial"] .card-head h3 { font-family: var(--font-display); text-transform: none; font-size: 1.35rem; letter-spacing: -0.01em; }
+[data-design="editorial"] .wod-card::before { display: none; }
+[data-design="editorial"] .wod-card:hover { transform: none; box-shadow: none; }
+[data-design="editorial"] .wod-card:hover h3 { color: var(--accent); }
+[data-design="editorial"] .wod-card h3 { font-family: var(--font-display); text-transform: none; font-size: 1.55rem; }
+[data-design="editorial"] .wod-card .wod-lines li::before { content: "·"; }
+
+/* Le WOD comme un programme imprimé */
+[data-design="editorial"] .board { background: var(--bg-elev); border: 1px solid var(--text); border-radius: 0; box-shadow: 6px 6px 0 var(--surface-3); }
+[data-design="editorial"] .board::after { display: none; }
+[data-design="editorial"] .board-title { text-transform: none; font-size: clamp(2.4rem, 7vw, 3.8rem); font-weight: 600; font-style: italic; }
+[data-design="editorial"] .board-format { color: var(--accent); font-family: var(--font); font-size: 0.8rem; letter-spacing: 0.18em; }
+[data-design="editorial"] .board-lines li { border-bottom: 1px dotted var(--text-faint); }
+[data-design="editorial"] .board-lines li::before { font-family: var(--font-display); font-style: italic; }
+[data-design="editorial"] .board-lines .qte { font-family: var(--font-display); font-weight: 600; font-style: italic; color: var(--accent); font-size: 1.6rem; }
+[data-design="editorial"] .board-lines .mvt { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; }
+[data-design="editorial"] .board-consignes { background: none; border-left: 2px solid var(--accent); border-radius: 0; font-family: var(--font-display); font-style: italic; font-size: 1.05rem; color: var(--text); }
+
+/* Badges, formulaires */
+[data-design="editorial"] .badge { border-radius: 0; background: none; border: 1px solid var(--text); color: var(--text); letter-spacing: 0.12em; font-weight: 600; }
+[data-design="editorial"] .badge-type { color: var(--accent); border-color: var(--accent); }
+[data-design="editorial"] .badge-accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+[data-design="editorial"] .type-for_time, [data-design="editorial"] .type-amrap, [data-design="editorial"] .type-emom, [data-design="editorial"] .type-tabata { --type-color: var(--accent); }
+[data-design="editorial"] .flammes { color: var(--accent); }
+[data-design="editorial"] input[type="text"], [data-design="editorial"] input[type="email"], [data-design="editorial"] input[type="password"],
+[data-design="editorial"] input[type="number"], [data-design="editorial"] input[type="date"], [data-design="editorial"] input[type="search"],
+[data-design="editorial"] textarea, [data-design="editorial"] select { border-radius: 0; border: 0; border-bottom: 1px solid var(--text); background: transparent; padding-inline: 2px; }
+[data-design="editorial"] .search-input input { border-radius: 0; background: transparent; font-family: var(--font-display); font-size: 1.3rem; font-style: italic; }
+[data-design="editorial"] .filters-row select { border-radius: 0; background-color: transparent; }
+[data-design="editorial"] .segmented label > span, [data-design="editorial"] .chips label > span, [data-design="editorial"] .choice-pill { border-radius: 0; background: transparent; border-color: var(--text-faint); }
+[data-design="editorial"] .segmented input:checked + span, [data-design="editorial"] .chips input:checked + span, [data-design="editorial"] .choice-inline input:checked + .choice-pill { background: var(--text); color: #fff; border-color: var(--text); }
+[data-design="editorial"] .segmented input:checked + span small, [data-design="editorial"] .segmented input:checked + span .flammes { color: #fff; }
+[data-design="editorial"] .gen-empty { border-radius: 0; border: 1px solid var(--text); font-family: var(--font-display); font-style: italic; }
+[data-design="editorial"] .gen-empty h2 { font-style: normal; }
+
+/* Stats, classements */
+[data-design="editorial"] .stat .stat-value, [data-design="editorial"] .stats-band strong { font-family: var(--font-display); font-weight: 600; font-style: italic; }
+[data-design="editorial"] .stats-band div { border-top: 1px solid var(--text); }
+[data-design="editorial"] .avatar { border-radius: 50%; filter: grayscale(1); }
+[data-design="editorial"] .rank { border-radius: 50%; background: none; border: 1px solid var(--text-faint); font-family: var(--font-display); font-style: italic; }
+[data-design="editorial"] .rank-1 { border-color: var(--accent); color: var(--accent); }
+[data-design="editorial"] .podium .marche { border-radius: 0; font-family: var(--font-display); font-style: italic; background: none !important; border: 1px solid var(--text); border-bottom: 0; color: var(--text) !important; }
+[data-design="editorial"] .podium .p1 .marche { background: var(--text) !important; color: #fff !important; }
+[data-design="editorial"] .tabs { border-radius: 0; background: none; border-bottom: 1px solid var(--text); padding: 0; }
+[data-design="editorial"] .tabs a { border-radius: 0; }
+[data-design="editorial"] .tabs a[aria-current="page"] { background: none; box-shadow: inset 0 -3px 0 var(--accent); color: var(--text); }
+[data-design="editorial"] .table th { color: var(--text); border-bottom: 2px solid var(--text); }
+[data-design="editorial"] .table tr.moi td { background: var(--accent-soft); }
+[data-design="editorial"] .heatmap i { border-radius: 50%; }
+[data-design="editorial"] .feature-icon { border-radius: 50%; background: none; border: 1px solid var(--accent); }
+[data-design="editorial"] .steps li::before { border-radius: 50%; background: none; border: 1px solid var(--text); font-family: var(--font-display); font-style: italic; }
+[data-design="editorial"] .alert { border-radius: 0; border: 1px solid var(--text); background: var(--bg-elev); }
+[data-design="editorial"] .footer { border-top: 3px double var(--text); font-family: var(--font-display); font-style: italic; }
+[data-design="editorial"] .chrono-dialog { background: var(--bg); }
+[data-design="editorial"] .chrono-time { font-family: var(--font-display); font-style: italic; font-weight: 600; }
+[data-design="editorial"] .chrono[data-etat="effort"] .chrono-time { color: var(--accent); }
+[data-design="editorial"] .chrono[data-etat="repos"] .chrono-time,
+[data-design="editorial"] .chrono[data-etat="decompte"] .chrono-time,
+[data-design="editorial"] .chrono[data-etat="fini"] .chrono-time { color: var(--text); }

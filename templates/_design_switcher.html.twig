@@ -1,0 +1,7 @@
+{# Aperçu temporaire des 3 propositions de refonte graphique — à retirer une fois le design choisi. #}
+<div class="design-switcher" data-controller="design" role="group" aria-label="Aperçu des designs" data-turbo-permanent id="design-switcher">
+    <span>Design</span>
+    {% for valeur, libelle in {'': 'Actuel', 'brut': 'Brut', 'editorial': 'Éditorial', 'neon': 'Néon'} %}
+        <button type="button" data-design-target="choix" data-action="design#choisir" data-design-valeur-param="{{ valeur }}">{{ libelle }}</button>
+    {% endfor %}
+</div>

@@ -1,0 +1,138 @@
+/* ==========================================================================
+   Design « Brut » — garage CrossFit industriel
+   Béton, jaune chantier, angles droits, bordures épaisses, chiffres mono.
+   ========================================================================== */
+
+:root[data-design="brut"],
+:root[data-design="brut"][data-theme] {
+    --bg: #121212;
+    --bg-elev: #1a1a1a;
+    --surface: #1a1a1a;
+    --surface-2: #232323;
+    --surface-3: #2e2e2e;
+    --border: #3a3a3a;
+    --border-strong: #f2f2ec;
+    --text: #f2f2ec;
+    --text-muted: #b4b4ac;
+    --text-faint: #7c7c76;
+    --accent: #ffd400;
+    --accent-hover: #ffe14d;
+    --accent-ink: #000000;
+    --accent-soft: rgb(255 212 0 / 0.14);
+    --lime: #ffd400;
+    --lime-soft: rgb(255 212 0 / 0.14);
+    --cyan: #f2f2ec;
+    --cyan-soft: rgb(242 242 236 / 0.1);
+    --heat-0: #232323;
+    --heat-1: #5c4f00;
+    --heat-2: #a38700;
+    --heat-3: #ffd400;
+    --radius-sm: 0;
+    --radius: 0;
+    --radius-lg: 0;
+    --shadow: none;
+    --ring: 0 0 0 3px #ffd400;
+    --font-display: Impact, "Haettenschweiler", "Arial Narrow Bold", "Oswald", "Bebas Neue", sans-serif;
+    --font: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+    color-scheme: dark;
+}
+
+[data-design="brut"] body {
+    background:
+        repeating-linear-gradient(0deg, rgb(255 255 255 / 0.012) 0 2px, transparent 2px 4px),
+        var(--bg);
+}
+[data-design="brut"] .nav-end [data-controller="theme"] { display: none; }
+
+/* Typographie : condensée, majuscules, chiffres en mono */
+[data-design="brut"] h1, [data-design="brut"] h2, [data-design="brut"] h3 { font-weight: 400; letter-spacing: 0.01em; text-transform: uppercase; }
+[data-design="brut"] .display { font-weight: 400; letter-spacing: 0; line-height: 0.9; }
+[data-design="brut"] .eyebrow { color: #000; background: var(--accent); display: inline-block; padding: 2px 8px; letter-spacing: 0.18em; }
+[data-design="brut"] .hero h1 { font-size: clamp(3rem, 11vw, 7rem); }
+[data-design="brut"] .hero h1 em { color: #000; background: var(--accent); padding: 0 0.12em; }
+[data-design="brut"] .hero-glow { display: none; }
+[data-design="brut"] .nums,
+[data-design="brut"] .stat-value,
+[data-design="brut"] .stats-band strong,
+[data-design="brut"] .board-lines .qte,
+[data-design="brut"] .chrono-time,
+[data-design="brut"] .table .num { font-family: var(--font-mono); font-weight: 800; letter-spacing: -0.04em; }
+
+/* Barre du haut et onglets */
+[data-design="brut"] .topbar { background: #000; border-bottom: 3px solid var(--accent); backdrop-filter: none; }
+[data-design="brut"] .brand { font-weight: 400; letter-spacing: 0.04em; }
+[data-design="brut"] .brand img { border-radius: 0; }
+[data-design="brut"] .brand span b { color: var(--accent); }
+[data-design="brut"] .nav-links a { border-radius: 0; text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.1em; }
+[data-design="brut"] .nav-links a[aria-current="page"] { background: var(--accent); color: #000; }
+[data-design="brut"] .tabbar { background: #000; border-top: 3px solid var(--accent); backdrop-filter: none; }
+[data-design="brut"] .tabbar a { text-transform: uppercase; letter-spacing: 0.06em; }
+[data-design="brut"] .tabbar .tab-generer span.tab-fab { border-radius: 0; box-shadow: 4px 4px 0 #f2f2ec; }
+
+/* Boutons : rectangles, ombre portée dure */
+[data-design="brut"] .btn { border-radius: 0; border-width: 2px; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.85rem; }
+[data-design="brut"] .btn-primary { box-shadow: 4px 4px 0 var(--text); border-color: var(--accent); }
+[data-design="brut"] .btn-primary:active { box-shadow: 1px 1px 0 var(--text); transform: translate(3px, 3px); }
+[data-design="brut"] .btn-outline { --btn-border: var(--text); }
+
+/* Cartes, tableau du WOD */
+[data-design="brut"] .card,
+[data-design="brut"] .board,
+[data-design="brut"] .stat,
+[data-design="brut"] .wod-card { border: 2px solid var(--border); }
+[data-design="brut"] .card-head h2, [data-design="brut"] .card-head h3 { font-family: var(--font-display); font-weight: 400; letter-spacing: 0.04em; }
+[data-design="brut"] .board { border-color: var(--text); padding-top: calc(clamp(20px, 4vw, 32px) + 14px); }
+[data-design="brut"] .board::after {
+    inset: 0 0 auto 0; width: auto; height: 14px; border-radius: 0;
+    background: repeating-linear-gradient(-45deg, var(--accent) 0 14px, #000 14px 28px);
+}
+[data-design="brut"] .board-title { font-size: clamp(2.6rem, 8vw, 4.4rem); font-weight: 400; }
+[data-design="brut"] .board-format { color: var(--accent); font-weight: 400; letter-spacing: 0.06em; }
+[data-design="brut"] .board-lines li { border-bottom: 2px solid var(--border); }
+[data-design="brut"] .board-lines .qte { color: var(--accent); font-size: 1.5rem; }
+[data-design="brut"] .board-lines .mvt { text-transform: uppercase; letter-spacing: 0.02em; }
+[data-design="brut"] .board-consignes { border-left: 6px solid var(--accent); background: var(--surface-2); }
+[data-design="brut"] .wod-card::before { width: 6px; }
+[data-design="brut"] .wod-card:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--accent); border-color: var(--text); }
+[data-design="brut"] .wod-card h3 { font-family: var(--font-display); font-weight: 400; font-size: 1.5rem; letter-spacing: 0.02em; }
+[data-design="brut"] .type-for_time, [data-design="brut"] .type-amrap, [data-design="brut"] .type-emom, [data-design="brut"] .type-tabata { --type-color: var(--accent); }
+
+/* Badges, formulaires, choix */
+[data-design="brut"] .badge { border-radius: 0; border: 2px solid currentColor; background: transparent; }
+[data-design="brut"] .badge-type, [data-design="brut"] .badge-accent { background: var(--accent); color: #000; border-color: var(--accent); }
+[data-design="brut"] .flammes { color: var(--accent); }
+[data-design="brut"] input[type="text"], [data-design="brut"] input[type="email"], [data-design="brut"] input[type="password"],
+[data-design="brut"] input[type="number"], [data-design="brut"] input[type="date"], [data-design="brut"] input[type="search"],
+[data-design="brut"] textarea, [data-design="brut"] select { border-radius: 0; border: 2px solid var(--border); background: #0c0c0c; }
+[data-design="brut"] .search-input input { border-radius: 0; }
+[data-design="brut"] .filters-row select { border-radius: 0; }
+[data-design="brut"] .segmented label > span, [data-design="brut"] .chips label > span, [data-design="brut"] .choice-pill { border-radius: 0; border-width: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
+[data-design="brut"] .segmented input:checked + span, [data-design="brut"] .chips input:checked + span, [data-design="brut"] .choice-inline input:checked + .choice-pill { background: var(--accent); color: #000; border-color: var(--accent); }
+[data-design="brut"] .segmented input:checked + span small, [data-design="brut"] .segmented input:checked + span .flammes { color: #000; }
+[data-design="brut"] .gen-empty { border-radius: 0; border: 2px dashed var(--accent); }
+
+/* Classements, stats, divers */
+[data-design="brut"] .rank { border-radius: 0; font-family: var(--font-mono); }
+[data-design="brut"] .rank-1 { background: var(--accent); color: #000; }
+[data-design="brut"] .podium .marche { border-radius: 0; font-family: var(--font-mono); }
+[data-design="brut"] .podium .p1 .marche { background: var(--accent); color: #000; }
+[data-design="brut"] .podium .p2 .marche { background: #d9d9d2; color: #000; }
+[data-design="brut"] .podium .p3 .marche { background: #6f6f69; color: #000; }
+[data-design="brut"] .avatar { border-radius: 0; filter: grayscale(1) contrast(1.2); }
+[data-design="brut"] .tabs { border-radius: 0; border: 2px solid var(--border); }
+[data-design="brut"] .tabs a { border-radius: 0; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.78rem; }
+[data-design="brut"] .tabs a[aria-current="page"] { background: var(--accent); color: #000; }
+[data-design="brut"] .table th { color: var(--accent); }
+[data-design="brut"] .heatmap i { border-radius: 0; }
+[data-design="brut"] .feature-icon, [data-design="brut"] .steps li::before { border-radius: 0; background: var(--accent); color: #000; }
+[data-design="brut"] .alert { border-radius: 0; border: 2px solid var(--text); }
+[data-design="brut"] .stats-band div { border-top: 4px solid var(--accent); }
+[data-design="brut"] .footer { border-top: 3px solid var(--accent); background: #000; }
+[data-design="brut"] .chrono[data-etat="effort"] .chrono-time { color: var(--accent); }
+[data-design="brut"] .chrono-progress { border-radius: 0; height: 12px; }
+[data-design="brut"] .chrono-progress i { background: repeating-linear-gradient(-45deg, var(--accent) 0 10px, #000 10px 20px); }
+[data-design="brut"] .board-lines .mvt small { text-transform: none; letter-spacing: 0; }
+[data-design="brut"] .segmented label > span small { text-transform: none; letter-spacing: 0; }
+@media (max-width: 479px) {
+    [data-design="brut"] .segmented label > span { letter-spacing: 0; font-size: 0.85rem; padding-inline: 4px; }
+}

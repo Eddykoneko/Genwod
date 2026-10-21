@@ -1,0 +1,134 @@
+/* ==========================================================================
+   Design « Néon » — arcade / synthwave
+   Nuit violette, dégradés magenta → cyan, verre dépoli, lueurs.
+   ========================================================================== */
+
+:root[data-design="neon"],
+:root[data-design="neon"][data-theme] {
+    --bg: #0b0620;
+    --bg-elev: #160d36;
+    --surface: rgb(255 255 255 / 0.045);
+    --surface-2: rgb(255 255 255 / 0.07);
+    --surface-3: rgb(255 255 255 / 0.12);
+    --border: rgb(255 255 255 / 0.1);
+    --border-strong: rgb(255 255 255 / 0.22);
+    --text: #f1edff;
+    --text-muted: #b3a9d9;
+    --text-faint: #7d72a8;
+    --accent: #ff2bd6;
+    --accent-hover: #ff5ce0;
+    --accent-ink: #ffffff;
+    --accent-soft: rgb(255 43 214 / 0.16);
+    --lime: #00e5ff;
+    --lime-soft: rgb(0 229 255 / 0.14);
+    --cyan: #00e5ff;
+    --cyan-soft: rgb(0 229 255 / 0.14);
+    --success: #3cffb4;
+    --success-soft: rgb(60 255 180 / 0.14);
+    --gold: #ffd166;
+    --heat-0: rgb(255 255 255 / 0.06);
+    --heat-1: #5b2a8c;
+    --heat-2: #b02bd6;
+    --heat-3: #ff2bd6;
+    --radius-sm: 12px;
+    --radius: 18px;
+    --radius-lg: 28px;
+    --shadow: 0 20px 50px -20px rgb(120 40 255 / 0.55);
+    --ring: 0 0 0 3px rgb(0 229 255 / 0.6);
+    --neon: linear-gradient(100deg, #ff2bd6 0%, #8a4dff 50%, #00e5ff 100%);
+    --font-display: "Avenir Next", "Futura", "Century Gothic", ui-rounded, system-ui, sans-serif;
+    --font: ui-rounded, "SF Pro Rounded", "Avenir Next", system-ui, sans-serif;
+    color-scheme: dark;
+}
+
+[data-design="neon"] body {
+    background:
+        radial-gradient(900px 500px at 85% -10%, rgb(255 43 214 / 0.22), transparent 60%),
+        radial-gradient(800px 500px at -10% 30%, rgb(0 229 255 / 0.14), transparent 60%),
+        linear-gradient(180deg, #0b0620 0%, #120a33 100%) fixed;
+}
+[data-design="neon"] .nav-end [data-controller="theme"] { display: none; }
+
+/* Texte en dégradé */
+[data-design="neon"] .hero h1 em,
+[data-design="neon"] .board-format,
+[data-design="neon"] .stat-value,
+[data-design="neon"] .stats-band strong,
+[data-design="neon"] .brand span b {
+    background: var(--neon);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+[data-design="neon"] h1, [data-design="neon"] h2, [data-design="neon"] h3 { font-weight: 800; letter-spacing: -0.02em; }
+[data-design="neon"] .display { letter-spacing: -0.03em; }
+[data-design="neon"] .hero h1 { text-shadow: 0 0 40px rgb(255 43 214 / 0.35); }
+[data-design="neon"] .hero-glow { display: none; }
+[data-design="neon"] .eyebrow { color: var(--cyan); text-shadow: 0 0 12px rgb(0 229 255 / 0.6); }
+
+/* Verre dépoli */
+[data-design="neon"] .card,
+[data-design="neon"] .board,
+[data-design="neon"] .stat,
+[data-design="neon"] .wod-card,
+[data-design="neon"] .menu-panel,
+[data-design="neon"] .alert {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(18px) saturate(1.3);
+    -webkit-backdrop-filter: blur(18px) saturate(1.3);
+}
+[data-design="neon"] .topbar { background: rgb(11 6 32 / 0.6); border-bottom-color: var(--border); }
+[data-design="neon"] .brand img { border-radius: 12px; box-shadow: 0 0 18px rgb(255 43 214 / 0.5); }
+[data-design="neon"] .nav-links a[aria-current="page"] { background: var(--accent-soft); color: #fff; box-shadow: inset 0 0 0 1px rgb(255 43 214 / 0.5); }
+[data-design="neon"] .tabbar { background: rgb(11 6 32 / 0.75); }
+[data-design="neon"] .tabbar a[aria-current="page"] { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
+[data-design="neon"] .tabbar .tab-generer span.tab-fab { background: var(--neon); border-radius: 50%; box-shadow: 0 0 24px rgb(255 43 214 / 0.7); color: #fff; }
+
+/* Boutons lumineux */
+[data-design="neon"] .btn-primary { --btn-bg: transparent; background: var(--neon); color: #fff; box-shadow: 0 0 0 1px rgb(255 255 255 / 0.15) inset, 0 10px 30px -8px rgb(255 43 214 / 0.8); }
+[data-design="neon"] .btn-primary:hover { filter: brightness(1.12); box-shadow: 0 0 0 1px rgb(255 255 255 / 0.25) inset, 0 12px 38px -6px rgb(0 229 255 / 0.7); }
+[data-design="neon"] .btn-outline { --btn-border: rgb(0 229 255 / 0.5); --btn-fg: var(--cyan); }
+[data-design="neon"] .btn[aria-pressed="true"].btn-toggle-like { box-shadow: 0 0 18px rgb(255 43 214 / 0.5); }
+
+/* Tableau du WOD */
+[data-design="neon"] .board { box-shadow: 0 0 0 1px rgb(255 43 214 / 0.25), 0 30px 80px -30px rgb(255 43 214 / 0.55); }
+[data-design="neon"] .board::after { width: 320px; height: 320px; right: -120px; top: -140px; background: radial-gradient(closest-side, rgb(0 229 255 / 0.25), transparent); }
+[data-design="neon"] .board-lines li { border-bottom: 1px solid var(--border); }
+[data-design="neon"] .board-lines .qte { color: var(--cyan); text-shadow: 0 0 14px rgb(0 229 255 / 0.55); }
+[data-design="neon"] .board-consignes { background: rgb(0 229 255 / 0.06); border: 1px solid rgb(0 229 255 / 0.2); }
+[data-design="neon"] .wod-card::before { width: 100%; height: 3px; inset: 0 0 auto 0; background: var(--neon); }
+[data-design="neon"] .wod-card:hover { border-color: rgb(255 43 214 / 0.5); box-shadow: 0 0 30px -6px rgb(255 43 214 / 0.6); }
+[data-design="neon"] .type-for_time { --type-color: #ff2bd6; }
+[data-design="neon"] .type-amrap { --type-color: #00e5ff; }
+[data-design="neon"] .type-emom { --type-color: #3cffb4; }
+[data-design="neon"] .type-tabata { --type-color: #b388ff; }
+[data-design="neon"] .badge-type { box-shadow: 0 0 12px color-mix(in srgb, var(--type-color) 45%, transparent); }
+
+/* Formulaires et choix */
+[data-design="neon"] input[type="text"], [data-design="neon"] input[type="email"], [data-design="neon"] input[type="password"],
+[data-design="neon"] input[type="number"], [data-design="neon"] input[type="date"], [data-design="neon"] input[type="search"],
+[data-design="neon"] textarea, [data-design="neon"] select { background: rgb(0 0 0 / 0.25); border-color: var(--border-strong); }
+[data-design="neon"] .search-input input { background: rgb(255 255 255 / 0.06); }
+[data-design="neon"] .segmented input:checked + span,
+[data-design="neon"] .chips input:checked + span,
+[data-design="neon"] .choice-inline input:checked + .choice-pill { border-color: var(--accent); background: var(--accent-soft); color: #fff; box-shadow: 0 0 20px -4px rgb(255 43 214 / 0.7); }
+[data-design="neon"] .gen-empty { border-color: rgb(255 43 214 / 0.35); }
+[data-design="neon"] .gen-empty svg { filter: drop-shadow(0 0 12px rgb(255 43 214 / 0.8)); }
+[data-design="neon"] input[type="range"] { accent-color: var(--accent); }
+
+/* Stats, classements */
+[data-design="neon"] .feature-icon { background: var(--neon); color: #fff; box-shadow: 0 0 20px -4px rgb(255 43 214 / 0.8); }
+[data-design="neon"] .steps li::before { background: var(--neon); color: #fff; }
+[data-design="neon"] .rank-1 { box-shadow: 0 0 16px rgb(255 209 102 / 0.6); }
+[data-design="neon"] .podium .p1 .marche { box-shadow: 0 -10px 40px -10px rgb(255 209 102 / 0.6); }
+[data-design="neon"] .heatmap i[data-n="3"] { box-shadow: 0 0 8px rgb(255 43 214 / 0.8); }
+[data-design="neon"] .tabs { background: rgb(255 255 255 / 0.05); }
+[data-design="neon"] .tabs a[aria-current="page"] { background: var(--neon); color: #fff; }
+[data-design="neon"] .avatar { box-shadow: 0 0 0 2px rgb(255 255 255 / 0.15), 0 0 16px -2px hsl(var(--h) 90% 60% / 0.7); }
+[data-design="neon"] .table tr.moi td { background: rgb(255 43 214 / 0.1); }
+[data-design="neon"] .chrono-dialog { background: radial-gradient(circle at 50% 40%, #241052, #0b0620 70%); }
+[data-design="neon"] .chrono[data-etat="effort"] .chrono-time { color: #ff2bd6; text-shadow: 0 0 30px rgb(255 43 214 / 0.7); }
+[data-design="neon"] .chrono[data-etat="repos"] .chrono-time { color: #00e5ff; text-shadow: 0 0 30px rgb(0 229 255 / 0.7); }
+[data-design="neon"] .chrono-progress i { background: var(--neon); box-shadow: 0 0 12px rgb(255 43 214 / 0.8); }
+[data-design="neon"] .footer { border-top-color: var(--border); }

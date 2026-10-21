@@ -12,7 +12,7 @@
         <form class="gen-form" method="get" action="{{ path('app_generateur') }}" data-turbo-action="advance">
             <fieldset style="border:0;padding:0">
                 <legend class="field-label">Format</legend>
-                <div class="segmented">
+                <div class="segmented segmented-4">
                     {% for type in types %}
                         <label>
                             <input type="radio" name="type" value="{{ type.value }}" {{ criteres.type == type ? 'checked' }}>
