@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+<header class="b-page-head">
+    <p class="b-kicker">MON ESPACE</p>
+    <h1>{{ app.user.pseudo }}</h1>
+    {{ include('espace/_nav.html.twig') }}
+</header>
+
+{% if not app.user.verified %}
+    <div class="banner">{{ ux_icon('lucide:mail-warning') }}<span>Confirme ton adresse e-mail.</span>
+        <form method="post" action="{{ path('app_verify_email_resend') }}" class="inline-form" style="margin-left:auto"><input type="hidden" name="_token" value="{{ csrf_token('renvoyer-confirmation') }}"><button class="btn btn-sm btn-outline">Renvoyer le lien</button></form>
+    </div>
+{% endif %}
+
+<section class="b-mur">
+    <div class="b-mur-serie"><small>SÉRIE EN COURS</small><strong>{{ resume.serie }}</strong><span>JOUR{{ resume.serie > 1 ? 'S' }} · RECORD {{ resume.meilleureSerie }}</span></div>
+    <div><small>SÉANCES</small><strong>{{ resume.total.seances }}</strong><span>{{ resume.mois.seances }} CE MOIS</span></div>
+    <div><small>POINTS</small><strong>{{ resume.total.points }}</strong><span>{{ resume.mois.points }} CE MOIS</span></div>
+    <div><small>EN RX</small><strong>{{ resume.total.seances > 0 ? (resume.total.rx / resume.total.seances * 100)|round : 0 }}%</strong><span>DES SÉANCES</span></div>
+</section>
+
+<section class="b-block">
+    <h2><span>A</span> Activité</h2>
+    <twig:Heatmap :semaines="heatmap" />
+</section>
+
+<div class="b-deux">
+    <section class="b-block">
+        <h2><span>B</span> Dernières séances</h2>
+        <ol class="b-scores">
+            {% for s in dernieres %}
+                <li><span class="b-rang">{{ s.realiseeLe|date('d/m') }}</span><a href="{{ path('app_wod_show', {slug: s.wod.slug}) }}">{{ s.wod.titre }}</a><small>+{{ s.points }}</small><strong>{{ s.scoreLisible }}</strong></li>
+            {% else %}
+                <li class="b-vide"><a href="{{ path('app_generateur') }}">Première séance →</a></li>
+            {% endfor %}
+        </ol>
+    </section>
+    <section class="b-block">
+        <h2><span>C</span> Records</h2>
+        <ol class="b-scores">
+            {% for r in records %}
+                <li><span class="b-rang">PR</span><a href="{{ path('app_wod_show', {slug: r.wod.slug}) }}">{{ r.wod.titre }}</a><small>{{ r.mode.label }}</small><strong>{{ r.scoreLisible }}</strong></li>
+            {% else %}
+                <li class="b-vide">Pas encore de record.</li>
+            {% endfor %}
+        </ol>
+    </section>
+</div>
+{% endblock %}

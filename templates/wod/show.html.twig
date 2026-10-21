@@ -4,10 +4,7 @@
 {% block description %}{{ wod.format }} — {{ wod.lignes|map(l => l.libelle)|join(', ') }}. Chrono intégré et classement sur Genwod.{% endblock %}
 
 {% block body %}
-<div data-controller="chrono"
-     data-chrono-type-value="{{ wod.type.value }}"
-     data-chrono-duree-value="{{ wod.duree }}"
-     data-chrono-lignes-value="{{ (wod.toutChaqueMinute ? [wod.lignes|map(l => l.libelle)|join(' · ')] : wod.lignes|map(l => wod.type.value == 'tabata' ? l.mouvement.nom : l.libelle))|json_encode|e('html_attr') }}">
+<div {{ include('wod/_chrono_attributs.html.twig') }}>
 <div class="layout-aside">
     <div class="stack" style="--stack: 24px">
         <twig:Tableau :wod="wod">
@@ -98,26 +95,7 @@
                 {{ ux_icon('lucide:chevron-down', {class: 'chevron'}) }}
             </summary>
             <div class="mt-2">
-                {% if app.user %}
-                    {{ form_start(seanceForm) }}
-                        <div class="form-grid">
-                            {{ form_row(seanceForm.realiseeLe) }}
-                            {% if seanceForm.tempsSecondes is defined %}{{ form_row(seanceForm.tempsSecondes) }}{% endif %}
-                            {% if seanceForm.tours is defined %}{{ form_row(seanceForm.tours, {attr: {'data-chrono-cible': 'tours'}}) }}{% endif %}
-                            {% if seanceForm.reps is defined %}{{ form_row(seanceForm.reps) }}{% endif %}
-                        </div>
-                        {{ form_row(seanceForm.mode) }}
-                        {{ form_row(seanceForm.ressenti) }}
-                        {{ form_row(seanceForm.notes) }}
-                        <button class="btn btn-primary btn-block">{{ ux_icon('lucide:check') }} Enregistrer ma séance</button>
-                    {{ form_end(seanceForm) }}
-                {% else %}
-                    <p class="small muted">Créez un compte gratuit pour garder vos scores, battre vos records et apparaître au classement.</p>
-                    <div class="cluster mt-2">
-                        <a class="btn btn-primary" href="{{ path('app_register') }}">Créer un compte</a>
-                        <a class="btn btn-ghost" href="{{ path('app_login') }}">Connexion</a>
-                    </div>
-                {% endif %}
+                    {{ include('wod/_seance_form.html.twig') }}
             </div>
         </details>
 
@@ -129,36 +107,6 @@
 </div>
 
 {# Chrono plein écran, adapté au format du WOD. #}
-<dialog class="chrono-dialog" data-chrono-target="dialog" data-action="cancel->chrono#fermer" aria-label="Chrono">
-    <div class="chrono" data-chrono-target="ecran" data-etat="pret">
-        <div class="chrono-top">
-            <div>
-                <strong style="text-transform:uppercase;font-family:var(--font-display)">{{ wod.titre }}</strong>
-                <div class="tiny muted">{{ wod.format }}</div>
-            </div>
-            <button type="button" class="btn btn-ghost btn-icon" data-action="chrono#fermer" aria-label="Fermer le chrono">{{ ux_icon('lucide:x') }}</button>
-        </div>
-        <div class="chrono-center">
-            <div class="chrono-phase" data-chrono-target="phase">Prêt ?</div>
-            <div class="chrono-time" data-chrono-target="temps">0:00</div>
-            <div class="chrono-sub" data-chrono-target="sous"></div>
-            <div class="chrono-progress"><i data-chrono-target="barre"></i></div>
-            {% if wod.type.value == 'amrap' or (wod.type.value == 'for_time' and (wod.tours ?? 1) > 1) %}
-                <div class="tours-counter mt-2">
-                    Tours <strong data-chrono-target="tours">0</strong>
-                    <button type="button" class="btn btn-primary btn-icon" data-action="chrono#tourPlus" aria-label="Ajouter un tour">{{ ux_icon('lucide:plus') }}</button>
-                </div>
-            {% endif %}
-        </div>
-        <div class="chrono-actions">
-            <button type="button" class="btn btn-primary btn-lg" data-chrono-target="boutonDemarrer" data-action="chrono#demarrer">{{ ux_icon('lucide:play') }} Démarrer</button>
-            <button type="button" class="btn btn-outline btn-lg" data-chrono-target="boutonPause" data-action="chrono#pause" hidden>{{ ux_icon('lucide:pause') }} Pause</button>
-            {% if wod.type.value == 'for_time' %}
-                <button type="button" class="btn btn-lg" style="--btn-bg: var(--lime); --btn-fg: #111; --btn-border: transparent" data-chrono-target="boutonFini" data-action="chrono#terminer" hidden>{{ ux_icon('lucide:flag') }} Terminé !</button>
-            {% endif %}
-            <button type="button" class="btn btn-ghost btn-lg" data-action="chrono#reinitialiser">{{ ux_icon('lucide:rotate-ccw') }} Remise à zéro</button>
-        </div>
-    </div>
-</dialog>
+{{ include('wod/_chrono_dialog.html.twig') }}
 </div>
 {% endblock %}

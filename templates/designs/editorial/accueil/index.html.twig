@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Le générateur de WODs CrossFit{% endblock %}
+
+{% block body %}
+<div class="e-une">
+    <article class="e-une-principal">
+        {% if wodDuJour %}
+            <p class="e-surtitre">À la une · Le WOD du jour</p>
+            <h1 class="e-gros-titre"><a href="{{ path('app_wod_show', {slug: wodDuJour.slug}) }}">{{ wodDuJour.titre }}, l'épreuve du {{ 'now'|format_date('full')|split(' ')|first }}</a></h1>
+            <p class="e-chapo-une">{{ wodDuJour.format }}. {{ wodDuJour.difficulte.label }}. {{ wodDuJour.type.explication }}</p>
+            <div class="e-colonnes">
+                {% if wodDuJour.consignes %}<p class="e-lettrine">{{ wodDuJour.consignes }}</p>{% endif %}
+                <twig:Tableau :wod="wodDuJour" titreTag="h2" />
+                <p><a class="e-lire" href="{{ path('app_wod_show', {slug: wodDuJour.slug}) }}">Lire la fiche, lancer le chrono →</a></p>
+            </div>
+        {% endif %}
+    </article>
+
+    <aside class="e-une-cote">
+        <section>
+            <h2 class="e-rubrique">Les plus lus</h2>
+            <ol class="e-plus-lus">
+                {% for wod in populaires %}
+                    <li><a href="{{ path('app_wod_show', {slug: wod.slug}) }}"><strong>{{ wod.titre }}</strong><span>{{ wod.format }}</span></a></li>
+                {% endfor %}
+            </ol>
+        </section>
+        <section class="e-chiffres">
+            <h2 class="e-rubrique">En chiffres</h2>
+            <p><strong>{{ stats.wods }}</strong> WODs publiés</p>
+            <p><strong>{{ stats.seances }}</strong> séances racontées</p>
+            <p><strong>{{ stats.athletes }}</strong> athlètes engagés</p>
+        </section>
+        <a class="e-pub" href="{{ path('app_generateur') }}">
+            <span>Annonce</span>
+            <strong>Besoin d'un WOD sur mesure&nbsp;?</strong>
+            <em>Le générateur compose votre séance en un clic →</em>
+        </a>
+    </aside>
+</div>
+
+<section class="e-rubriques-bas">
+    <article>
+        <h2 class="e-rubrique">The Girls</h2>
+        <p>Fran, Grace, Cindy, Helen… Les benchmarks historiques, pour mesurer sa progression d'année en année.</p>
+        <a class="e-lire" href="{{ path('app_wod_index', {benchmark: 'girl'}) }}">Les découvrir →</a>
+    </article>
+    <article>
+        <h2 class="e-rubrique">Hero WODs</h2>
+        <p>Murph, DT, JT, Nate : des séances longues et dures, dédiées à des militaires morts en service.</p>
+        <a class="e-lire" href="{{ path('app_wod_index', {benchmark: 'hero'}) }}">Rendre hommage →</a>
+    </article>
+    <article>
+        <h2 class="e-rubrique">Le générateur</h2>
+        <p>Format, durée, difficulté, matériel : une séance équilibrée, composée pour vous et partageable.</p>
+        <a class="e-lire" href="{{ path('app_generateur') }}">Essayer →</a>
+    </article>
+</section>
+{% endblock %}

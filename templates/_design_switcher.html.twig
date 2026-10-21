@@ -1,7 +1,8 @@
 {# Aperçu temporaire des 3 propositions de refonte graphique — à retirer une fois le design choisi. #}
-<div class="design-switcher" data-controller="design" role="group" aria-label="Aperçu des designs" data-turbo-permanent id="design-switcher">
+{% set actuel = app.request.attributes.get('_design', '') %}
+<nav class="design-switcher" aria-label="Aperçu des designs">
     <span>Design</span>
     {% for valeur, libelle in {'': 'Actuel', 'brut': 'Brut', 'editorial': 'Éditorial', 'neon': 'Néon'} %}
-        <button type="button" data-design-target="choix" data-action="design#choisir" data-design-valeur-param="{{ valeur }}">{{ libelle }}</button>
+        <a href="{{ path(app.current_route ?? 'app_accueil', app.current_route_parameters|merge(app.request.query.all)|merge({design: valeur})) }}" data-turbo="false" aria-current="{{ actuel == valeur ? 'true' : 'false' }}">{{ libelle }}</a>
     {% endfor %}
-</div>
+</nav>

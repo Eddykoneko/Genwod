@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr" data-design="neon">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <title>{% block title %}Générateur de WODs CrossFit{% endblock %} · Genwod</title>
+        <meta name="description" content="{% block description %}Genwod génère des entraînements CrossFit (WOD) adaptés à votre niveau et à votre matériel.{% endblock %}">
+        <meta name="theme-color" content="#0b0620">
+        <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
+        <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+        {% block javascripts %}{% block importmap %}{{ importmap('app') }}{% endblock %}{% endblock %}
+    </head>
+    {% set route = app.current_route %}
+    <body class="n-body">
+        <a class="sr-only" href="#contenu">Aller au contenu</a>
+        <div class="n-aurora" aria-hidden="true"></div>
+
+        <header class="n-top">
+            <a class="n-logo" href="{{ path('app_accueil') }}"><img src="{{ asset('img/logo.png') }}" alt="" width="38" height="38"><span>genwod</span></a>
+            {% if app.user %}
+                <a class="n-moi" href="{{ path('app_tableau_de_bord') }}" aria-label="Mon espace">
+                    <span class="n-moi-txt">{{ app.user.pseudo }}</span>
+                    <span class="avatar" style="--h: {{ app.user.teinteAvatar }}">{{ app.user.initiales }}</span>
+                </a>
+            {% else %}
+                <a class="btn btn-primary btn-sm" href="{{ path('app_register') }}">Rejoindre</a>
+            {% endif %}
+        </header>
+
+        {{ include('_flashes.html.twig') }}
+
+        <main id="contenu" class="n-main">
+            {% block main %}{% block body %}{% endblock %}{% endblock %}
+            <footer class="n-footer">
+                <a href="{{ path('app_a_propos') }}">Concept</a>
+                <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+                <a href="{{ path('app_confidentialite') }}">Confidentialité</a>
+                {% if app.user %}<a href="{{ path('app_espace_profil') }}">Paramètres</a>{% if is_granted('ROLE_ADMIN') %}<a href="{{ path('admin') }}" data-turbo="false">Admin</a>{% endif %}<a href="{{ path('app_logout') }}" data-turbo="false">Déconnexion</a>{% else %}<a href="{{ path('app_login') }}">Connexion</a>{% endif %}
+            </footer>
+        </main>
+
+        <nav class="n-dock" aria-label="Navigation principale">
+            {% for item in [
+                ['app_accueil', 'Accueil', 'lucide:house', route == 'app_accueil'],
+                ['app_wod_index', 'WODs', 'lucide:library', route starts with 'app_wod'],
+                ['app_generateur', 'Générer', 'lucide:dices', route starts with 'app_generateur'],
+                ['app_classement', 'Top', 'lucide:trophy', route == 'app_classement'],
+                [app.user ? 'app_tableau_de_bord' : 'app_login', app.user ? 'Moi' : 'Connexion', app.user ? 'lucide:circle-user-round' : 'lucide:log-in', route starts with 'app_espace' or route == 'app_tableau_de_bord' or route == 'app_login'],
+            ] %}
+                <a href="{{ path(item[0]) }}" class="{{ item[0] == 'app_generateur' ? 'n-dock-fab' }}" {{ item[3] ? 'aria-current="page"' }}>{{ ux_icon(item[2]) }}<span>{{ item[1] }}</span></a>
+            {% endfor %}
+        </nav>
+        {{ include('_design_switcher.html.twig') }}
+    </body>
+</html>

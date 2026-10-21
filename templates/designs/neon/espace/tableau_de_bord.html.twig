@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+<section class="n-salut">
+    <p class="n-petit">Mon espace</p>
+    <h1>{{ resume.serie > 0 ? resume.serie ~ ' jour' ~ (resume.serie > 1 ? 's' : '') ~ ' de série 🔥' : 'On s\'y remet ? 💪' }}</h1>
+</section>
+{{ include('espace/_nav.html.twig') }}
+
+{% if not app.user.verified %}
+    <div class="banner">{{ ux_icon('lucide:mail-warning') }}<span>Confirme ton adresse e-mail.</span>
+        <form method="post" action="{{ path('app_verify_email_resend') }}" class="inline-form" style="margin-left:auto"><input type="hidden" name="_token" value="{{ csrf_token('renvoyer-confirmation') }}"><button class="btn btn-sm btn-outline">Renvoyer</button></form>
+    </div>
+{% endif %}
+
+<div class="n-bento n-bento-moi">
+    <div class="n-tuile n-tuile-anneaux">
+        <div class="n-anneau-bloc">
+            <twig:Anneau :valeur="resume.mois.seances" :max="20" libelle="mois" />
+            <div><strong>{{ resume.mois.seances }}<small>/20</small></strong><span>séances ce mois</span></div>
+        </div>
+        <div class="n-anneau-bloc">
+            <twig:Anneau :valeur="resume.serie" :max="max(resume.meilleureSerie, 1)" libelle="serie" />
+            <div><strong>{{ resume.serie }}<small>/{{ resume.meilleureSerie }}</small></strong><span>jours de série (record)</span></div>
+        </div>
+    </div>
+    <div class="n-tuile n-tuile-chiffres">
+        <div><strong>{{ resume.total.points }}</strong><span>points</span></div>
+        <div><strong>{{ resume.total.seances }}</strong><span>séances</span></div>
+        <div><strong>{{ resume.total.seances > 0 ? (resume.total.rx / resume.total.seances * 100)|round : 0 }}%</strong><span>en RX</span></div>
+    </div>
+    <section class="n-tuile n-tuile-large">
+        <h2>Activité</h2>
+        <twig:Heatmap :semaines="heatmap" />
+    </section>
+    <section class="n-tuile">
+        <h2>Récent</h2>
+        <ol class="n-liste">
+            {% for s in dernieres %}
+                <li><span class="n-rang">{{ s.realiseeLe|date('d/m') }}</span><a href="{{ path('app_wod_show', {slug: s.wod.slug}) }}">{{ s.wod.titre }}</a><strong>{{ s.scoreLisible }}</strong></li>
+            {% else %}
+                <li class="n-vide"><a href="{{ path('app_generateur') }}">Lance ta première séance ✨</a></li>
+            {% endfor %}
+        </ol>
+    </section>
+    <section class="n-tuile">
+        <h2>Records 🏅</h2>
+        <ol class="n-liste">
+            {% for r in records %}
+                <li><span class="n-rang">PR</span><a href="{{ path('app_wod_show', {slug: r.wod.slug}) }}">{{ r.wod.titre }}</a><strong>{{ r.scoreLisible }}</strong></li>
+            {% else %}
+                <li class="n-vide">Pas encore de record.</li>
+            {% endfor %}
+        </ol>
+    </section>
+</div>
+{% endblock %}

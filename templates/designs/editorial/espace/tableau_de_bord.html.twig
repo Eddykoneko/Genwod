@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+<header class="e-entete-page">
+    <p class="e-surtitre">Mon carnet d'entraînement</p>
+    <h1 class="e-gros-titre">Le bilan de {{ app.user.pseudo }}</h1>
+    {{ include('espace/_nav.html.twig') }}
+</header>
+
+{% if not app.user.verified %}
+    <div class="banner">{{ ux_icon('lucide:mail-warning') }}<span>Confirmez votre adresse e-mail.</span>
+        <form method="post" action="{{ path('app_verify_email_resend') }}" class="inline-form" style="margin-left:auto"><input type="hidden" name="_token" value="{{ csrf_token('renvoyer-confirmation') }}"><button class="btn btn-sm btn-outline">Renvoyer le lien</button></form>
+    </div>
+{% endif %}
+
+<p class="e-chapo-une e-bilan">
+    Vous avez réalisé <strong>{{ resume.total.seances }} séance{{ resume.total.seances > 1 ? 's' }}</strong>, dont {{ resume.mois.seances }} ce mois-ci,
+    pour un total de <strong>{{ resume.total.points }} points</strong>.
+    {% if resume.serie > 0 %}Vous vous entraînez depuis <strong>{{ resume.serie }} jour{{ resume.serie > 1 ? 's' }} d'affilée</strong> (record : {{ resume.meilleureSerie }}).{% else %}Votre meilleure série reste de {{ resume.meilleureSerie }} jours : à vous de la battre.{% endif %}
+    {% if resume.total.seances > 0 %}{{ (resume.total.rx / resume.total.seances * 100)|round }}&nbsp;% de vos séances ont été faites en RX.{% endif %}
+</p>
+
+<section class="e-section">
+    <h2 class="e-rubrique">Calendrier d'activité</h2>
+    <twig:Heatmap :semaines="heatmap" />
+</section>
+
+<div class="e-deux-colonnes">
+    <section class="e-section">
+        <h2 class="e-rubrique">Dernières séances</h2>
+        <table class="e-resultats">
+            {% for s in dernieres %}
+                <tr><td>{{ s.realiseeLe|format_date('short') }}</td><td><a href="{{ path('app_wod_show', {slug: s.wod.slug}) }}">{{ s.wod.titre }}</a></td><td class="e-leaders"></td><td><strong>{{ s.scoreLisible }}</strong></td></tr>
+            {% else %}
+                <tr><td><em>Aucune séance pour l'instant.</em></td></tr>
+            {% endfor %}
+        </table>
+    </section>
+    <section class="e-section">
+        <h2 class="e-rubrique">Records personnels</h2>
+        <table class="e-resultats">
+            {% for r in records %}
+                <tr><td><a href="{{ path('app_wod_show', {slug: r.wod.slug}) }}">{{ r.wod.titre }}</a> <em>({{ r.mode.label }})</em></td><td class="e-leaders"></td><td><strong>{{ r.scoreLisible }}</strong></td></tr>
+            {% else %}
+                <tr><td><em>Pas encore de record.</em></td></tr>
+            {% endfor %}
+        </table>
+    </section>
+</div>
+{% endblock %}

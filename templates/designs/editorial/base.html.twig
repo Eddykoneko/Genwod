@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr" data-design="editorial">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <title>{% block title %}Générateur de WODs CrossFit{% endblock %} · Genwod</title>
+        <meta name="description" content="{% block description %}Genwod génère des entraînements CrossFit (WOD) adaptés à votre niveau et à votre matériel.{% endblock %}">
+        <meta name="theme-color" content="#f3eee4">
+        <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
+        <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+        {% block javascripts %}{% block importmap %}{{ importmap('app') }}{% endblock %}{% endblock %}
+    </head>
+    {% set route = app.current_route %}
+    <body class="e-body has-tabbar">
+        <a class="sr-only" href="#contenu">Aller au contenu</a>
+
+        <header class="e-masthead">
+            <div class="e-ear">
+                <span>{{ 'now'|format_date('full')|capitalize }}</span>
+                <span class="e-ear-centre">Le quotidien du WOD · N° {{ 'now'|date('z') + 1 }}</span>
+                <span class="e-ear-compte">
+                    {% if app.user %}
+                        <a href="{{ path('app_tableau_de_bord') }}">{{ app.user.pseudo }}</a> ·
+                        <a href="{{ path('app_logout') }}" data-turbo="false">Déconnexion</a>
+                    {% else %}
+                        <a href="{{ path('app_login') }}">Connexion</a> · <a href="{{ path('app_register') }}">S'abonner</a>
+                    {% endif %}
+                </span>
+            </div>
+            <a class="e-titre" href="{{ path('app_accueil') }}">Genwod</a>
+            <p class="e-devise">« Tout ce qui ne vous tue pas vous rend plus fort »</p>
+            <nav class="e-rubriques" aria-label="Rubriques">
+                {% for item in [
+                    ['app_accueil', 'À la une'],
+                    ['app_generateur', 'Le générateur'],
+                    ['app_wod_index', 'Les WODs'],
+                    ['app_classement', 'Résultats'],
+                    ['app_a_propos', 'Le concept'],
+                ] %}
+                    <a href="{{ path(item[0]) }}" {{ route == item[0] or (item[0] != 'app_accueil' and route starts with item[0]|replace({'_index': ''})) ? 'aria-current="page"' }}>{{ item[1] }}</a>
+                {% endfor %}
+                {% if app.user %}<a href="{{ path('app_tableau_de_bord') }}" {{ route starts with 'app_espace' or route == 'app_tableau_de_bord' ? 'aria-current="page"' }}>Mon carnet</a>{% endif %}
+            </nav>
+        </header>
+
+        {{ include('_flashes.html.twig') }}
+
+        <main id="contenu" class="e-main">
+            {% block main %}
+                <div class="e-page">{% block body %}{% endblock %}</div>
+            {% endblock %}
+        </main>
+
+        <footer class="e-colophon">
+            <div>
+                <strong>Genwod</strong>
+                <p>Le générateur d'entraînements CrossFit. Projet DWWM de William Luong, revisité.</p>
+            </div>
+            <div>
+                <strong>Rubriques</strong>
+                <p><a href="{{ path('app_generateur') }}">Le générateur</a><br><a href="{{ path('app_wod_index', {benchmark: 'girl'}) }}">The Girls</a><br><a href="{{ path('app_wod_index', {benchmark: 'hero'}) }}">Hero WODs</a></p>
+            </div>
+            <div>
+                <strong>Informations</strong>
+                <p><a href="{{ path('app_mentions_legales') }}">Mentions légales</a><br><a href="{{ path('app_confidentialite') }}">Confidentialité</a><br><a href="https://github.com/Eddykoneko/Genwod" rel="noopener">Code source</a></p>
+            </div>
+        </footer>
+
+        {{ include('_tabbar.html.twig') }}
+        {{ include('_design_switcher.html.twig') }}
+    </body>
+</html>

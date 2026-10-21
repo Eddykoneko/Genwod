@@ -1,0 +1,46 @@
+<div {{ attributes }} data-loading="addClass(is-loading)" class="e-sommaire">
+    <div class="e-sommaire-filtres">
+        <input type="search" data-model="debounce(300)|q" placeholder="Rechercher dans les archives…" aria-label="Rechercher un WOD" autocomplete="off">
+        <p class="e-filtres-phrase">
+            Afficher
+            <select data-model="benchmark" aria-label="Origine"><option value="">tous les WODs</option>{% for b in this.benchmarks %}<option value="{{ b.value }}" {{ benchmark == b ? 'selected' }}>les {{ b.label }}</option>{% endfor %}</select>
+            au format
+            <select data-model="type" aria-label="Format"><option value="">quelconque</option>{% for t in this.types %}<option value="{{ t.value }}" {{ type == t ? 'selected' }}>{{ t.label }}</option>{% endfor %}</select>,
+            difficulté
+            <select data-model="difficulte" aria-label="Difficulté"><option value="">indifférente</option>{% for d in this.difficultes %}<option value="{{ d.value }}" {{ difficulte == d ? 'selected' }}>{{ d.label|lower }}</option>{% endfor %}</select>,
+            durée
+            <select data-model="dureeMax" aria-label="Durée maximale"><option value="">libre</option>{% for d in [10, 15, 20, 30] %}<option value="{{ d }}" {{ dureeMax == d ? 'selected' }}>≤ {{ d }} min</option>{% endfor %}</select>,
+            triés par
+            <select data-model="tri" aria-label="Tri">
+                <option value="recents" {{ tri == 'recents' ? 'selected' }}>date</option>
+                <option value="populaires" {{ tri == 'populaires' ? 'selected' }}>popularité</option>
+                <option value="courts" {{ tri == 'courts' ? 'selected' }}>durée</option>
+            </select>.
+            {% if q or type or difficulte or dureeMax or benchmark %}<button type="button" class="e-lien-bouton" data-action="live#action" data-live-action-param="reinitialiser">Tout effacer</button>{% endif %}
+        </p>
+    </div>
+
+    {% set resultats = this.resultats %}
+    <ol class="e-toc results" start="{{ (page - 1) * 12 + 1 }}">
+        {% for wod in resultats %}
+            <li>
+                <a href="{{ path('app_wod_show', {slug: wod.slug}) }}">
+                    <span class="e-toc-titre">{{ wod.titre }}</span>
+                    <span class="e-toc-desc">{{ wod.lignes|map(l => l.mouvement.nom)|join(', ') }}</span>
+                    <span class="e-toc-pts"></span>
+                    <span class="e-toc-format">{{ wod.format }}</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="e-vide"><em>Rien dans nos archives. <a href="{{ path('app_generateur') }}">Commander une séance sur mesure</a>.</em></li>
+        {% endfor %}
+    </ol>
+
+    {% if resultats.nbPages > 1 %}
+        <nav class="pagination" aria-label="Pagination">
+            <button class="e-lien-bouton" {{ not resultats.aPrecedente ? 'disabled' }} data-action="live#action" data-live-action-param="allerPage" data-live-page-param="{{ page - 1 }}">← Page précédente</button>
+            <span><em>Page {{ page }} sur {{ resultats.nbPages }}</em></span>
+            <button class="e-lien-bouton" {{ not resultats.aSuivante ? 'disabled' }} data-action="live#action" data-live-action-param="allerPage" data-live-page-param="{{ page + 1 }}">Page suivante →</button>
+        </nav>
+    {% endif %}
+</div>

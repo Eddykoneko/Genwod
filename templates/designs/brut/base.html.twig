@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr" data-design="brut">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <title>{% block title %}Générateur de WODs CrossFit{% endblock %} · Genwod</title>
+        <meta name="description" content="{% block description %}Genwod génère des entraînements CrossFit (WOD) adaptés à votre niveau et à votre matériel.{% endblock %}">
+        <meta name="theme-color" content="#000000">
+        <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
+        <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+        {% block javascripts %}{% block importmap %}{{ importmap('app') }}{% endblock %}{% endblock %}
+    </head>
+    {% set route = app.current_route %}
+    <body class="b-body has-tabbar">
+        <a class="sr-only" href="#contenu">Aller au contenu</a>
+
+        <aside class="b-sidebar" aria-label="Navigation principale">
+            <a class="b-logo" href="{{ path('app_accueil') }}">
+                <img src="{{ asset('img/logo.png') }}" alt="" width="56" height="56">
+                <span>GEN<br><b>WOD</b></span>
+            </a>
+            <nav class="b-menu">
+                {% for item in [
+                    ['app_generateur', 'Générer', '01'],
+                    ['app_wod_index', 'WODs', '02'],
+                    ['app_classement', 'Classement', '03'],
+                    ['app_a_propos', 'Concept', '04'],
+                ] %}
+                    <a href="{{ path(item[0]) }}" {{ route starts with item[0]|replace({'_index': ''}) or route == item[0] ? 'aria-current="page"' }}><small>{{ item[2] }}</small>{{ item[1] }}</a>
+                {% endfor %}
+            </nav>
+            <div class="b-compte">
+                {% if app.user %}
+                    <a class="b-moi" href="{{ path('app_tableau_de_bord') }}">
+                        <span class="avatar" style="--h: {{ app.user.teinteAvatar }}">{{ app.user.initiales }}</span>
+                        <span><strong>{{ app.user.pseudo }}</strong><small>Mon espace →</small></span>
+                    </a>
+                    <div class="b-liens">
+                        <a href="{{ path('app_espace_profil') }}">Paramètres</a>
+                        {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('admin') }}" data-turbo="false">Admin</a>{% endif %}
+                        <a href="{{ path('app_logout') }}" data-turbo="false">Déconnexion</a>
+                    </div>
+                {% else %}
+                    <a class="btn btn-primary btn-block" href="{{ path('app_register') }}">S'inscrire</a>
+                    <a class="b-lien-connexion" href="{{ path('app_login') }}">J'ai déjà un compte</a>
+                {% endif %}
+            </div>
+        </aside>
+
+        <header class="b-topbar">
+            <a class="b-logo-mini" href="{{ path('app_accueil') }}"><img src="{{ asset('img/logo.png') }}" alt="" width="36" height="36"> GEN<b>WOD</b></a>
+            {% if app.user %}<a class="avatar avatar-sm" style="--h: {{ app.user.teinteAvatar }}" href="{{ path('app_tableau_de_bord') }}">{{ app.user.initiales }}</a>{% endif %}
+        </header>
+
+        {{ include('_flashes.html.twig') }}
+
+        <main id="contenu" class="b-main">
+            {% block main %}
+                <div class="b-page">{% block body %}{% endblock %}</div>
+            {% endblock %}
+            <footer class="b-footer">
+                <span>GENWOD — PROJET DWWM DE WILLIAM LUONG</span>
+                <nav>
+                    <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+                    <a href="{{ path('app_confidentialite') }}">Confidentialité</a>
+                    <a href="https://github.com/Eddykoneko/Genwod" rel="noopener">GitHub</a>
+                </nav>
+            </footer>
+        </main>
+
+        {{ include('_tabbar.html.twig') }}
+        {{ include('_design_switcher.html.twig') }}
+    </body>
+</html>

@@ -1,0 +1,21 @@
+{# Formulaire « Noter mon score » (ou invitation à créer un compte), partagé par tous les designs. #}
+{% if app.user %}
+{{ form_start(seanceForm) }}
+    <div class="form-grid">
+        {{ form_row(seanceForm.realiseeLe) }}
+        {% if seanceForm.tempsSecondes is defined %}{{ form_row(seanceForm.tempsSecondes) }}{% endif %}
+        {% if seanceForm.tours is defined %}{{ form_row(seanceForm.tours, {attr: {'data-chrono-cible': 'tours'}}) }}{% endif %}
+        {% if seanceForm.reps is defined %}{{ form_row(seanceForm.reps) }}{% endif %}
+    </div>
+    {{ form_row(seanceForm.mode) }}
+    {{ form_row(seanceForm.ressenti) }}
+    {{ form_row(seanceForm.notes) }}
+    <button class="btn btn-primary btn-block">{{ ux_icon('lucide:check') }} Enregistrer ma séance</button>
+{{ form_end(seanceForm) }}
+{% else %}
+<p class="small muted">Créez un compte gratuit pour garder vos scores, battre vos records et apparaître au classement.</p>
+<div class="cluster mt-2">
+    <a class="btn btn-primary" href="{{ path('app_register') }}">Créer un compte</a>
+    <a class="btn btn-ghost" href="{{ path('app_login') }}">Connexion</a>
+</div>
+{% endif %}

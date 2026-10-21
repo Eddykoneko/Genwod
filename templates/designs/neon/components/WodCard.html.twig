@@ -1,0 +1,11 @@
+{# Néon : tuile lumineuse, couleur selon le format. #}
+{% props wod %}
+<a href="{{ path('app_wod_show', {slug: wod.slug}) }}" {{ attributes.defaults({class: 'n-tuile-wod n-' ~ wod.type.value}) }}>
+    <span class="n-chip">{{ wod.type.label }}</span>
+    <h3>{{ wod.titre }}</h3>
+    <p>{{ wod.format }}</p>
+    <div class="n-tuile-bas">
+        <span>{{ wod.lignes|length }} mvt{{ wod.lignes|length > 1 ? 's' }} · {{ wod.difficulte.label }}</span>
+        <span>♥ {{ wod.likesCount }}</span>
+    </div>
+</a>

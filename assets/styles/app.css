@@ -602,8 +602,8 @@ input::placeholder, textarea::placeholder { color: var(--text-faint); }
     font: 600 12px/1 system-ui, -apple-system, sans-serif; letter-spacing: 0; text-transform: none;
 }
 .design-switcher span { padding: 0 8px 0 10px; color: #777; }
-.design-switcher button { border: 0; background: none; color: #111; padding: 8px 11px; border-radius: 999px; font: inherit; }
-.design-switcher button[aria-pressed="true"] { background: #111; color: #fff; }
+.design-switcher a { color: #111; padding: 8px 11px; border-radius: 999px; text-decoration: none; }
+.design-switcher a[aria-current="true"] { background: #111; color: #fff; }
 @media (min-width: 860px) { .design-switcher { bottom: 56px; } }
-@media (max-width: 379px) { .design-switcher span { display: none; } .design-switcher button { padding: 8px 8px; } }
+@media (max-width: 379px) { .design-switcher span { display: none; } .design-switcher a { padding: 8px 8px; } }
 @media print { .design-switcher { display: none; } }

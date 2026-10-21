@@ -1,0 +1,21 @@
+{# Formulaire d'enregistrement d'un WOD généré (champs cachés = critères), partagé par tous les designs. #}
+{% if app.user %}
+    <form method="post" action="{{ path('app_generateur_enregistrer') }}" class="stack" style="--stack: 12px">
+        {% for cle, valeur in criteres.versQuery %}
+            {% if valeur is iterable %}
+                {% for v in valeur %}<input type="hidden" name="{{ cle }}[]" value="{{ v }}">{% endfor %}
+            {% else %}
+                <input type="hidden" name="{{ cle }}" value="{{ valeur }}">
+            {% endif %}
+        {% endfor %}
+        <input type="hidden" name="_token" value="{{ csrf_token('generateur-enregistrer') }}">
+        <div class="form-row" style="margin:0">
+            <label class="form-label" for="titre">Nom du WOD</label>
+            <input type="text" id="titre" name="titre" value="{{ wod.titre }}" maxlength="80">
+        </div>
+        <label class="form-check"><input type="checkbox" name="public" value="1" checked> <span>Le partager dans la bibliothèque publique</span></label>
+        <button class="btn btn-primary btn-block">{{ ux_icon('lucide:save') }} {{ libelle_bouton ?? 'Enregistrer et lancer le chrono' }}</button>
+    </form>
+{% else %}
+    <p class="small muted"><a href="{{ path('app_login') }}">Connectez-vous</a> pour enregistrer ce WOD, lancer le chrono et noter votre score.</p>
+{% endif %}

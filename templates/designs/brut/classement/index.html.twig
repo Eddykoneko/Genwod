@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Classement des athlètes{% endblock %}
+
+{% block body %}
+<header class="b-page-head">
+    <p class="b-kicker">SCOREBOARD</p>
+    <h1>Classement</h1>
+    <nav class="b-filtres">
+        {% for cle, libelle in periodes %}
+            <a href="{{ path('app_classement', {periode: cle}) }}" {{ periode == cle ? 'aria-current="page"' }}>{{ libelle }}</a>
+        {% endfor %}
+    </nav>
+</header>
+
+<ol class="b-scoreboard">
+    {% for l in classement %}
+        <li class="{{ app.user and app.user.id == l.id ? 'moi' }} {{ loop.index <= 3 ? 'top' }}">
+            <span class="b-rang">{{ '%02d'|format(loop.index) }}</span>
+            <a href="{{ path('app_athlete', {pseudo: l.pseudo}) }}">{{ l.pseudo }}</a>
+            <span class="b-sb-seances">{{ l.seances }} séances</span>
+            <strong>{{ l.points }}<small>PTS</small></strong>
+        </li>
+    {% else %}
+        <li class="b-vide">Personne sur cette période. À toi de jouer.</li>
+    {% endfor %}
+</ol>
+<p class="b-bareme">{{ bareme.base }} pts / séance · +5/+10 intermédiaire/difficile · +{{ bareme.rx }} RX · +{{ bareme.record }} record</p>
+{% endblock %}

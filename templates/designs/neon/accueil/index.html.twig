@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Le générateur de WODs CrossFit{% endblock %}
+
+{% block body %}
+<section class="n-salut">
+    <p class="n-petit">{{ 'now'|format_date('full')|capitalize }}</p>
+    <h1>{% if app.user %}Hey {{ app.user.pseudo }} 👋{% else %}Prêt·e à transpirer&nbsp;?{% endif %}</h1>
+</section>
+
+<div class="n-bento">
+    {% if wodDuJour %}
+        <a class="n-tuile n-tuile-jour n-{{ wodDuJour.type.value }}" href="{{ path('app_wod_show', {slug: wodDuJour.slug}) }}">
+            <span class="n-chip">WOD du jour · {{ wodDuJour.benchmark ? wodDuJour.benchmark.label : wodDuJour.type.label }}</span>
+            <h2>{{ wodDuJour.titre }}</h2>
+            <p>{{ wodDuJour.format }}</p>
+            <ul>{% for l in wodDuJour.lignes|slice(0, 5) %}<li>{{ l.libelle }}</li>{% endfor %}</ul>
+            <span class="n-play" aria-hidden="true">{{ ux_icon('lucide:play') }}</span>
+        </a>
+    {% endif %}
+
+    <a class="n-tuile n-tuile-gen" href="{{ path('app_generateur') }}">
+        {{ ux_icon('lucide:dices') }}
+        <h2>Générer</h2>
+        <p>Un WOD sur mesure en 1 clic</p>
+    </a>
+
+    <div class="n-tuile n-tuile-stat">
+        <twig:Anneau :valeur="stats.seances" :max="stats.seances + 100" :taille="96" libelle="seances" />
+        <div><strong>{{ stats.seances }}</strong><span>séances loggées</span></div>
+    </div>
+
+    <div class="n-tuile n-tuile-chiffres">
+        <div><strong>{{ stats.wods }}</strong><span>WODs</span></div>
+        <div><strong>{{ stats.athletes }}</strong><span>athlètes</span></div>
+    </div>
+
+    <a class="n-tuile n-tuile-top" href="{{ path('app_classement') }}">
+        {{ ux_icon('lucide:trophy') }}
+        <h2>Classement</h2>
+        <p>Grimpe au sommet</p>
+    </a>
+
+    {% if populaires is not empty %}
+        <section class="n-tuile n-tuile-rail">
+            <div class="n-tuile-entete"><h2>Tendances 🔥</h2><a href="{{ path('app_wod_index', {tri: 'populaires'}) }}">Tout voir</a></div>
+            <div class="n-rail">
+                {% for wod in populaires %}<twig:WodCard :wod="wod" />{% endfor %}
+            </div>
+        </section>
+    {% endif %}
+</div>
+{% endblock %}
