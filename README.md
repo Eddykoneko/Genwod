@@ -31,6 +31,16 @@ Genwod génère des entraînements CrossFit (*Workout Of the Day*) adaptés au f
 | Bootstrap + 3 CDN (Bootstrap, Font Awesome, Bootstrap Icons) | Design system sur mesure, sombre/clair, mobile d'abord, **icônes servies localement** (UX Icons) |
 | Pas de tests | **54 tests** (unitaires + fonctionnels), **PHPStan niveau 8**, PHP-CS-Fixer, CI GitHub Actions |
 
+## Propositions de design (aperçu)
+
+En plus du design actuel, trois refontes complètes sont consultables avec le sélecteur en bas de page ou en ajoutant `?design=…` à l'adresse :
+
+- **Studio** (`studio`) — clair, épuré, premium ; l'orange Genwod comme seul accent.
+- **Performance** (`performance`) — tableau de bord sportif sombre, chiffres en mono, barre d'icônes.
+- **Ludique** (`ludique`) — chaleureux et coloré, série 🔥 dans l'en-tête, badges à débloquer.
+
+Chaque design a ses propres gabarits dans `templates/designs/<design>/` (Twig y cherche en priorité, via `DesignListener`) et sa feuille de style dans `assets/styles/designs/`. Les polices (Inter, Inter Tight, Space Grotesk, JetBrains Mono, Plus Jakarta Sans, Bricolage Grotesque — licence SIL OFL) sont hébergées localement dans `assets/fonts/`.
+
 ## Stack
 
 - **Back** : Symfony 7.4 LTS, Doctrine ORM 3 / Migrations, Security (form login, remember-me, login throttling, voters), Validator, Mailer, Rate Limiter, SymfonyCasts Verify Email & Reset Password, EasyAdmin 5

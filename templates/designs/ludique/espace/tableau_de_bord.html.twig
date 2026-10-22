@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+<header class="l-entete"><h1>Salut {{ app.user.pseudo }} 👋</h1><p class="l-muted">{{ resume.serie > 0 ? 'Ne casse pas ta série !' : 'Une séance aujourd\'hui pour lancer ta série ?' }}</p></header>
+{{ include('espace/_nav.html.twig') }}
+{% if not app.user.verified %}
+    <div class="banner">{{ ux_icon('lucide:mail-warning') }}<span>Confirme ton adresse e-mail.</span>
+        <form method="post" action="{{ path('app_verify_email_resend') }}" class="inline-form" style="margin-left:auto"><input type="hidden" name="_token" value="{{ csrf_token('renvoyer-confirmation') }}"><button class="btn btn-sm btn-outline">Renvoyer le lien</button></form>
+    </div>
+{% endif %}
+<div class="l-tableau">
+    <div class="l-carte l-serie-carte"><span>🔥</span><b>{{ resume.serie }}</b><p>jour{{ resume.serie > 1 ? 's' }} de série<br><small>record : {{ resume.meilleureSerie }}</small></p></div>
+    <div class="l-carte l-stat l-for_time"><b>{{ resume.total.seances }}</b><span>séances</span></div>
+    <div class="l-carte l-stat l-amrap"><b>{{ resume.total.points }}</b><span>points</span></div>
+    <div class="l-carte l-stat l-emom"><b>{{ resume.total.seances > 0 ? (resume.total.rx / resume.total.seances * 100)|round : 0 }}%</b><span>en RX</span></div>
+</div>
+<div class="l-deux">
+    <section class="l-carte"><h2>Ton activité</h2><twig:Heatmap :semaines="heatmap" /></section>
+    {{ include('_badges.html.twig') }}
+</div>
+<div class="l-deux">
+    <section class="l-carte"><h2>Dernières séances</h2>
+        <ol class="l-liste">{% for s in dernieres %}<li><a href="{{ path('app_wod_show', {slug: s.wod.slug}) }}">{{ s.wod.titre }}</a><span class="l-pill">+{{ s.points }}</span><b>{{ s.scoreLisible }}</b></li>{% else %}<li class="l-muted">Pas encore de séance.</li>{% endfor %}</ol>
+    </section>
+    <section class="l-carte"><h2>Records 🏅</h2>
+        <ol class="l-liste">{% for r in records %}<li><a href="{{ path('app_wod_show', {slug: r.wod.slug}) }}">{{ r.wod.titre }}</a><span class="l-pill">{{ r.mode.label }}</span><b>{{ r.scoreLisible }}</b></li>{% else %}<li class="l-muted">Pas encore de record.</li>{% endfor %}</ol>
+    </section>
+</div>
+{% endblock %}

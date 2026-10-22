@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Le générateur de WODs CrossFit{% endblock %}
+
+{% block body %}
+<section class="s-hero">
+    <div>
+        <h1>Ton WOD,<br><em>en un clic.</em></h1>
+        <p class="s-lead">Format, durée, intensité, matériel. Genwod compose la séance, lance le chrono et garde chaque score.</p>
+        <div class="s-actions">
+            <a class="s-btn s-btn-noir" href="{{ path('app_generateur') }}">Générer mon WOD →</a>
+            <a class="s-btn s-btn-clair" href="{{ path('app_wod_index') }}">Parcourir les WODs</a>
+        </div>
+        <div class="s-kpis">
+            <div><b>{{ stats.wods }}</b><span>WODs publics</span></div>
+            <div><b>{{ stats.seances|number_format(0, ',', ' ') }}</b><span>séances loggées</span></div>
+            {% if app.user %}
+                <div><b>{{ resume_athlete(app.user).serie }} j</b><span>ta série</span></div>
+            {% else %}
+                <div><b>{{ stats.athletes }}</b><span>athlètes actifs</span></div>
+            {% endif %}
+        </div>
+    </div>
+    {% if wodDuJour %}
+        <twig:Tableau :wod="wodDuJour" titreTag="h2" :surtitre="'WOD du jour · ' ~ ('now'|format_date('long'))">
+            <div class="s-actions s-board-cta">
+                <a class="s-btn s-btn-accent" href="{{ path('app_wod_show', {slug: wodDuJour.slug}) }}">▶ Faire ce WOD</a>
+                <a class="s-btn s-btn-clair" href="{{ path('app_wod_show', {slug: wodDuJour.slug}) }}#classement">Classement</a>
+            </div>
+        </twig:Tableau>
+    {% endif %}
+</section>
+
+<section class="s-section">
+    <div class="s-section-tete"><h2>Choisis ton format</h2></div>
+    <div class="s-formats">
+        {% for t in [['for_time', 'FT', 'For Time', 'Le plus vite possible'], ['amrap', 'AM', 'AMRAP', 'Max de tours'], ['emom', 'EM', 'EMOM', 'Chaque minute'], ['tabata', 'TB', 'Tabata', '20 s / 10 s']] %}
+            <a class="s-format" href="{{ path('app_generateur', {type: t[0], duree: 15, difficulte: 'moyen'}) }}">
+                <span class="s-format-ic s-{{ t[0] }}">{{ t[1] }}</span>
+                <h3>{{ t[2] }}</h3>
+                <p>{{ t[3] }}</p>
+            </a>
+        {% endfor %}
+    </div>
+</section>
+
+{% if populaires is not empty %}
+    <section class="s-section">
+        <div class="s-section-tete"><h2>Populaires</h2><a href="{{ path('app_wod_index', {tri: 'populaires'}) }}">Tout voir →</a></div>
+        <div class="s-grille">
+            {% for wod in populaires %}<twig:WodCard :wod="wod" />{% endfor %}
+        </div>
+    </section>
+{% endif %}
+{% endblock %}

@@ -1,7 +1,0 @@
-{# Éditorial : une brève (surtitre, titre, chapô). #}
-{% props wod %}
-<a href="{{ path('app_wod_show', {slug: wod.slug}) }}" {{ attributes.defaults({class: 'e-breve'}) }}>
-    <span class="e-surtitre">{{ wod.benchmark ? wod.benchmark.label : wod.type.label }}</span>
-    <h3>{{ wod.titre }}</h3>
-    <p>{{ wod.format }}. {{ wod.lignes|map(l => l.libelle)|join(', ') }}.</p>
-</a>

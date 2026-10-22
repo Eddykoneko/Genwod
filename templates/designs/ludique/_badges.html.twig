@@ -1,0 +1,18 @@
+{# Badges de l'athlète et progression vers le prochain (partagé accueil / espace). #}
+{% set badges = badges_athlete(app.user) %}
+{% set obtenus = badges|filter(b => b.obtenu) %}
+{% set prochain = badges|filter(b => not b.obtenu)|first %}
+<div class="l-carte l-carte-badges">
+    <h2>Tes badges <span class="l-muted">{{ obtenus|length }}/{{ badges|length }}</span></h2>
+    <div class="l-badges">
+        {% for b in badges %}
+            <div class="l-badge {{ b.obtenu ? 'obtenu' }}" title="{{ b.titre }}"><i>{{ b.code }}</i><span>{{ b.titre }}</span></div>
+        {% endfor %}
+    </div>
+    {% if prochain %}
+        <p class="l-prochain">Prochain : <b>{{ prochain.titre }}</b> ({{ prochain.valeur }}/{{ prochain.objectif }})</p>
+        <div class="l-barre"><i style="width: {{ min(100, (prochain.valeur / prochain.objectif * 100)|round) }}%"></i></div>
+    {% else %}
+        <p class="l-prochain">Tous les badges débloqués. Respect 🙌</p>
+    {% endif %}
+</div>

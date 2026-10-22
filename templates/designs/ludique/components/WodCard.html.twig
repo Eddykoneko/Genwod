@@ -1,0 +1,7 @@
+{% props wod %}
+<a href="{{ path('app_wod_show', {slug: wod.slug}) }}" {{ attributes.defaults({class: 'l-carte l-carte-petite l-' ~ wod.type.value}) }}>
+    <span class="l-pill">{{ wod.type.label }}</span>
+    <h3>{{ wod.titre }}</h3>
+    <ul>{% for ligne in wod.lignes|slice(0, 3) %}<li>{{ ligne.libelle }}</li>{% endfor %}{% if wod.lignes|length > 3 %}<li>+ {{ wod.lignes|length - 3 }} autre{{ wod.lignes|length - 3 > 1 ? 's' }}</li>{% endif %}</ul>
+    <span class="l-carte-bas"><twig:Flammes :difficulte="wod.difficulte" /><span>♥ {{ wod.likesCount }}</span></span>
+</a>

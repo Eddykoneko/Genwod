@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Le générateur de WODs CrossFit{% endblock %}
+
+{% block body %}
+<header class="p-entete">
+    <h1>{{ app.user ? 'Salut ' ~ app.user.pseudo : 'Ton entraînement, en chiffres' }}</h1>
+    <p>{{ 'now'|format_date('full')|capitalize }} · semaine {{ 'now'|date('W') }}</p>
+</header>
+
+{% set resume = app.user ? resume_athlete(app.user) : null %}
+<div class="p-kpis">
+    {% if resume %}
+        <div class="p-kpi"><small>Séances · ce mois</small><b>{{ resume.mois.seances }}</b><span>{{ resume.total.seances }} au total</span></div>
+        <div class="p-kpi"><small>Points</small><b>{{ resume.total.points|number_format(0, ',', ' ') }}</b><span class="p-lime">+{{ resume.mois.points }} ce mois</span></div>
+        <div class="p-kpi"><small>Série en cours</small><b>{{ resume.serie }} j</b><span>record {{ resume.meilleureSerie }} j</span></div>
+        <div class="p-kpi"><small>Part RX</small><b>{{ resume.total.seances > 0 ? (resume.total.rx / resume.total.seances * 100)|round : 0 }} %</b><span class="p-jauge"><i style="width: {{ resume.total.seances > 0 ? (resume.total.rx / resume.total.seances * 100)|round : 0 }}%"></i></span></div>
+    {% else %}
+        <div class="p-kpi"><small>WODs publics</small><b>{{ stats.wods }}</b><span>Girls, Heroes, Open…</span></div>
+        <div class="p-kpi"><small>Séances loggées</small><b>{{ stats.seances|number_format(0, ',', ' ') }}</b><span>par la communauté</span></div>
+        <div class="p-kpi"><small>Athlètes actifs</small><b>{{ stats.athletes }}</b><span>au classement</span></div>
+        <div class="p-kpi p-kpi-cta"><small>Pas encore inscrit ?</small><a class="p-btn p-btn-lime" href="{{ path('app_register') }}">Créer un compte</a></div>
+    {% endif %}
+</div>
+
+<div class="p-grille">
+    {% if wodDuJour %}
+        <twig:Tableau :wod="wodDuJour" titreTag="h2" surtitre="WOD du jour">
+            <div class="p-actions">
+                <a class="p-btn p-btn-lime" href="{{ path('app_wod_show', {slug: wodDuJour.slug}) }}">▶ Lancer le chrono</a>
+                <a class="p-btn" href="{{ path('app_wod_show', {slug: wodDuJour.slug}) }}#noter">Noter un score</a>
+            </div>
+        </twig:Tableau>
+    {% endif %}
+    <section class="p-panel">
+        <div class="p-panel-tete"><h2 class="p-panel-titre">Tendances</h2><a href="{{ path('app_wod_index', {tri: 'populaires'}) }}">Tout voir →</a></div>
+        <div class="p-liste-wods">{% for wod in populaires %}<twig:WodCard :wod="wod" />{% endfor %}</div>
+    </section>
+</div>
+
+<section class="p-panel p-formats-panel">
+    <div class="p-panel-tete"><h2 class="p-panel-titre">Générer en un clic</h2><span>Durée 15 min · intermédiaire</span></div>
+    <div class="p-formats">
+        {% for t in [['for_time', 'For Time', 'Le plus vite possible'], ['amrap', 'AMRAP', 'Max de tours'], ['emom', 'EMOM', 'Chaque minute'], ['tabata', 'Tabata', '20 s / 10 s']] %}
+            <a class="p-format p-format-{{ t[0] }}" href="{{ path('app_generateur', {type: t[0], duree: 15, difficulte: 'moyen'}) }}"><b>{{ t[1] }}</b><small>{{ t[2] }}</small><span>→</span></a>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

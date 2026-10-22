@@ -1,0 +1,14 @@
+{# Ludique : grande carte pastel (couleur du format), lignes en pilules. #}
+{% props wod, titreTag = 'h1', etiquette = null %}
+<article {{ attributes.defaults({class: 'l-carte l-carte-wod l-' ~ wod.type.value}) }}>
+    {% if etiquette %}<span class="l-sticker">{{ etiquette }}</span>{% endif %}
+    <span class="l-pill">{{ wod.type.label }}{{ wod.benchmark ? ' · ' ~ wod.benchmark.label }}</span>
+    <{{ titreTag }} class="l-titre-wod">{{ wod.titre }}</{{ titreTag }}>
+    <p class="l-format">{{ wod.format }} · <twig:Flammes :difficulte="wod.difficulte" /></p>
+    <div class="l-lignes">
+        {% for ligne in wod.lignes %}
+            <div><b>{{ ligne.quantiteLisible }}</b><span>{{ ligne.mouvement.nom }}</span>{% set charge = ligne.note ?? ligne.mouvement.chargeRx %}{% if charge %}<small>{{ charge }}</small>{% endif %}</div>
+        {% endfor %}
+    </div>
+    {% block content %}{% endblock %}
+</article>

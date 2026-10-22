@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Le générateur de WODs CrossFit{% endblock %}
+
+{% block body %}
+<section class="l-hero">
+    <div>
+        <h1>{% if app.user %}Salut {{ app.user.pseudo }},<br>ton WOD est <span>prêt.</span>{% else %}Ton WOD du jour<br>est <span>prêt.</span>{% endif %}</h1>
+        <p class="l-intro">Un clic pour générer une séance sur mesure, un chrono qui t'accompagne et des badges à collectionner.</p>
+        <div class="l-actions">
+            <a class="l-btn l-btn-orange l-btn-grand" href="{{ path('app_generateur') }}">🎲 Générer un WOD</a>
+            <a class="l-btn l-btn-grand" href="{{ path('app_wod_index') }}">Voir les WODs</a>
+        </div>
+        <p class="l-chiffres"><b>{{ stats.wods }}</b> WODs · <b>{{ stats.seances }}</b> séances · <b>{{ stats.athletes }}</b> athlètes</p>
+    </div>
+    {% if wodDuJour %}
+        <twig:Tableau :wod="wodDuJour" titreTag="h2" etiquette="WOD du jour">
+            <a class="l-btn l-btn-orange l-btn-plein" href="{{ path('app_wod_show', {slug: wodDuJour.slug}) }}">▶ C'est parti !</a>
+        </twig:Tableau>
+    {% endif %}
+</section>
+
+<section class="l-section">
+    <h2 class="l-section-titre">Quel format aujourd'hui ?</h2>
+    <div class="l-formats">
+        {% for t in [['for_time', 'FT', 'For Time', 'Le plus vite possible'], ['amrap', 'AM', 'AMRAP', 'Max de tours'], ['emom', 'EM', 'EMOM', 'Chaque minute'], ['tabata', 'TB', 'Tabata', '20 s / 10 s']] %}
+            <a class="l-carte l-format-tuile l-{{ t[0] }}" href="{{ path('app_generateur', {type: t[0], duree: 15, difficulte: 'moyen'}) }}"><span class="l-format-ic">{{ t[1] }}</span><h3>{{ t[2] }}</h3><p>{{ t[3] }}</p></a>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="l-section l-deux">
+    <div>
+        <h2 class="l-section-titre">Les plus aimés</h2>
+        <div class="l-grille l-grille-2">{% for wod in populaires|slice(0, 4) %}<twig:WodCard :wod="wod" />{% endfor %}</div>
+    </div>
+    {% if app.user %}
+        {{ include('_badges.html.twig') }}
+    {% else %}
+        <div class="l-carte l-carte-badges"><h2>Des badges à gagner</h2><p class="l-muted">Séries de jours, records, WODs terminés : crée ton compte pour commencer ta collection.</p><a class="l-btn l-btn-orange" href="{{ path('app_register') }}">Créer mon compte</a></div>
+    {% endif %}
+</section>
+{% endblock %}

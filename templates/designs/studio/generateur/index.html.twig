@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ wod ? wod.titre ~ ' · ' ~ wod.format : 'Générateur de WOD' }}{% endblock %}
+
+{% block body %}
+<header class="s-entete"><h1>Générateur</h1><p class="s-lead">Règle quatre paramètres, on s'occupe du reste.</p></header>
+<div class="s-gen">
+    <form class="s-card s-gen-form" method="get" action="{{ path('app_generateur') }}" data-turbo-action="advance">
+        <fieldset><legend>Format</legend>
+            <div class="s-choix s-choix-4">
+                {% for type in types %}<label><input type="radio" name="type" value="{{ type.value }}" {{ criteres.type == type ? 'checked' }}><span><b>{{ type.label }}</b><small>{{ {'for_time': 'Le plus vite', 'amrap': 'Max de tours', 'emom': 'Chaque minute', 'tabata': '20 s / 10 s'}[type.value] }}</small></span></label>{% endfor %}
+            </div>
+        </fieldset>
+        <div data-controller="range" class="s-duree">
+            <label for="duree">Durée</label>
+            <output for="duree" data-range-target="sortie">{{ criteres.duree }} min</output>
+            <input type="range" id="duree" name="duree" min="4" max="40" value="{{ criteres.duree }}" data-range-target="input" data-action="input->range#maj">
+        </div>
+        <fieldset><legend>Intensité</legend>
+            <div class="s-choix s-choix-3">
+                {% for d in difficultes %}<label><input type="radio" name="difficulte" value="{{ d.value }}" {{ criteres.difficulte == d ? 'checked' }}><span><b>{{ d.label }}</b></span></label>{% endfor %}
+            </div>
+        </fieldset>
+        <fieldset><legend>Matériel</legend>
+            <div class="s-pastilles">
+                {% for e in equipements %}<label><input type="checkbox" name="materiel[]" value="{{ e.value }}" {{ e in criteres.equipements ? 'checked' }}><span>{{ e.label }}</span></label>{% endfor %}
+            </div>
+        </fieldset>
+        <button type="submit" class="s-btn s-btn-noir s-btn-large">{{ wod ? 'Générer un autre WOD' : 'Générer le WOD' }} →</button>
+    </form>
+    {% if wod %}
+        <twig:Tableau :wod="wod" titreTag="h2" class="reveal">
+            {% if wod.consignes %}<p class="s-consignes">{{ wod.consignes }}</p>{% endif %}
+            <div class="s-gen-enregistrer">{{ include('generateur/_enregistrer.html.twig') }}</div>
+            <p class="s-muted s-petit">Graine #{{ criteres.graine }} · <button type="button" class="s-lien" data-controller="partage" data-action="partage#partager" data-partage-titre-value="{{ wod.titre }} · Genwod">partager</button></p>
+        </twig:Tableau>
+    {% else %}
+        <div class="s-card s-vide-gen"><b>Ton WOD apparaîtra ici</b><p class="s-muted">Chaque WOD a sa propre adresse : partage-le avec ta box.</p></div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr" data-design="performance">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <title>{% block title %}Générateur de WODs CrossFit{% endblock %} · Genwod</title>
+        <meta name="description" content="{% block description %}Genwod génère des entraînements CrossFit (WOD) adaptés à votre niveau et à votre matériel.{% endblock %}">
+        <meta name="theme-color" content="#0e1013">
+        <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
+        <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+        {% block javascripts %}{% block importmap %}{{ importmap('app') }}{% endblock %}{% endblock %}
+    </head>
+    {% set route = app.current_route %}
+    <body class="p-body has-tabbar">
+        <a class="sr-only" href="#contenu">Aller au contenu</a>
+        <nav class="p-rail" aria-label="Navigation principale">
+            <a class="p-rail-logo" href="{{ path('app_accueil') }}" aria-label="Accueil"><img src="{{ asset('img/logo.png') }}" alt="" width="40" height="40"></a>
+            {% for item in [
+                ['app_accueil', 'Accueil', 'lucide:layout-dashboard', route == 'app_accueil'],
+                ['app_generateur', 'Générer', 'lucide:dices', route starts with 'app_generateur'],
+                ['app_wod_index', 'WODs', 'lucide:library', route starts with 'app_wod'],
+                ['app_classement', 'Top', 'lucide:trophy', route == 'app_classement'],
+                [app.user ? 'app_tableau_de_bord' : 'app_login', app.user ? 'Moi' : 'Connexion', app.user ? 'lucide:activity' : 'lucide:log-in', route starts with 'app_espace' or route == 'app_tableau_de_bord'],
+            ] %}
+                <a href="{{ path(item[0]) }}" {{ item[3] ? 'aria-current="page"' }}>{{ ux_icon(item[2]) }}<span>{{ item[1] }}</span></a>
+            {% endfor %}
+            {% if app.user %}<a class="p-rail-bas" href="{{ path('app_espace_profil') }}" aria-label="Paramètres">{{ ux_icon('lucide:settings') }}<span>Réglages</span></a>{% endif %}
+        </nav>
+
+        <div class="p-app">
+            <header class="p-top">
+                <a class="p-top-logo" href="{{ path('app_accueil') }}"><img src="{{ asset('img/logo.png') }}" alt="" width="30" height="30"> genwod</a>
+                <form class="p-search" action="{{ path('app_wod_index') }}" method="get" role="search">
+                    {{ ux_icon('lucide:search') }}<input type="search" name="q" placeholder="Rechercher un WOD, un mouvement…" aria-label="Rechercher un WOD">
+                </form>
+                <div class="p-top-fin">
+                    <a class="p-btn p-btn-lime" href="{{ path('app_generateur') }}">+ Générer un WOD</a>
+                    {% if app.user %}
+                        <details class="menu" data-controller="menu" data-action="click@window->menu#fermerSiDehors keydown.esc@window->menu#fermer">
+                            <summary class="p-avatar" style="--h: {{ app.user.teinteAvatar }}" aria-label="Menu du compte">{{ app.user.initiales }}</summary>
+                            <div class="menu-panel">
+                                <div class="menu-head"><strong>{{ app.user.pseudo }}</strong></div>
+                                <a href="{{ path('app_tableau_de_bord') }}">Tableau de bord</a>
+                                <a href="{{ path('app_espace_seances') }}">Mes séances</a>
+                                <a href="{{ path('app_espace_profil') }}">Paramètres</a>
+                                {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('admin') }}" data-turbo="false">Administration</a>{% endif %}
+                                <hr><a href="{{ path('app_logout') }}" data-turbo="false">Se déconnecter</a>
+                            </div>
+                        </details>
+                    {% else %}
+                        <a class="p-btn" href="{{ path('app_login') }}">Connexion</a>
+                    {% endif %}
+                </div>
+            </header>
+
+            {{ include('_flashes.html.twig') }}
+
+            <main id="contenu" class="p-main">
+                {% block main %}{% block body %}{% endblock %}{% endblock %}
+            </main>
+            <footer class="p-footer"><span>genwod · v2</span><a href="{{ path('app_a_propos') }}">Concept</a><a href="{{ path('app_mentions_legales') }}">Mentions légales</a><a href="{{ path('app_confidentialite') }}">Confidentialité</a></footer>
+        </div>
+
+        {{ include('_tabbar.html.twig') }}
+        {{ include('_design_switcher.html.twig') }}
+    </body>
+</html>

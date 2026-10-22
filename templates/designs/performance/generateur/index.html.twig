@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ wod ? wod.titre ~ ' · ' ~ wod.format : 'Générateur de WOD' }}{% endblock %}
+
+{% block body %}
+<header class="p-entete"><h1>Générateur</h1><p>Paramètre ta séance, le moteur compose un WOD équilibré.</p></header>
+<div class="p-grille">
+    <form class="p-panel p-gen" method="get" action="{{ path('app_generateur') }}" data-turbo-action="advance">
+        <div class="p-panel-tete"><h2 class="p-panel-titre">Paramètres</h2><span>seed #{{ criteres.graine }}</span></div>
+        <fieldset><legend>Format</legend><div class="p-seg">
+            {% for type in types %}<label><input type="radio" name="type" value="{{ type.value }}" {{ criteres.type == type ? 'checked' }}><span>{{ type.label }}</span></label>{% endfor %}
+        </div></fieldset>
+        <div class="p-curseur" data-controller="range">
+            <label for="duree">Durée</label><output for="duree" data-range-target="sortie">{{ criteres.duree }} min</output>
+            <input type="range" id="duree" name="duree" min="4" max="40" value="{{ criteres.duree }}" data-range-target="input" data-action="input->range#maj">
+        </div>
+        <fieldset><legend>Intensité</legend><div class="p-seg">
+            {% for d in difficultes %}<label><input type="radio" name="difficulte" value="{{ d.value }}" {{ criteres.difficulte == d ? 'checked' }}><span>{{ d.label }}</span></label>{% endfor %}
+        </div></fieldset>
+        <fieldset><legend>Matériel disponible</legend><div class="p-cases">
+            {% for e in equipements %}<label><input type="checkbox" name="materiel[]" value="{{ e.value }}" {{ e in criteres.equipements ? 'checked' }}><span>{{ e.label }}</span></label>{% endfor %}
+        </div></fieldset>
+        <button type="submit" class="p-btn p-btn-lime p-btn-large">{{ wod ? 'Régénérer' : 'Générer' }}</button>
+    </form>
+    {% if wod %}
+        <twig:Tableau :wod="wod" titreTag="h2" surtitre="Résultat" class="reveal">
+            {% if wod.consignes %}<p class="p-consignes">{{ wod.consignes }}</p>{% endif %}
+            {{ include('generateur/_enregistrer.html.twig') }}
+            <p class="p-muted p-petit">Même seed + mêmes paramètres = même WOD · <button type="button" class="p-lien" data-controller="partage" data-action="partage#partager" data-partage-titre-value="{{ wod.titre }} · Genwod">partager</button></p>
+        </twig:Tableau>
+    {% else %}
+        <section class="p-panel p-vide"><b>En attente de paramètres</b><p class="p-muted">Le WOD généré s'affichera ici, avec son adresse partageable.</p></section>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% props wod %}
+<a href="{{ path('app_wod_show', {slug: wod.slug}) }}" {{ attributes.defaults({class: 'p-ligne-wod'}) }}>
+    <span class="p-tag p-tag-{{ wod.type.value }}">{{ wod.type.label|upper }}</span>
+    <span class="p-ligne-titre">{{ wod.titre }}<small>{{ wod.lignes|map(l => l.mouvement.nom)|join(' · ') }}</small></span>
+    <span class="p-ligne-meta">{{ wod.benchmark ? wod.benchmark.label : 'Communauté' }}</span>
+    <span class="p-mono">{{ wod.duree }}′</span>
+    <span class="p-mono p-muted">♥ {{ wod.likesCount }}</span>
+</a>

@@ -1,0 +1,29 @@
+<div {{ attributes }} data-loading="addClass(is-loading)">
+    <div class="s-recherche">
+        <input type="search" data-model="debounce(300)|q" placeholder="Rechercher : Fran, burpees, Murph…" aria-label="Rechercher un WOD" autocomplete="off">
+        <div class="s-filtres">
+            <select data-model="benchmark" aria-label="Origine"><option value="">Tous les WODs</option>{% for b in this.benchmarks %}<option value="{{ b.value }}" {{ benchmark == b ? 'selected' }}>{{ b.label }}</option>{% endfor %}</select>
+            <select data-model="type" aria-label="Format"><option value="">Tous formats</option>{% for t in this.types %}<option value="{{ t.value }}" {{ type == t ? 'selected' }}>{{ t.label }}</option>{% endfor %}</select>
+            <select data-model="difficulte" aria-label="Difficulté"><option value="">Toutes intensités</option>{% for d in this.difficultes %}<option value="{{ d.value }}" {{ difficulte == d ? 'selected' }}>{{ d.label }}</option>{% endfor %}</select>
+            <select data-model="dureeMax" aria-label="Durée maximale"><option value="">Toutes durées</option>{% for d in [10, 15, 20, 30] %}<option value="{{ d }}" {{ dureeMax == d ? 'selected' }}>≤ {{ d }} min</option>{% endfor %}</select>
+            <select data-model="tri" aria-label="Tri">
+                <option value="recents" {{ tri == 'recents' ? 'selected' }}>Plus récents</option>
+                <option value="populaires" {{ tri == 'populaires' ? 'selected' }}>Plus aimés</option>
+                <option value="courts" {{ tri == 'courts' ? 'selected' }}>Plus courts</option>
+            </select>
+            {% if q or type or difficulte or dureeMax or benchmark %}<button type="button" class="s-lien" data-action="live#action" data-live-action-param="reinitialiser">Effacer</button>{% endif %}
+        </div>
+    </div>
+    {% set resultats = this.resultats %}
+    <p class="s-muted s-petit" style="margin-bottom:12px">{{ resultats.total }} WOD{{ resultats.total > 1 ? 's' }}</p>
+    <div class="s-grille results">
+        {% for wod in resultats %}<twig:WodCard :wod="wod" />{% else %}<div class="s-card s-muted">Aucun WOD ne correspond. <a href="{{ path('app_generateur') }}">Génère-le</a>.</div>{% endfor %}
+    </div>
+    {% if resultats.nbPages > 1 %}
+        <nav class="pagination" aria-label="Pagination">
+            <button class="s-btn s-btn-clair" {{ not resultats.aPrecedente ? 'disabled' }} data-action="live#action" data-live-action-param="allerPage" data-live-page-param="{{ page - 1 }}">← Précédent</button>
+            <span class="s-muted">{{ page }} / {{ resultats.nbPages }}</span>
+            <button class="s-btn s-btn-clair" {{ not resultats.aSuivante ? 'disabled' }} data-action="live#action" data-live-action-param="allerPage" data-live-page-param="{{ page + 1 }}">Suivant →</button>
+        </nav>
+    {% endif %}
+</div>

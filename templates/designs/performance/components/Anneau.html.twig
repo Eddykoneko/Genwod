@@ -1,0 +1,11 @@
+{# Anneau de progression (SVG), façon app de sport. #}
+{% props valeur, max = 100, taille = 120, epaisseur = 12, libelle = '' %}
+{% set r = (taille - epaisseur) / 2 %}
+{% set circ = 2 * 3.14159 * r %}
+{% set ratio = max > 0 ? min(valeur / max, 1) : 0 %}
+<svg {{ attributes.defaults({class: 'n-anneau'}) }} width="{{ taille }}" height="{{ taille }}" viewBox="0 0 {{ taille }} {{ taille }}" role="img" aria-label="{{ libelle }}">
+    <defs><linearGradient id="n-grad-{{ libelle|u.snake }}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c8ff3d"/><stop offset="1" stop-color="#7fd12a"/></linearGradient></defs>
+    <circle cx="{{ taille / 2 }}" cy="{{ taille / 2 }}" r="{{ r }}" fill="none" stroke="#262b33" stroke-width="{{ epaisseur }}"/>
+    <circle cx="{{ taille / 2 }}" cy="{{ taille / 2 }}" r="{{ r }}" fill="none" stroke="url(#n-grad-{{ libelle|u.snake }})" stroke-width="{{ epaisseur }}" stroke-linecap="round"
+            stroke-dasharray="{{ circ }}" stroke-dashoffset="{{ circ * (1 - ratio) }}" transform="rotate(-90 {{ taille / 2 }} {{ taille / 2 }})"/>
+</svg>

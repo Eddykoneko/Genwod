@@ -30,6 +30,11 @@ php bin/console ux:icons:lock                   # après avoir utilisé une nouv
 - Composants Twig anonymes dans `templates/components/` ; le seul composant PHP est le Live Component `WodRecherche`.
 - Éviter le N+1 sur les listes de WODs : `WodRepository::prechargerLignes()`.
 
+## Designs
+
+- Trois propositions de refonte (`studio`, `performance`, `ludique`) en plus du design actuel : `DesignListener` (cookie + `?design=`) fait chercher Twig d'abord dans `templates/designs/<design>/`. Partiels communs à réutiliser : `wod/_chrono_attributs`, `wod/_chrono_dialog`, `wod/_seance_form`, `generateur/_enregistrer`. Les ids des cibles Turbo Stream (`interactions-*`, `commentaires-liste`, `nb-commentaires`…) doivent être conservés.
+- Fonctions Twig `resume_athlete()` et `badges_athlete()` (`App\Twig\AthleteExtension`).
+
 ## Architecture
 
 - `WodGenerator` : génération déterministe (graine) depuis le catalogue `Mouvement`. Règles : matériel disponible, alternance des familles, ≤ 1 cardio, ≤ 1 gainage, volumes arrondis.

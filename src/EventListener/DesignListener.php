@@ -19,7 +19,7 @@ use Twig\Loader\FilesystemLoader;
  */
 final class DesignListener
 {
-    public const DESIGNS = ['brut' => 'Brut', 'editorial' => 'Éditorial', 'neon' => 'Néon'];
+    public const DESIGNS = ['studio' => 'Studio', 'performance' => 'Performance', 'ludique' => 'Ludique'];
     public const COOKIE = 'genwod_design';
 
     /** @var list<string>|null chemins Twig d'origine (restaurés à chaque requête : serveurs persistants) */
