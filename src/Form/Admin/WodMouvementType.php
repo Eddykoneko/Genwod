@@ -25,7 +25,7 @@ class WodMouvementType extends AbstractType
                 'choice_label' => 'nom',
                 'group_by' => static fn (Mouvement $m) => $m->getCategorie()->label(),
             ])
-            ->add('quantite', IntegerType::class, ['label' => 'Quantité'])
+            ->add('quantite', IntegerType::class, ['label' => 'Quantité', 'help' => '0 = « Max »'])
             ->add('note', TextType::class, ['label' => 'Charge / note', 'required' => false]);
     }
 

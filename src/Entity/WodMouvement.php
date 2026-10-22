@@ -32,8 +32,9 @@ class WodMouvement
     #[ORM\Column(type: Types::SMALLINT)]
     private int $position = 0;
 
+    /** 0 = « Max » : un maximum de répétitions sur la durée (ex. Open 12.1, 7 min de burpees). */
     #[ORM\Column(type: Types::SMALLINT)]
-    #[Assert\Positive]
+    #[Assert\PositiveOrZero]
     private int $quantite = 10;
 
     #[ORM\Column(length: 60, nullable: true)]
@@ -67,6 +68,7 @@ class WodMouvement
         return match (true) {
             null !== $this->wod?->getSchemaReps() => (string) $this->wod->getSchemaReps(),
             WodType::Tabata === $this->wod?->getType() => '8×',
+            0 === $this->quantite => 'Max',
             default => $this->getUnite()->format($this->quantite),
         };
     }

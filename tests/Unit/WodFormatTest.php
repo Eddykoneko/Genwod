@@ -26,6 +26,14 @@ final class WodFormatTest extends TestCase
         self::assertSame('EMOM 30 min · tout chaque minute', $chelsea->getFormat());
     }
 
+    public function testQuantiteMax(): void
+    {
+        $wod = (new Wod())->setType(WodType::Amrap)->setDuree(7);
+        $wod->addLigne($ligne = (new WodMouvement())->setMouvement((new Mouvement())->setNom('Burpees'))->setQuantite(0));
+
+        self::assertSame('Max Burpees', $ligne->getLibelle());
+    }
+
     public function testTabataSansQuantite(): void
     {
         $tabata = (new Wod())->setType(WodType::Tabata);

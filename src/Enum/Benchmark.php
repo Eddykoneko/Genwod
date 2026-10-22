@@ -12,6 +12,7 @@ enum Benchmark: string implements TranslatableInterface
 {
     case Girl = 'girl';
     case Hero = 'hero';
+    case Open = 'open';
     case Classique = 'classique';
 
     public function label(): string
@@ -19,6 +20,7 @@ enum Benchmark: string implements TranslatableInterface
         return match ($this) {
             self::Girl => 'The Girls',
             self::Hero => 'Hero WOD',
+            self::Open => 'CrossFit Open',
             self::Classique => 'Classique',
         };
     }

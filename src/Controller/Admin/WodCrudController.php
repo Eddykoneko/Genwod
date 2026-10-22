@@ -54,7 +54,7 @@ final class WodCrudController extends AbstractCrudController
             ->add(ChoiceFilter::new('type')->setChoices(WodType::choices()))
             ->add(ChoiceFilter::new('difficulte')->setChoices(Difficulte::choices()))
             ->add(BooleanFilter::new('officiel'))
-            ->add(ChoiceFilter::new('benchmark')->setChoices(['The Girls' => Benchmark::Girl, 'Hero WOD' => Benchmark::Hero, 'Classique' => Benchmark::Classique]))
+            ->add(ChoiceFilter::new('benchmark')->setChoices(['The Girls' => Benchmark::Girl, 'Hero WOD' => Benchmark::Hero, 'CrossFit Open' => Benchmark::Open, 'Classique' => Benchmark::Classique]))
             ->add(BooleanFilter::new('public'));
     }
 

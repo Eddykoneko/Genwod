@@ -46,12 +46,14 @@ final class PagesPubliquesTest extends AppWebTestCase
     {
         $officiels = static::getContainer()->get(WodRepository::class)->findBy(['officiel' => true]);
 
-        self::assertCount(23, $officiels);
+        self::assertCount(36, $officiels);
         foreach ($officiels as $wod) {
             self::assertNotNull($wod->getBenchmark(), (string) $wod->getTitre());
             self::assertNotEmpty($wod->getLignes(), (string) $wod->getTitre());
         }
         self::assertSame('21-15-9 For Time · cap 10 min', $this->wod('Fran')->getFormat());
+        self::assertSame('10 tours For Time · cap 15 min', $this->wod('Open 20.1')->getFormat());
+        self::assertSame('Max Burpees (cible à +15 cm)', $this->wod('Open 12.1')->getLignes()->first()?->getLibelle());
     }
 
     public function testFiltrerLesHeroWods(): void

@@ -35,5 +35,5 @@ php bin/console ux:icons:lock                   # après avoir utilisé une nouv
 - `WodGenerator` : génération déterministe (graine) depuis le catalogue `Mouvement`. Règles : matériel disponible, alternance des familles, ≤ 1 cardio, ≤ 1 gainage, volumes arrondis.
 - `Seance` est l'unique source des scores ; le classement par WOD et les records sont calculés depuis elle (`SeanceRepository`). Les points sont figés à l'enregistrement (`EnregistreurSeance` + `Points`).
 - `Statistiques` : série de jours consécutifs et heatmap.
-- `config/donnees/catalogue.php` : catalogue de mouvements et **uniquement des WODs de référence de la communauté CrossFit** (Girls, Hero WODs, classiques), avec `schema` (21-15-9…) et `toutChaqueMinute` (EMOM type Chelsea). Les mouvements `actif = false` servent aux benchmarks mais pas au générateur.
+- `config/donnees/catalogue.php` : catalogue de mouvements et **uniquement des WODs de référence de la communauté CrossFit** (Girls, Hero WODs, CrossFit Open, classiques ; quantité 0 = « Max »), avec `schema` (21-15-9…) et `toutChaqueMinute` (EMOM type Chelsea). Les mouvements `actif = false` servent aux benchmarks mais pas au générateur.
 - `app:import-v1` : reprise des données de la v1 (schéma avec colonnes `user_id_id` / `exercice_id_id`).
