@@ -53,7 +53,9 @@ final class PagesPubliquesTest extends AppWebTestCase
         }
         self::assertSame('21-15-9 For Time · cap 10 min', $this->wod('Fran')->getFormat());
         self::assertSame('10 tours For Time · cap 15 min', $this->wod('Open 20.1')->getFormat());
-        self::assertSame('Max Burpees (cible à +15 cm)', $this->wod('Open 12.1')->getLignes()->first()?->getLibelle());
+        $burpees = $this->wod('Open 12.1')->getLignes()->first();
+        self::assertNotFalse($burpees);
+        self::assertSame('Max Burpees (cible à +15 cm)', $burpees->getLibelle());
     }
 
     public function testFiltrerLesHeroWods(): void
