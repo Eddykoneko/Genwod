@@ -46,7 +46,7 @@ final class PagesPubliquesTest extends AppWebTestCase
     {
         $officiels = static::getContainer()->get(WodRepository::class)->findBy(['officiel' => true]);
 
-        self::assertCount(36, $officiels);
+        self::assertCount(43, $officiels);
         foreach ($officiels as $wod) {
             self::assertNotNull($wod->getBenchmark(), (string) $wod->getTitre());
             self::assertNotEmpty($wod->getLignes(), (string) $wod->getTitre());
@@ -56,6 +56,32 @@ final class PagesPubliquesTest extends AppWebTestCase
         $burpees = $this->wod('Open 12.1')->getLignes()->first();
         self::assertNotFalse($burpees);
         self::assertSame('Max Burpees (cible à +15 cm)', $burpees->getLibelle());
+    }
+
+    /**
+     * Les échelles de l'Open sont saisies ligne par ligne : on vérifie le total officiel de répétitions.
+     *
+     * @return iterable<string, array{string, int}>
+     */
+    public static function totauxOfficiels(): iterable
+    {
+        yield '17.1' => ['Open 17.1', 225];
+        yield '18.2' => ['Open 18.2', 110];
+        yield '21.1' => ['Open 21.1', 605];
+        yield '26.1' => ['Open 26.1', 354];
+    }
+
+    #[DataProvider('totauxOfficiels')]
+    public function testLeTotalDeRepetitionsDesEchellesEstExact(string $titre, int $total): void
+    {
+        $wod = $this->wod($titre);
+        $schema = $wod->getSchemaReps();
+        $somme = 0;
+        foreach ($wod->getLignes() as $ligne) {
+            $somme += null !== $schema ? array_sum(array_map('intval', explode('-', $schema))) : $ligne->getQuantite();
+        }
+
+        self::assertSame($total, $somme);
     }
 
     public function testFiltrerLesHeroWods(): void
