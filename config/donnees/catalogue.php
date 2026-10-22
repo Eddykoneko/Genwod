@@ -196,7 +196,7 @@ return [
             'consignes' => 'Box jump-overs : descente de la box en marchant, sans rebond.',
             'lignes' => [['wall-walk', 3], ['db-snatch', 12, '22,5/15 kg'], ['box-jump-over', 15, '60/50 cm']]],
         ['titre' => 'Open 22.3', 'benchmark' => 'open', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 12, 'tours' => 1,
-            'consignes' => "Trois paliers : le mouvement de traction devient plus difficile et le thruster plus lourd à chaque palier.",
+            'consignes' => 'Trois paliers : le mouvement de traction devient plus difficile et le thruster plus lourd à chaque palier.',
             'lignes' => [['pull-up', 21], ['double-unders', 42], ['thruster', 21, '43/30 kg'],
                 ['chest-to-bar', 18], ['double-unders', 36], ['thruster', 18, '52/34 kg'],
                 ['bar-muscle-up', 15], ['double-unders', 30], ['thruster', 15, '61/39 kg']]],
