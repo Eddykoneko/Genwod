@@ -52,6 +52,15 @@ Chaque design a ses propres gabarits dans `templates/designs/<design>/` (Twig y 
 
 Prérequis : PHP 8.4+ (extensions `intl`, `pdo_mysql`), Composer, MySQL 8 (MAMP, Docker…).
 
+> **Le plus simple en local : SQLite, sans aucun serveur de base de données.** Dans `.env.local` :
+>
+> ```bash
+> DATABASE_URL="sqlite:///%kernel.project_dir%/var/genwod.db"
+> ```
+>
+> puis `php bin/console doctrine:schema:create` et `php bin/console doctrine:fixtures:load`.
+> Les migrations, écrites pour MySQL, servent à la production (MySQL/MariaDB).
+
 ```bash
 composer install
 
