@@ -41,7 +41,7 @@
 <section class="p-panel p-formats-panel">
     <div class="p-panel-tete"><h2 class="p-panel-titre">Générer en un clic</h2><span>Durée 15 min · intermédiaire</span></div>
     <div class="p-formats">
-        {% for t in [['for_time', 'For Time', 'Le plus vite possible'], ['amrap', 'AMRAP', 'Max de tours'], ['emom', 'EMOM', 'Chaque minute'], ['tabata', 'Tabata', '20 s / 10 s']] %}
+        {% for t in [['for_time', 'For Time', 'Le plus vite possible'], ['amrap', 'AMRAP', 'Max de tours'], ['emom', 'EMOM', 'Chaque minute'], ['death_by', 'Death By', '+1 par minute']] %}
             <a class="p-format p-format-{{ t[0] }}" href="{{ path('app_generateur', {type: t[0], duree: 15, difficulte: 'moyen'}) }}"><b>{{ t[1] }}</b><small>{{ t[2] }}</small><span>→</span></a>
         {% endfor %}
     </div>

@@ -23,7 +23,7 @@
 <section class="l-section">
     <h2 class="l-section-titre">Quel format aujourd'hui ?</h2>
     <div class="l-formats">
-        {% for t in [['for_time', 'FT', 'For Time', 'Le plus vite possible'], ['amrap', 'AM', 'AMRAP', 'Max de tours'], ['emom', 'EM', 'EMOM', 'Chaque minute'], ['tabata', 'TB', 'Tabata', '20 s / 10 s']] %}
+        {% for t in [['for_time', 'FT', 'For Time', 'Le plus vite possible'], ['amrap', 'AM', 'AMRAP', 'Max de tours'], ['emom', 'EM', 'EMOM', 'Chaque minute'], ['death_by', 'DB', 'Death By', '+1 par minute']] %}
             <a class="l-carte l-format-tuile l-{{ t[0] }}" href="{{ path('app_generateur', {type: t[0], duree: 15, difficulte: 'moyen'}) }}"><span class="l-format-ic">{{ t[1] }}</span><h3>{{ t[2] }}</h3><p>{{ t[3] }}</p></a>
         {% endfor %}
     </div>

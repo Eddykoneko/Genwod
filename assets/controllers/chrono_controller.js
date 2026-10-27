@@ -5,13 +5,13 @@ import { Controller } from '@hotwired/stimulus';
  *  - For Time : chrono qui monte jusqu'au time cap, bouton « Terminé » qui reporte le temps dans le formulaire ;
  *  - AMRAP    : compte à rebours + compteur de tours reporté dans le formulaire ;
  *  - EMOM     : une minute par mouvement, en boucle ;
- *  - Tabata   : 8 × (20 s d'effort / 10 s de repos) pour chaque mouvement.
+ *  - Death By : chaque minute, un pas de plus (1, 2, 3… répétitions) ; bouton « Minute ratée » qui reporte les minutes complétées.
  * Décompte de 10 s, bips (Web Audio) et écran maintenu allumé (Wake Lock API).
  */
 const DECOMPTE = 10;
 
 export default class extends Controller {
-    static values = { type: String, duree: Number, lignes: Array };
+    static values = { type: String, duree: Number, lignes: Array, pas: Array };
     static targets = ['dialog', 'ecran', 'phase', 'temps', 'sous', 'barre', 'tours', 'boutonDemarrer', 'boutonPause', 'boutonFini'];
 
     connect() {
@@ -82,9 +82,18 @@ export default class extends Controller {
         this.bip(660, 0.08);
     }
 
-    /** For Time : l'athlète a fini, on fige le temps et on le reporte dans le formulaire. */
+    /**
+     * For Time : l'athlète a fini, on fige le temps et on le reporte dans le formulaire.
+     * Death By : la minute en cours est ratée, on reporte les minutes complétées.
+     */
     terminer() {
         const secondes = Math.round(Math.max(0, this.ecoule / 1000 - DECOMPTE));
+        if (this.typeValue === 'death_by') {
+            const minutes = Math.floor(secondes / 60);
+            this.finir('Minute ratée', `${minutes} min`, 'Ajoutez les répétitions de la minute ratée dans « Noter mon score »');
+            this.reporter('tours', String(minutes));
+            return;
+        }
         this.finir('Bravo !', this.format(secondes));
         this.reporter('temps', this.format(secondes));
     }
@@ -109,6 +118,7 @@ export default class extends Controller {
             this.bip(1320, 0.8);
             this.finir(this.typeValue === 'for_time' ? 'Time cap !' : 'Terminé !', this.typeValue === 'amrap' ? '0:00' : this.format(total));
             if (this.typeValue === 'amrap') this.reporter('tours', String(this.tours));
+            if (this.typeValue === 'death_by') this.reporter('tours', String(this.dureeValue));
             return;
         }
 
@@ -129,28 +139,19 @@ export default class extends Controller {
                 this.afficher('effort', `Minute ${minute + 1} / ${this.dureeValue}`, this.format(reste), this.ligne(minute), e / total);
                 break;
             }
-            case 'tabata': {
-                const intervalle = Math.floor(e / 30);
-                const dansIntervalle = e % 30;
-                const bloc = Math.floor(intervalle / 8);
-                const round = (intervalle % 8) + 1;
-                const effort = dansIntervalle < 20;
-                const reste = effort ? 20 - dansIntervalle : 30 - dansIntervalle;
-                this.bipUneFois(`t${intervalle}${effort ? 'e' : 'r'}`, effort ? 1320 : 520, 0.35);
-                this.bipFinDePeriode(reste, `t${intervalle}${effort ? 'e' : 'r'}`);
-                this.afficher(
-                    effort ? 'effort' : 'repos',
-                    `${effort ? 'Effort' : 'Repos'} · round ${round}/8`,
-                    this.format(reste),
-                    effort ? this.ligne(bloc) : `Ensuite : ${round === 8 ? this.ligne(bloc + 1) : this.ligne(bloc)}`,
-                    e / total,
-                );
+            case 'death_by': {
+                const minute = Math.floor(e / 60);
+                const reste = 60 - (e % 60);
+                if (this.hasBoutonFiniTarget) this.boutonFiniTarget.hidden = false;
+                this.bipUneFois(`m${minute}`, minute > 0 ? 1320 : null, 0.4);
+                this.bipFinDePeriode(reste, `m${minute}`);
+                this.afficher('effort', `Minute ${minute + 1}`, this.format(reste), this.travailDeathBy(minute), e / total);
                 break;
             }
         }
     }
 
-    finir(phase, temps) {
+    finir(phase, temps, sous = 'Score reporté dans « Noter mon score »') {
         this.arreterBoucle();
         this.libererEcran();
         this.enCours = false;
@@ -159,7 +160,7 @@ export default class extends Controller {
         if (this.hasBoutonFiniTarget) this.boutonFiniTarget.hidden = true;
         this.boutonDemarrerTarget.hidden = false;
         this.boutonDemarrerTarget.lastChild.textContent = ' Recommencer';
-        this.afficher('fini', phase, temps, 'Score reporté dans « Noter mon score »', 1);
+        this.afficher('fini', phase, temps, sous, 1);
     }
 
     /** Reporte le résultat dans le champ du formulaire de séance et y amène l'utilisateur. */
@@ -188,7 +189,12 @@ export default class extends Controller {
     }
 
     total() {
-        return this.typeValue === 'tabata' ? this.lignesValue.length * 8 * 30 : this.dureeValue * 60;
+        return this.dureeValue * 60;
+    }
+
+    /** Death By : le travail de la minute (0 = première minute), ex. « 6 Burpees · 6 Tractions ». */
+    travailDeathBy(minute) {
+        return this.lignesValue.map((ligne, i) => `${(minute + 1) * (this.pasValue[i] ?? 1)} ${ligne}`).join(' · ');
     }
 
     ligne(index) {
@@ -196,7 +202,8 @@ export default class extends Controller {
     }
 
     premiereLigne() {
-        return ['emom', 'tabata'].includes(this.typeValue) ? `D'abord : ${this.ligne(0)}` : '';
+        if (this.typeValue === 'death_by') return `D'abord : ${this.travailDeathBy(0)}`;
+        return this.typeValue === 'emom' ? `D'abord : ${this.ligne(0)}` : '';
     }
 
     format(secondes) {

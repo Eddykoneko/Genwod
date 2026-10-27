@@ -22,7 +22,7 @@ final class GenererCommand
     /** @param list<string> $materiel */
     public function __invoke(
         SymfonyStyle $io,
-        #[Argument('for_time, amrap, emom ou tabata')] string $type = 'amrap',
+        #[Argument('for_time, amrap, emom ou death_by')] string $type = 'amrap',
         #[Option('Durée en minutes')] int $duree = 12,
         #[Option('facile, moyen ou difficile')] string $difficulte = 'moyen',
         #[Option('Matériel disponible (répétable)')] array $materiel = [],

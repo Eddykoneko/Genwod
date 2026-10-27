@@ -124,9 +124,9 @@ final class ImporterV1Command
         $wods = [];
         foreach ($v1->fetchAllAssociative('SELECT * FROM exercice') as $ligne) {
             $type = match (mb_strtoupper(trim((string) $ligne['type']))) {
-                'AMRAP' => WodType::Amrap,
+                // La v2 n'a plus de Tabata : comme un AMRAP, il se score en répétitions.
+                'AMRAP', 'TABATA' => WodType::Amrap,
                 'EMOM' => WodType::Emom,
-                'TABATA' => WodType::Tabata,
                 default => WodType::ForTime,
             };
             $difficulte = match (mb_strtolower(trim((string) $ligne['difficulte']))) {

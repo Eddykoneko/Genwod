@@ -34,7 +34,7 @@
 <section class="s-section">
     <div class="s-section-tete"><h2>Choisis ton format</h2></div>
     <div class="s-formats">
-        {% for t in [['for_time', 'FT', 'For Time', 'Le plus vite possible'], ['amrap', 'AM', 'AMRAP', 'Max de tours'], ['emom', 'EM', 'EMOM', 'Chaque minute'], ['tabata', 'TB', 'Tabata', '20 s / 10 s']] %}
+        {% for t in [['for_time', 'FT', 'For Time', 'Le plus vite possible'], ['amrap', 'AM', 'AMRAP', 'Max de tours'], ['emom', 'EM', 'EMOM', 'Chaque minute'], ['death_by', 'DB', 'Death By', '+1 par minute']] %}
             <a class="s-format" href="{{ path('app_generateur', {type: t[0], duree: 15, difficulte: 'moyen'}) }}">
                 <span class="s-format-ic s-{{ t[0] }}">{{ t[1] }}</span>
                 <h3>{{ t[2] }}</h3>

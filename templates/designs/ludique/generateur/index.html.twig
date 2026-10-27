@@ -8,7 +8,7 @@
     <form class="l-carte l-gen-form" method="get" action="{{ path('app_generateur') }}" data-turbo-action="advance">
         <fieldset><legend>1. Le format</legend>
             <div class="l-tuiles">
-                {% for type in types %}<label class="l-{{ type.value }}"><input type="radio" name="type" value="{{ type.value }}" {{ criteres.type == type ? 'checked' }}><span><b>{{ type.label }}</b><small>{{ {'for_time': 'Le plus vite', 'amrap': 'Max de tours', 'emom': 'Chaque minute', 'tabata': '20 s / 10 s'}[type.value] }}</small></span></label>{% endfor %}
+                {% for type in types %}<label class="l-{{ type.value }}"><input type="radio" name="type" value="{{ type.value }}" {{ criteres.type == type ? 'checked' }}><span><b>{{ type.label }}</b><small>{{ {'for_time': 'Le plus vite', 'amrap': 'Max de tours', 'emom': 'Chaque minute', 'death_by': '+1 par minute'}[type.value] }}</small></span></label>{% endfor %}
             </div>
         </fieldset>
         <div class="l-curseur" data-controller="range">

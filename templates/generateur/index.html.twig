@@ -16,7 +16,7 @@
                     {% for type in types %}
                         <label>
                             <input type="radio" name="type" value="{{ type.value }}" {{ criteres.type == type ? 'checked' }}>
-                            <span>{{ type.label }}<small>{{ {'for_time': 'Le plus vite', 'amrap': 'Max de tours', 'emom': 'Chaque minute', 'tabata': '20 s / 10 s'}[type.value] }}</small></span>
+                            <span>{{ type.label }}<small>{{ {'for_time': 'Le plus vite', 'amrap': 'Max de tours', 'emom': 'Chaque minute', 'death_by': '+1 par minute'}[type.value] }}</small></span>
                         </label>
                     {% endfor %}
                 </div>

@@ -52,7 +52,7 @@ final class MouvementCrudController extends AbstractCrudController
         yield IntegerField::new('volumeBase', 'Volume de base')->setHelp('Pour un tour en difficulté intermédiaire.');
         yield TextField::new('chargeRx', 'Charge RX');
         yield TextareaField::new('description')->hideOnIndex();
-        yield BooleanField::new('technique')->setHelp('Exclu en difficulté facile et en Tabata.');
+        yield BooleanField::new('technique')->setHelp('Exclu en difficulté facile.');
         yield BooleanField::new('actif')->setHelp('Proposé par le générateur.');
     }
 

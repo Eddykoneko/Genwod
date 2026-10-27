@@ -37,8 +37,8 @@ php bin/console ux:icons:lock                   # après avoir utilisé une nouv
 
 ## Architecture
 
-- `WodGenerator` : génération déterministe (graine) depuis le catalogue `Mouvement`. Règles : matériel disponible, alternance des familles, ≤ 1 cardio, ≤ 1 gainage, volumes arrondis.
+- `WodGenerator` : génération déterministe (graine) depuis le catalogue `Mouvement`. Règles : matériel disponible, alternance des familles, ≤ 1 cardio, ≤ 1 gainage, volumes arrondis. Death By : un seul mouvement en répétitions (hors cardio), `quantite` = pas ajouté chaque minute (affiché « 2-4-6… »), time cap ≥ 10 min ; le score est stocké dans `Seance::tours` (minutes complétées) + `reps` (minute ratée).
 - `Seance` est l'unique source des scores ; le classement par WOD et les records sont calculés depuis elle (`SeanceRepository`). Les points sont figés à l'enregistrement (`EnregistreurSeance` + `Points`).
 - `Statistiques` : série de jours consécutifs et heatmap.
-- `config/donnees/catalogue.php` : catalogue de mouvements et **uniquement des WODs de référence de la communauté CrossFit** (Girls, Hero WODs, CrossFit Open, classiques ; quantité 0 = « Max » ; les échelles et pyramides de l'Open sont saisies ligne par ligne comme des chippers, leurs totaux officiels sont vérifiés par PagesPubliquesTest), avec `schema` (21-15-9…) et `toutChaqueMinute` (EMOM type Chelsea). Les mouvements `actif = false` servent aux benchmarks mais pas au générateur.
+- `config/donnees/catalogue.php` : catalogue de mouvements et **uniquement des WODs de référence de la communauté CrossFit** (Girls, Hero WODs, CrossFit Open ; pas de Tabata, jugé « cross-training » ; quantité 0 = « Max » ; les échelles et pyramides de l'Open sont saisies ligne par ligne comme des chippers, leurs totaux officiels sont vérifiés par PagesPubliquesTest), avec `schema` (21-15-9…) et `toutChaqueMinute` (EMOM type Chelsea). Les mouvements `actif = false` servent aux benchmarks mais pas au générateur.
 - `app:import-v1` : reprise des données de la v1 (schéma avec colonnes `user_id_id` / `exercice_id_id`).

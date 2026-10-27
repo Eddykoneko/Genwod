@@ -67,7 +67,7 @@ final class WodGeneratorTest extends TestCase
         yield 'EMOM 12 → 4 mouvements' => [WodType::Emom, 12, 4];
         yield 'EMOM 9 → 3 mouvements' => [WodType::Emom, 9, 3];
         yield 'EMOM 10 → 2 mouvements' => [WodType::Emom, 10, 2];
-        yield 'Tabata 16 min → 4 mouvements' => [WodType::Tabata, 16, 4];
+        yield 'Death By → 1 mouvement' => [WodType::DeathBy, 16, 1];
     }
 
     #[DataProvider('structures')]
@@ -89,15 +89,18 @@ final class WodGeneratorTest extends TestCase
         }
     }
 
-    public function testTabataSansDistanceNiMouvementTechnique(): void
+    public function testDeathByEnRepetitionsAvecUnPasParMinute(): void
     {
         for ($i = 0; $i < 20; ++$i) {
-            $wod = $this->generateur->generer(new CriteresGeneration(WodType::Tabata, 20, Difficulte::Difficile, Equipement::selectionnables(), \sprintf('%08x', $i)));
-            self::assertSame(4 * \count($wod->getLignes()), $wod->getDuree());
-            foreach ($wod->getLignes() as $ligne) {
-                self::assertNotContains($ligne->getUnite(), [Unite::Metres, Unite::Secondes]);
-                self::assertFalse($ligne->getMouvement()?->isTechnique());
-            }
+            $wod = $this->generateur->generer(new CriteresGeneration(WodType::DeathBy, 6, Difficulte::cases()[$i % 3], Equipement::selectionnables(), \sprintf('%08x', $i)));
+            // Le time cap laisse toujours le temps de monter en charge.
+            self::assertSame(10, $wod->getDuree());
+            $ligne = $wod->getLignes()->first();
+            self::assertNotFalse($ligne);
+            self::assertSame(Unite::Reps, $ligne->getUnite());
+            self::assertNotSame(Categorie::Cardio, $ligne->getMouvement()?->getCategorie());
+            self::assertGreaterThanOrEqual(1, $ligne->getQuantite());
+            self::assertLessThanOrEqual(5, $ligne->getQuantite());
         }
     }
 

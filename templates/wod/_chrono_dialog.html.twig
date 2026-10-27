@@ -25,6 +25,8 @@
             <button type="button" class="btn btn-outline btn-lg" data-chrono-target="boutonPause" data-action="chrono#pause" hidden>{{ ux_icon('lucide:pause') }} Pause</button>
             {% if wod.type.value == 'for_time' %}
                 <button type="button" class="btn btn-lg" style="--btn-bg: var(--lime); --btn-fg: #111; --btn-border: transparent" data-chrono-target="boutonFini" data-action="chrono#terminer" hidden>{{ ux_icon('lucide:flag') }} Terminé !</button>
+            {% elseif wod.type.value == 'death_by' %}
+                <button type="button" class="btn btn-lg" style="--btn-bg: var(--lime); --btn-fg: #111; --btn-border: transparent" data-chrono-target="boutonFini" data-action="chrono#terminer" hidden>{{ ux_icon('lucide:flag') }} Minute ratée</button>
             {% endif %}
             <button type="button" class="btn btn-ghost btn-lg" data-action="chrono#reinitialiser">{{ ux_icon('lucide:rotate-ccw') }} Remise à zéro</button>
         </div>

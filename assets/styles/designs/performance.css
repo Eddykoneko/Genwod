@@ -94,7 +94,7 @@
 .p-tag-for_time { background: rgb(255 106 43 / 0.15); color: var(--p-orange); }
 .p-tag-amrap { background: rgb(77 163 255 / 0.15); color: var(--cyan); }
 .p-tag-emom, .p-tag-lime { background: rgb(200 255 61 / 0.13); color: var(--lime); }
-.p-tag-tabata { background: rgb(155 123 255 / 0.15); color: var(--p-violet); }
+.p-tag-death_by { background: rgb(155 123 255 / 0.15); color: var(--p-violet); }
 .p-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .p-entete { margin-bottom: 22px; }
 .p-entete h1 { font-size: 1.9rem; }
@@ -149,7 +149,7 @@
 .p-format small { color: var(--text-muted); }
 .p-format span { position: absolute; right: 14px; top: 14px; color: var(--text-faint); }
 .p-format:hover { background: var(--surface-3); }
-.p-format-for_time { --c: var(--p-orange); } .p-format-amrap { --c: var(--cyan); } .p-format-tabata { --c: var(--p-violet); }
+.p-format-for_time { --c: var(--p-orange); } .p-format-amrap { --c: var(--cyan); } .p-format-death_by { --c: var(--p-violet); }
 .p-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 .p-table th { text-align: left; color: var(--text-faint); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 8px 6px; border-bottom: 1px solid var(--border); }
 .p-table td { padding: 10px 6px; border-top: 1px solid var(--border); }

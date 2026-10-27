@@ -34,7 +34,7 @@ final class AppFixtures extends Fixture
         ['lea', 'Léa_Rx', Niveau::Confirme, 'Coach à Lyon. Team thrusters.'],
         ['max', 'MaxPower', Niveau::Confirme, 'Ancien rugbyman, accro aux chippers.'],
         ['ines', 'InesRows', Niveau::Intermediaire, 'Rameur le matin, barre le soir.'],
-        ['tom', 'TomTabata', Niveau::Intermediaire, null],
+        ['tom', 'TomBurpees', Niveau::Intermediaire, null],
         ['sarah', 'Sarah.KB', Niveau::Intermediaire, 'Kettlebell addict.'],
         ['yanis', 'Yanis69', Niveau::Debutant, 'Premier WOD en janvier !'],
         ['chloe', 'ChloeBurpees', Niveau::Debutant, null],
@@ -169,6 +169,7 @@ final class AppFixtures extends Fixture
         match ($wod->getType()) {
             WodType::ForTime => $seance->setTempsSecondes(mt_rand((int) ($cap * 0.45), $cap)),
             WodType::Amrap => $seance->setTours(mt_rand(max(1, intdiv($wod->getDuree(), 3)), $wod->getDuree()))->setReps(mt_rand(0, 20)),
+            WodType::DeathBy => $seance->setTours(mt_rand(intdiv($wod->getDuree(), 2), $wod->getDuree() - 1))->setReps(mt_rand(0, 10)),
             default => $seance->setReps(mt_rand(6, 14) * $wod->getDuree()),
         };
 

@@ -53,6 +53,9 @@ class SeanceType extends AbstractType
             WodType::Amrap => $builder
                 ->add('tours', IntegerType::class, ['label' => 'Tours complets', 'attr' => ['min' => 0, 'inputmode' => 'numeric']])
                 ->add('reps', IntegerType::class, ['label' => '+ répétitions', 'required' => false, 'attr' => ['min' => 0, 'inputmode' => 'numeric']]),
+            WodType::DeathBy => $builder
+                ->add('tours', IntegerType::class, ['label' => 'Minutes complétées', 'attr' => ['min' => 0, 'inputmode' => 'numeric']])
+                ->add('reps', IntegerType::class, ['label' => '+ reps de la minute ratée', 'required' => false, 'attr' => ['min' => 0, 'inputmode' => 'numeric']]),
             default => $builder->add('reps', IntegerType::class, ['label' => 'Total de répétitions', 'attr' => ['min' => 0, 'inputmode' => 'numeric']]),
         };
 

@@ -46,7 +46,8 @@ final class WodGenerator
         $wod = (new Wod())
             ->setType($criteres->type)
             ->setDifficulte($criteres->difficulte)
-            ->setDuree($criteres->duree)
+            // Un Death By s'arrête à l'échec : la durée n'est qu'un time cap, qui doit laisser le temps de monter.
+            ->setDuree(WodType::DeathBy === $criteres->type ? max(10, $criteres->duree) : $criteres->duree)
             ->setGraine($criteres->graine)
             ->setTitre(self::NOMS[$rng->getInt(0, \count(self::NOMS) - 1)].' '.self::COMPLEMENTS[$rng->getInt(0, \count(self::COMPLEMENTS) - 1)]);
 
@@ -54,15 +55,12 @@ final class WodGenerator
         $wod->setTours($tours);
 
         foreach ($this->choisirMouvements($catalogue, $nbMouvements, $criteres, $rng) as $mouvement) {
-            $quantite = $this->arrondir(
-                $mouvement->getVolumeBase() * $facteur * $criteres->difficulte->facteurVolume(),
-                $mouvement->getUnite(),
-            );
+            $volume = $mouvement->getVolumeBase() * $facteur * $criteres->difficulte->facteurVolume();
+            $quantite = WodType::DeathBy === $criteres->type
+                // Death By : la quantité est le pas ajouté chaque minute (1 burpee, 2 air squats…).
+                ? max(1, min(5, (int) round($volume)))
+                : $this->arrondir($volume, $mouvement->getUnite());
             $wod->addLigne((new WodMouvement())->setMouvement($mouvement)->setQuantite($quantite));
-        }
-
-        if (WodType::Tabata === $criteres->type) {
-            $wod->setDuree(4 * \count($wod->getLignes()));
         }
         $wod->setConsignes($this->consignes($wod));
 
@@ -77,10 +75,10 @@ final class WodGenerator
         return array_values(array_filter(
             $this->mouvements->findBy(['actif' => true], ['id' => 'ASC']),
             static fn (Mouvement $m) => \in_array($m->getEquipement(), $materiel, true)
-                // Pas de mouvements très techniques en facile, ni sous la fatigue d'un Tabata.
-                && !($m->isTechnique() && (Difficulte::Facile === $criteres->difficulte || WodType::Tabata === $criteres->type))
-                // En Tabata, l'effort se mesure en répétitions sur 20 s : ni distances, ni gainages.
-                && !(WodType::Tabata === $criteres->type && \in_array($m->getUnite(), [Unite::Metres, Unite::Secondes], true)),
+                // Pas de mouvements très techniques en facile.
+                && !($m->isTechnique() && Difficulte::Facile === $criteres->difficulte)
+                // Un Death By se compte en répétitions, sur un mouvement qui se dégrade : pas de cardio.
+                && !(WodType::DeathBy === $criteres->type && (Unite::Reps !== $m->getUnite() || Categorie::Cardio === $m->getCategorie())),
         ));
     }
 
@@ -98,7 +96,8 @@ final class WodGenerator
             },
             WodType::Amrap => [$c->duree <= 12 ? 3 : 4, null, $c->duree >= 20 ? 1.2 : 1.0],
             WodType::Emom => [$this->mouvementsEmom($c->duree), null, 0.55],
-            WodType::Tabata => [max(2, min(5, (int) round($c->duree / 4))), null, 1.0],
+            // Un seul mouvement ; le facteur ramène le volume de base à un pas par minute (burpees 12 → 1).
+            WodType::DeathBy => [1, null, 0.1],
         };
     }
 
@@ -204,7 +203,7 @@ final class WodGenerator
                 : \sprintf('Enchaînez %d tours complets.', $wod->getTours()),
             WodType::Amrap => 'Notez vos tours complets et les répétitions du tour entamé.',
             WodType::Emom => \sprintf('Minute 1 : mouvement 1, minute 2 : mouvement 2… en boucle pendant %d minutes.', $wod->getDuree()),
-            WodType::Tabata => 'Comptez vos répétitions sur chaque intervalle et additionnez-les.',
+            WodType::DeathBy => \sprintf('Score : minutes complétées + répétitions de la minute ratée (time cap %d min).', $wod->getDuree()),
         };
         $lignes[] = 'Échauffement conseillé : 10 minutes, en reprenant les mouvements du jour à vide.';
 

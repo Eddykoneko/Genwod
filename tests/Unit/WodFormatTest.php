@@ -34,11 +34,13 @@ final class WodFormatTest extends TestCase
         self::assertSame('Max Burpees', $ligne->getLibelle());
     }
 
-    public function testTabataSansQuantite(): void
+    public function testDeathByAfficheLaProgression(): void
     {
-        $tabata = (new Wod())->setType(WodType::Tabata);
-        $tabata->addLigne($ligne = (new WodMouvement())->setMouvement((new Mouvement())->setNom('Squats'))->setQuantite(8));
+        $deathBy = (new Wod())->setType(WodType::DeathBy)->setDuree(20);
+        $deathBy->addLigne($ligne = (new WodMouvement())->setMouvement((new Mouvement())->setNom('Thrusters')->setChargeRx('43/30 kg'))->setQuantite(2));
 
-        self::assertSame('8× Squats', $ligne->getLibelle());
+        self::assertSame('Death By · cap 20 min', $deathBy->getFormat());
+        self::assertSame('2-4-6… Thrusters (43/30 kg)', $ligne->getLibelle());
+        self::assertSame('Thrusters (43/30 kg)', $ligne->getMouvementLibelle());
     }
 }

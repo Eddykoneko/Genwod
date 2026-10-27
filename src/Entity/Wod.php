@@ -118,7 +118,7 @@ class Wod
             },
             WodType::Amrap => 'AMRAP '.$this->duree.' min',
             WodType::Emom => 'EMOM '.$this->duree.' min'.($this->toutChaqueMinute ? ' · tout chaque minute' : ''),
-            WodType::Tabata => 'Tabata · '.\count($this->lignes).' × 4 min',
+            WodType::DeathBy => 'Death By · cap '.$this->duree.' min',
         };
     }
 

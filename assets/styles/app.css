@@ -309,7 +309,7 @@ body.has-tabbar { padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom
 .type-for_time { --type-color: var(--accent); }
 .type-amrap { --type-color: var(--lime); }
 .type-emom { --type-color: var(--cyan); }
-.type-tabata { --type-color: #b388ff; }
+.type-death_by { --type-color: #b388ff; }
 
 /* ---------- Badges ---------- */
 .badge { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); white-space: nowrap; }

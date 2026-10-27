@@ -81,14 +81,17 @@ class Seance
         if (WodType::Amrap === $type && null === $this->tours && null === $this->reps) {
             $context->buildViolation('Indiquez vos tours et/ou répétitions.')->atPath('tours')->addViolation();
         }
-        if (\in_array($type, [WodType::Emom, WodType::Tabata], true) && null === $this->reps) {
+        if (WodType::DeathBy === $type && null === $this->tours) {
+            $context->buildViolation('Indiquez le nombre de minutes complétées.')->atPath('tours')->addViolation();
+        }
+        if (WodType::Emom === $type && null === $this->reps) {
             $context->buildViolation('Indiquez le total de répétitions.')->atPath('reps')->addViolation();
         }
     }
 
     /**
      * Valeur de tri du classement : plus petite = meilleure pour un For Time,
-     * plus grande = meilleure sinon (tours × 1000 + reps).
+     * plus grande = meilleure sinon (tours ou minutes × 1000 + reps).
      */
     public function getValeurScore(): int
     {
@@ -99,12 +102,13 @@ class Seance
         return ($this->tours ?? 0) * 1000 + ($this->reps ?? 0);
     }
 
-    /** Score lisible : « 12:34 », « 7 tours + 12 reps » ou « 184 reps ». */
+    /** Score lisible : « 12:34 », « 7 tours + 12 reps », « 14 min + 6 reps » ou « 184 reps ». */
     public function getScoreLisible(): string
     {
         return match ($this->wod?->getType()) {
             WodType::ForTime => self::formaterTemps($this->tempsSecondes ?? 0),
             WodType::Amrap => \sprintf('%d tours + %d reps', $this->tours ?? 0, $this->reps ?? 0),
+            WodType::DeathBy => \sprintf('%d min + %d reps', $this->tours ?? 0, $this->reps ?? 0),
             default => \sprintf('%d reps', $this->reps ?? 0),
         };
     }

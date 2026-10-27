@@ -96,16 +96,26 @@ final class ParcoursAthleteTest extends AppWebTestCase
         self::assertSame(0, $this->wod('Cindy')->getLikesCount());
     }
 
-    public function testEnregistrerUnWodGenere(): void
+    public function testEnregistrerUnDeathByGenereEtNoterSonScore(): void
     {
         $this->client->loginUser($athlete = $this->creerAthlete());
-        $this->client->request('GET', '/generateur?type=tabata&duree=12&difficulte=moyen&graine=0000abcd');
-        $this->client->submitForm('Enregistrer et lancer le chrono', ['titre' => 'Mon Tabata']);
+        $this->client->request('GET', '/generateur?type=death_by&duree=12&difficulte=moyen&graine=0000abcd');
+        $this->client->submitForm('Enregistrer et lancer le chrono', ['titre' => 'Mon Death By']);
 
         self::assertResponseRedirects();
-        $this->client->followRedirect();
-        self::assertSelectorTextContains('h1', 'Mon Tabata');
+        $crawler = $this->client->followRedirect();
+        self::assertSelectorTextContains('h1', 'Mon Death By');
+        self::assertSelectorExists('[data-chrono-type-value="death_by"][data-chrono-pas-value]');
         self::assertCount(1, static::getContainer()->get(WodRepository::class)->findBy(['auteur' => $athlete]));
+
+        $this->client->submit($crawler->selectButton('Enregistrer ma séance')->form([
+            'seance[tours]' => 11,
+            'seance[reps]' => 4,
+            'seance[mode]' => 'rx',
+        ]));
+        self::assertResponseRedirects();
+        $seance = static::getContainer()->get(SeanceRepository::class)->findOneBy(['athlete' => $athlete]);
+        self::assertSame('11 min + 4 reps', $seance?->getScoreLisible());
     }
 
     public function testCommenter(): void

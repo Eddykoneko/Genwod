@@ -46,7 +46,7 @@ final class PagesPubliquesTest extends AppWebTestCase
     {
         $officiels = static::getContainer()->get(WodRepository::class)->findBy(['officiel' => true]);
 
-        self::assertCount(43, $officiels);
+        self::assertCount(42, $officiels);
         foreach ($officiels as $wod) {
             self::assertNotNull($wod->getBenchmark(), (string) $wod->getTitre());
             self::assertNotEmpty($wod->getLignes(), (string) $wod->getTitre());

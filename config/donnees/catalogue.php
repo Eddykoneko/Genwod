@@ -6,7 +6,7 @@
  *
  * Mouvement : [slug, nom, catégorie, équipement, unité, volume de base, charge RX, technique, description, actif = true]
  *             (actif = false : réservé aux WODs de référence, jamais proposé par le générateur)
- * WOD       : WODs de référence reconnus par la communauté CrossFit (Girls, Hero WODs, classiques).
+ * WOD       : WODs de référence reconnus par la communauté CrossFit (Girls, Hero WODs, CrossFit Open).
  *             Charges converties des standards en livres (95 lb ≈ 43 kg, 135 lb ≈ 61 kg…).
  */
 
@@ -215,10 +215,5 @@ return [
             'lignes' => [['wall-ball', 20, '9/6 kg · cible 3/2,7 m'], ['box-jump-over', 18, '60/50 cm'], ['wall-ball', 30, '9/6 kg · cible 3/2,7 m'], ['box-jump-over', 18, '60/50 cm'],
                 ['wall-ball', 40, '9/6 kg · cible 3/2,7 m'], ['step-over-med-ball', 18], ['wall-ball', 66, '9/6 kg · cible 3/2,7 m'], ['step-over-med-ball', 18],
                 ['wall-ball', 40, '9/6 kg · cible 3/2,7 m'], ['box-jump-over', 18, '60/50 cm'], ['wall-ball', 30, '9/6 kg · cible 3/2,7 m'], ['box-jump-over', 18, '60/50 cm'], ['wall-ball', 20, '9/6 kg · cible 3/2,7 m']]],
-
-        // --- Classiques --------------------------------------------------------
-        ['titre' => 'Tabata Something Else', 'benchmark' => 'classique', 'type' => 'tabata', 'difficulte' => 'moyen', 'duree' => 16,
-            'consignes' => "8 intervalles de 20 s d'effort / 10 s de repos pour chaque mouvement, sans pause entre les mouvements.\nScore : total des répétitions.",
-            'lignes' => [['pull-up', 8], ['push-up', 8], ['sit-up', 8], ['air-squat', 8]]],
     ],
 ];

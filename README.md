@@ -9,9 +9,9 @@ Genwod génère des entraînements CrossFit (*Workout Of the Day*) adaptés au f
 
 | | |
 |---|---|
-| 🎲 **Générateur** | For Time, AMRAP, EMOM, Tabata, de 4 à 40 min. Sélection équilibrée par familles de mouvements, volumes adaptés à la difficulté et arrondis aux valeurs « naturelles » (15, 21, 400 m…). Déterministe : chaque WOD a une **URL partageable** (graine). |
-| ⏱️ **Chrono intégré** | Décompte de 10 s, intervalles EMOM et Tabata, bips (Web Audio), écran maintenu allumé (Wake Lock), compteur de tours. Le score est **reporté automatiquement** dans le formulaire. |
-| 📚 **Bibliothèque** | Recherche « live » (Live Component) dans les titres, consignes et mouvements, avec filtres reflétés dans l'URL. **43 WODs de référence de la communauté CrossFit** : les Girls (Fran, Grace, Cindy, Helen, Diane, Annie…), des Hero WODs (Murph, DT, JT, Nate), 20 WODs de l'**Open** (11.1, 12.1, 13.2, 14.5, 15.1, 15.5, 17.1, 18.1, 18.2, 19.1, 20.1, 20.3, 20.5, 21.1, 22.1, 22.3, 23.1, 24.1, 25.1, 26.1 — échelles croissantes et pyramide comprises) et Tabata Something Else. Le WOD du jour est tiré parmi eux. |
+| 🎲 **Générateur** | For Time, AMRAP, EMOM et Death By, de 4 à 40 min. Sélection équilibrée par familles de mouvements, volumes adaptés à la difficulté et arrondis aux valeurs « naturelles » (15, 21, 400 m…). Déterministe : chaque WOD a une **URL partageable** (graine). |
+| ⏱️ **Chrono intégré** | Décompte de 10 s, minutes EMOM et Death By (bouton « Minute ratée »), bips (Web Audio), écran maintenu allumé (Wake Lock), compteur de tours. Le score est **reporté automatiquement** dans le formulaire. |
+| 📚 **Bibliothèque** | Recherche « live » (Live Component) dans les titres, consignes et mouvements, avec filtres reflétés dans l'URL. **42 WODs de référence de la communauté CrossFit** : les Girls (Fran, Grace, Cindy, Helen, Diane, Annie…), des Hero WODs (Murph, DT, JT, Nate), 20 WODs de l'**Open** (11.1, 12.1, 13.2, 14.5, 15.1, 15.5, 17.1, 18.1, 18.2, 19.1, 20.1, 20.3, 20.5, 21.1, 22.1, 22.3, 23.1, 24.1, 25.1, 26.1 — échelles croissantes et pyramide comprises). Le WOD du jour est tiré parmi eux. |
 | 🏆 **Classements** | Par WOD (meilleur score par athlète, RX avant Scaled) et global par points (semaine, mois, tout). Détection des **records personnels**. |
 | 📈 **Tableau de bord** | Séances, points, série de jours consécutifs, part de séances en RX, heatmap d'activité sur 18 semaines, records. Profil public d'athlète. |
 | 💬 **Communauté** | « J'aime », favoris et commentaires sans rechargement (Turbo Streams). |
@@ -23,13 +23,13 @@ Genwod génère des entraînements CrossFit (*Workout Of the Day*) adaptés au f
 | v1 (soutenance DWWM) | v2 |
 |---|---|
 | Symfony 7.0, Doctrine ORM 2 | **Symfony 7.4 LTS**, Doctrine ORM 3, PHP 8.4 |
-| « Générateur » = tirage aléatoire d'un exercice en base | **Algorithme de génération** à partir d'un catalogue de 47 mouvements, et 43 benchmarks CrossFit (Girls, Heroes, Open) |
+| « Générateur » = tirage aléatoire d'un exercice en base | **Algorithme de génération** à partir d'un catalogue de 47 mouvements, et 42 benchmarks CrossFit (Girls, Heroes, Open) |
 | `Exercice` en texte libre, `HistoriqueExercice` + `Leaderboard` dupliqués | Modèle structuré : `Wod` → `WodMouvement` → `Mouvement`, `Seance` unique source des scores |
 | Propriétés `user_id` / `exercice_id` contenant des objets | Nommage clair (`athlete`, `wod`), **enums PHP** typées |
 | 7 contrôleurs CRUD admin générés | **EasyAdmin 5** |
 | Like/favori en GET sans CSRF | POST + CSRF + Turbo Streams, contraintes d'unicité en base |
 | Bootstrap + 3 CDN (Bootstrap, Font Awesome, Bootstrap Icons) | Design system sur mesure, sombre/clair, mobile d'abord, **icônes servies localement** (UX Icons) |
-| Pas de tests | **54 tests** (unitaires + fonctionnels), **PHPStan niveau 8**, PHP-CS-Fixer, CI GitHub Actions |
+| Pas de tests | **69 tests** (unitaires + fonctionnels), **PHPStan niveau 8**, PHP-CS-Fixer, CI GitHub Actions |
 
 ## Propositions de design (aperçu)
 
@@ -109,7 +109,7 @@ config/donnees/         catalogue.php — données de référence (mouvements, W
 
 ### Le générateur en bref
 
-1. Filtre le catalogue selon le matériel coché (le poids du corps est toujours disponible), exclut les mouvements très techniques en difficulté facile ou en Tabata.
+1. Filtre le catalogue selon le matériel coché (le poids du corps est toujours disponible), exclut les mouvements très techniques en difficulté facile ; un Death By ne prend qu'un mouvement en répétitions, hors cardio.
 2. Détermine la structure : nombre de mouvements, tours imposés et facteur de volume selon le format et la durée (ex. EMOM : un nombre de mouvements qui divise la durée).
 3. Choisit les mouvements en **alternant les familles** (au plus un cardio et un gainage), en privilégiant le matériel sélectionné.
 4. Calcule les volumes (`volume de base × format × difficulté`) puis les arrondit à des valeurs habituelles.
@@ -123,7 +123,7 @@ Le tout utilise `Random\Randomizer` (PHP 8.2+) initialisé avec une graine : mê
 ## Tests et qualité
 
 ```bash
-php bin/phpunit                      # 54 tests, base SQLite créée automatiquement
+php bin/phpunit                      # 69 tests, base SQLite créée automatiquement
 vendor/bin/phpstan analyse           # niveau 8
 vendor/bin/php-cs-fixer fix          # règles @Symfony
 ```

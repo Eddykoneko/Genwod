@@ -10,7 +10,7 @@ enum WodType: string implements TranslatableInterface
     case ForTime = 'for_time';
     case Amrap = 'amrap';
     case Emom = 'emom';
-    case Tabata = 'tabata';
+    case DeathBy = 'death_by';
 
     public function label(): string
     {
@@ -18,7 +18,7 @@ enum WodType: string implements TranslatableInterface
             self::ForTime => 'For Time',
             self::Amrap => 'AMRAP',
             self::Emom => 'EMOM',
-            self::Tabata => 'Tabata',
+            self::DeathBy => 'Death By',
         };
     }
 
@@ -34,7 +34,7 @@ enum WodType: string implements TranslatableInterface
             self::ForTime => 'Terminez le travail le plus vite possible, avant le time cap.',
             self::Amrap => 'Un maximum de tours et de répétitions dans le temps imparti.',
             self::Emom => 'Chaque minute, au top : faites le travail, récupérez le reste de la minute.',
-            self::Tabata => '8 rounds de 20 s d\'effort / 10 s de repos par mouvement.',
+            self::DeathBy => 'Le nombre de répétitions augmente à chaque minute, jusqu\'à ne plus pouvoir finir dans la minute.',
         };
     }
 

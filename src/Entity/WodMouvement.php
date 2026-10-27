@@ -53,21 +53,31 @@ class WodMouvement
             return '';
         }
 
-        $libelle = $this->getQuantiteLisible().' '.$mouvement->getNom();
+        return $this->getQuantiteLisible().' '.$this->getMouvementLibelle();
+    }
+
+    /** Le mouvement et sa charge, sans la quantité : « Thrusters (43/30 kg) ». */
+    public function getMouvementLibelle(): string
+    {
+        $mouvement = $this->mouvement;
+        if (null === $mouvement) {
+            return '';
+        }
+
         $charge = $this->note ?? $mouvement->getChargeRx();
 
-        return null !== $charge ? $libelle.' ('.$charge.')' : $libelle;
+        return null !== $charge ? $mouvement->getNom().' ('.$charge.')' : (string) $mouvement->getNom();
     }
 
     /**
-     * Quantité affichée : le schéma du WOD (« 21-15-9 »), « 8× » en Tabata
-     * (maximum de répétitions sur chaque intervalle), sinon la quantité et son unité.
+     * Quantité affichée : le schéma du WOD (« 21-15-9 »), la progression d'un Death By
+     * (« 1-2-3… », « 2-4-6… »), sinon la quantité et son unité.
      */
     public function getQuantiteLisible(): string
     {
         return match (true) {
             null !== $this->wod?->getSchemaReps() => (string) $this->wod->getSchemaReps(),
-            WodType::Tabata === $this->wod?->getType() => '8×',
+            WodType::DeathBy === $this->wod?->getType() => \sprintf('%d-%d-%d…', $this->quantite, 2 * $this->quantite, 3 * $this->quantite),
             0 === $this->quantite => 'Max',
             default => $this->getUnite()->format($this->quantite),
         };
