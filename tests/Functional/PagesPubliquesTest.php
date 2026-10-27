@@ -2,6 +2,7 @@
 
 namespace App\Tests\Functional;
 
+use App\Enum\Benchmark;
 use App\Repository\WodRepository;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -46,7 +47,7 @@ final class PagesPubliquesTest extends AppWebTestCase
     {
         $officiels = static::getContainer()->get(WodRepository::class)->findBy(['officiel' => true]);
 
-        self::assertCount(42, $officiels);
+        self::assertCount(65, $officiels);
         foreach ($officiels as $wod) {
             self::assertNotNull($wod->getBenchmark(), (string) $wod->getTitre());
             self::assertNotEmpty($wod->getLignes(), (string) $wod->getTitre());
@@ -56,6 +57,14 @@ final class PagesPubliquesTest extends AppWebTestCase
         $burpees = $this->wod('Open 12.1')->getLignes()->first();
         self::assertNotFalse($burpees);
         self::assertSame('Max Burpees (cible à +15 cm)', $burpees->getLibelle());
+
+        self::assertSame('10-9-8-7-6-5-4-3-2-1 For Time · cap 40 min', $this->wod('Linda')->getFormat());
+        self::assertSame('For Time · cap 120 min', $this->wod('CHAD1000x')->getFormat());
+        self::assertSame('7 tours For Time · cap 50 min', $this->wod('The Seven')->getFormat());
+        // Filthy Fifty : 10 mouvements × 50 répétitions.
+        $filthy = $this->wod('Filthy Fifty');
+        self::assertSame(500, array_sum(array_map(static fn ($l) => $l->getQuantite(), $filthy->getLignes()->toArray())));
+        self::assertSame(Benchmark::Classique, $filthy->getBenchmark());
     }
 
     /**
@@ -88,7 +97,7 @@ final class PagesPubliquesTest extends AppWebTestCase
     {
         $this->client->request('GET', '/wods?benchmark=hero');
 
-        self::assertSelectorTextContains('.results', 'Murph');
+        self::assertSelectorTextContains('.results', 'The Seven');
         self::assertSelectorTextNotContains('.results', 'Cindy');
     }
 

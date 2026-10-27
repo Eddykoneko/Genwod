@@ -37,7 +37,7 @@ class Wod
 
     /** Durée en minutes (time cap pour un For Time). */
     #[ORM\Column(type: Types::SMALLINT)]
-    #[Assert\Range(min: 1, max: 90)]
+    #[Assert\Range(min: 1, max: 180)]
     private int $duree = 15;
 
     /** Nombre de tours imposés (For Time uniquement). */

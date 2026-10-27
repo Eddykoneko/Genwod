@@ -6,7 +6,7 @@
  *
  * Mouvement : [slug, nom, catégorie, équipement, unité, volume de base, charge RX, technique, description, actif = true]
  *             (actif = false : réservé aux WODs de référence, jamais proposé par le générateur)
- * WOD       : WODs de référence reconnus par la communauté CrossFit (Girls, Hero WODs, CrossFit Open).
+ * WOD       : WODs de référence reconnus par la communauté CrossFit (Girls, Hero WODs, CrossFit Open, classiques).
  *             Charges converties des standards en livres (95 lb ≈ 43 kg, 135 lb ≈ 61 kg…).
  */
 
@@ -48,6 +48,12 @@ return [
         ['pistol', 'Pistol squats', 'gymnastique', 'aucun', 'reps', 10, null, true, 'Squat sur une jambe, en alternant.'],
         ['burpee-box-jump-over', 'Burpees box jump over', 'gymnastique', 'box', 'reps', 8, '60/50 cm', false, 'Un burpee puis un saut par-dessus la box.'],
 
+        ['back-extension', 'Back extensions', 'gymnastique', 'aucun', 'reps', 20, null, false, 'Sur GHD ou banc à lombaires : le buste descend puis remonte à l\'horizontale.', false],
+        ['jumping-pull-up', 'Tractions sautées', 'gymnastique', 'barre_traction', 'reps', 15, null, false, 'Barre basse : l\'impulsion des jambes amène le menton au-dessus.', false],
+        ['knees-to-elbows', 'Knees-to-elbows', 'gymnastique', 'barre_traction', 'reps', 10, null, true, 'Suspendu, les genoux viennent toucher les coudes.', false],
+        ['pas-fentes-marchees', 'Pas de fentes marchées', 'gymnastique', 'aucun', 'reps', 20, null, false, 'Fentes en avançant : chaque pas compte pour une répétition.', false],
+        ['rope-climb', 'Montées de corde', 'gymnastique', 'aucun', 'reps', 3, '4,5 m', true, 'Montée jusqu\'en haut de la corde, descente contrôlée.', false],
+
         // Haltérophilie
         ['thruster', 'Thrusters', 'halterophilie', 'barre', 'reps', 12, '43/30 kg', false, 'Front squat enchaîné avec un développé au-dessus de la tête.'],
         ['deadlift', 'Soulevés de terre', 'halterophilie', 'barre', 'reps', 10, '100/70 kg', false, 'Dos plat, la barre frôle les jambes.'],
@@ -65,6 +71,10 @@ return [
         ['squat-snatch', 'Squat snatches', 'halterophilie', 'barre', 'reps', 5, '61/43 kg', true, 'Arraché réceptionné en squat complet.'],
         ['hang-power-clean', 'Hang power cleans', 'halterophilie', 'barre', 'reps', 8, '60/40 kg', true, 'Épaulé depuis la position suspendue (au-dessus des genoux).'],
         ['push-jerk', 'Push jerks', 'halterophilie', 'barre', 'reps', 8, '50/35 kg', true, 'Impulsion des jambes, réception jambes fléchies sous la barre.'],
+
+        ['bench-press', 'Développés couchés', 'halterophilie', 'barre', 'reps', 10, null, false, 'Sur banc : la barre touche la poitrine, puis bras tendus.', false],
+        ['hang-power-snatch', 'Hang power snatches', 'halterophilie', 'barre', 'reps', 8, '30/20 kg', true, 'Arraché depuis la position suspendue, réception au-dessus de la parallèle.', false],
+        ['sdhp', 'Sumo deadlift high pulls', 'halterophilie', 'barre', 'reps', 10, '34/25 kg', false, 'Soulevé de terre jambes écartées, enchaîné avec un tirage jusqu\'au menton.', false],
 
         // Kettlebell & haltères
         ['kb-swing', 'Kettlebell swings', 'kettlebell', 'kettlebell', 'reps', 15, '24/16 kg', false, 'Swing américain : la kettlebell monte au-dessus de la tête.'],
@@ -135,6 +145,30 @@ return [
         ['titre' => 'Amanda', 'benchmark' => 'girl', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 15, 'schema' => '9-7-5',
             'lignes' => [['muscle-up', 9], ['squat-snatch', 9, '61/43 kg']]],
 
+        ['titre' => 'Candy', 'benchmark' => 'girl', 'type' => 'for_time', 'difficulte' => 'moyen', 'duree' => 45, 'tours' => 5,
+            'lignes' => [['pull-up', 20], ['push-up', 40], ['air-squat', 60]]],
+        ['titre' => 'Maggie', 'benchmark' => 'girl', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 60, 'tours' => 5,
+            'consignes' => 'Pistol squats en alternant les jambes.',
+            'lignes' => [['hspu', 20], ['pull-up', 40], ['pistol', 60]]],
+        ['titre' => 'Nicole', 'benchmark' => 'girl', 'type' => 'amrap', 'difficulte' => 'moyen', 'duree' => 20,
+            'consignes' => "Courez 400 m puis faites un maximum de tractions, en boucle pendant 20 minutes.\nScore officiel : total des tractions (à noter en répétitions).",
+            'lignes' => [['course', 400], ['pull-up', 0]]],
+        ['titre' => 'Linda', 'benchmark' => 'girl', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 40, 'schema' => '10-9-8-7-6-5-4-3-2-1',
+            'consignes' => "Charges calculées sur votre poids de corps.\n10 répétitions de chaque mouvement, puis 9, 8… jusqu'à 1.",
+            'lignes' => [['deadlift', 10, '1,5 × poids de corps'], ['bench-press', 10, 'poids de corps'], ['squat-clean', 10, '0,75 × poids de corps']]],
+        ['titre' => 'Lyla', 'benchmark' => 'girl', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 40, 'schema' => '10-9-8-7-6-5-4-3-2-1',
+            'lignes' => [['muscle-up', 10], ['clean-and-jerk', 10, 'poids de corps']]],
+        ['titre' => 'Grettel', 'benchmark' => 'girl', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 20, 'tours' => 10,
+            'lignes' => [['clean-and-jerk', 3, '61/43 kg'], ['bar-facing-burpee', 3]]],
+        ['titre' => 'Ingrid', 'benchmark' => 'girl', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 20, 'tours' => 10,
+            'lignes' => [['snatch', 3, '61/43 kg'], ['bar-facing-burpee', 3]]],
+        ['titre' => 'Ellen', 'benchmark' => 'girl', 'type' => 'for_time', 'difficulte' => 'moyen', 'duree' => 30, 'tours' => 3,
+            'consignes' => 'Un seul haltère pour les arrachés, une paire pour les thrusters.',
+            'lignes' => [['burpee', 20], ['db-snatch', 21, '22,5/15 kg'], ['db-thruster', 12, '2×22,5/15 kg']]],
+        ['titre' => 'Andi', 'benchmark' => 'girl', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 60, 'tours' => 1,
+            'consignes' => 'La même barre pour les quatre mouvements, terminés dans l\'ordre.',
+            'lignes' => [['hang-power-snatch', 100, '30/20 kg'], ['push-press', 100, '30/20 kg'], ['sdhp', 100, '30/20 kg'], ['front-squat', 100, '30/20 kg']]],
+
         // --- Hero WODs -----------------------------------------------------------
         ['titre' => 'Murph', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 75, 'tours' => 1,
             'consignes' => "En hommage au lieutenant Michael Murphy (Navy SEAL), tué en Afghanistan en 2005.\nAvec un gilet lesté de 9/6 kg. Tractions, pompes et squats peuvent être fractionnés librement entre les deux courses.",
@@ -148,6 +182,46 @@ return [
         ['titre' => 'Nate', 'benchmark' => 'hero', 'type' => 'amrap', 'difficulte' => 'difficile', 'duree' => 20,
             'consignes' => 'En hommage au Chief Petty Officer Nate Hardy (US Navy), tué en Irak en 2008.',
             'lignes' => [['muscle-up', 2], ['hspu', 4], ['kb-swing', 8, '32/24 kg']]],
+
+        ['titre' => 'Badger', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 45, 'tours' => 3,
+            'consignes' => 'En hommage au Chief Petty Officer Mark Carter (US Navy), tué en Irak en 2007.',
+            'lignes' => [['squat-clean', 30, '43/30 kg'], ['pull-up', 30], ['course', 800]]],
+        ['titre' => 'Randy', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'moyen', 'duree' => 15, 'tours' => 1,
+            'consignes' => 'En hommage à Randy Simmons, membre du SWAT de la police de Los Angeles, tué en service en 2008.',
+            'lignes' => [['power-snatch', 75, '34/25 kg']]],
+        ['titre' => 'Josh', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 25, 'tours' => 1,
+            'consignes' => 'En hommage au sergent-chef Joshua Hager (US Army), tué en Irak en 2007.',
+            'lignes' => [['overhead-squat', 21, '43/30 kg'], ['pull-up', 42], ['overhead-squat', 15, '43/30 kg'], ['pull-up', 30], ['overhead-squat', 9, '43/30 kg'], ['pull-up', 18]]],
+        ['titre' => 'Daniel', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 40, 'tours' => 1,
+            'consignes' => 'En hommage au sergent de 1re classe Daniel Crabtree (US Army), tué en Irak en 2006.',
+            'lignes' => [['pull-up', 50], ['course', 400], ['thruster', 21, '43/30 kg'], ['course', 800], ['thruster', 21, '43/30 kg'], ['course', 400], ['pull-up', 50]]],
+        ['titre' => 'Michael', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'moyen', 'duree' => 45, 'tours' => 3,
+            'consignes' => 'En hommage au lieutenant Michael McGreevy (US Navy), tué en Afghanistan en 2005.',
+            'lignes' => [['course', 800], ['back-extension', 50], ['sit-up', 50]]],
+        ['titre' => 'Ryan', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 30, 'tours' => 5,
+            'consignes' => 'En hommage à Ryan Hummert, pompier de Maplewood (Missouri), tué par un tireur en intervention en 2008.',
+            'lignes' => [['muscle-up', 7], ['burpee', 21]]],
+        ['titre' => 'Jerry', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'moyen', 'duree' => 45, 'tours' => 1,
+            'consignes' => "En hommage au sergent-major Jerry Patton (US Army), mort à l'entraînement en 2008.\nUn mile de course, soit environ 1,6 km.",
+            'lignes' => [['course', 1600], ['rameur-distance', 2000], ['course', 1600]]],
+        ['titre' => 'Loredo', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'moyen', 'duree' => 45, 'tours' => 6,
+            'consignes' => 'En hommage au sergent-chef Edwardo Loredo (US Army), tué en Afghanistan en 2010.',
+            'lignes' => [['air-squat', 24], ['push-up', 24], ['pas-fentes-marchees', 24], ['course', 400]]],
+        ['titre' => 'Bulger', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 60, 'tours' => 10,
+            'consignes' => 'En hommage au caporal Nicholas Bulger (Forces armées canadiennes), tué en Afghanistan en 2009.',
+            'lignes' => [['course', 150], ['chest-to-bar', 7], ['front-squat', 7, '61/43 kg'], ['hspu', 7]]],
+        ['titre' => 'Nutts', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 60, 'tours' => 1,
+            'consignes' => 'En hommage au lieutenant Andrew Nuttall (Forces armées canadiennes), tué en Afghanistan en 2009.',
+            'lignes' => [['hspu', 10], ['deadlift', 15, '113/79 kg'], ['box-jump', 25, '76/60 cm'], ['pull-up', 50], ['wall-ball', 100, '9/6 kg · cible 3/2,7 m'], ['double-unders', 200], ['course', 400, 'avec un disque de 20/11 kg']]],
+        ['titre' => 'Tommy V', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 30, 'tours' => 1,
+            'consignes' => 'En hommage au Senior Chief Petty Officer Thomas J. Valentine (US Navy), mort à l\'entraînement en 2008.',
+            'lignes' => [['thruster', 21, '52/34 kg'], ['rope-climb', 12], ['thruster', 15, '52/34 kg'], ['rope-climb', 9], ['thruster', 9, '52/34 kg'], ['rope-climb', 6]]],
+        ['titre' => 'The Seven', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 50, 'tours' => 7,
+            'consignes' => 'En hommage aux sept agents de la CIA tués dans un attentat en Afghanistan le 30 décembre 2009.',
+            'lignes' => [['hspu', 7], ['thruster', 7, '61/43 kg'], ['knees-to-elbows', 7], ['deadlift', 7, '111/75 kg'], ['burpee', 7], ['kb-swing', 7, '32/24 kg'], ['pull-up', 7]]],
+        ['titre' => 'CHAD1000x', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 120, 'tours' => 1,
+            'consignes' => "En hommage au Senior Chief Chad Wilkinson (Navy SEAL), décédé en 2018. Réalisé chaque année autour du Veterans Day pour soutenir la santé mentale des vétérans.\nLes step-ups peuvent être fractionnés librement.",
+            'lignes' => [['step-up', 1000, 'sac lesté 20/15 kg · box 50 cm']]],
 
         // --- CrossFit Open (énoncés officiels, charges converties des livres) ---
         ['titre' => 'Open 11.1', 'benchmark' => 'open', 'type' => 'amrap', 'difficulte' => 'moyen', 'duree' => 10,
@@ -215,5 +289,11 @@ return [
             'lignes' => [['wall-ball', 20, '9/6 kg · cible 3/2,7 m'], ['box-jump-over', 18, '60/50 cm'], ['wall-ball', 30, '9/6 kg · cible 3/2,7 m'], ['box-jump-over', 18, '60/50 cm'],
                 ['wall-ball', 40, '9/6 kg · cible 3/2,7 m'], ['step-over-med-ball', 18], ['wall-ball', 66, '9/6 kg · cible 3/2,7 m'], ['step-over-med-ball', 18],
                 ['wall-ball', 40, '9/6 kg · cible 3/2,7 m'], ['box-jump-over', 18, '60/50 cm'], ['wall-ball', 30, '9/6 kg · cible 3/2,7 m'], ['box-jump-over', 18, '60/50 cm'], ['wall-ball', 20, '9/6 kg · cible 3/2,7 m']]],
+
+        // --- Classiques --------------------------------------------------------
+        ['titre' => 'Filthy Fifty', 'benchmark' => 'classique', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 45, 'tours' => 1,
+            'consignes' => 'Un chipper de 500 répétitions : terminez chaque mouvement avant de passer au suivant.',
+            'lignes' => [['box-jump', 50, '60/50 cm'], ['jumping-pull-up', 50], ['kb-swing', 50, '16/12 kg'], ['pas-fentes-marchees', 50], ['knees-to-elbows', 50],
+                ['push-press', 50, '20/15 kg'], ['back-extension', 50], ['wall-ball', 50, '9/6 kg'], ['burpee', 50], ['double-unders', 50]]],
     ],
 ];
