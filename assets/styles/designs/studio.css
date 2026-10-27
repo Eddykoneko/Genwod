@@ -83,6 +83,8 @@
 .s-chip.s-amrap, .s-format-ic.s-amrap { background: #e9f3ff; color: #1859a8; }
 .s-chip.s-emom, .s-format-ic.s-emom { background: #e5f4ea; color: #1d7340; }
 .s-chip.s-death_by, .s-format-ic.s-death_by { background: #f2edfe; color: #5a3cc4; }
+.s-chip.s-for_load, .s-format-ic.s-for_load { background: #fdf3dc; color: #8a5a00; }
+.s-chip.s-max_reps, .s-format-ic.s-max_reps { background: #fde8f1; color: #a3285d; }
 .s-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; }
 .s-card-titre { font-size: 1.2rem; margin-bottom: 12px; }
 .s-card-entete { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }

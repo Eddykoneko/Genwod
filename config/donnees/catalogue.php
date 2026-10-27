@@ -169,6 +169,16 @@ return [
             'consignes' => 'La même barre pour les quatre mouvements, terminés dans l\'ordre.',
             'lignes' => [['hang-power-snatch', 100, '30/20 kg'], ['push-press', 100, '30/20 kg'], ['sdhp', 100, '30/20 kg'], ['front-squat', 100, '30/20 kg']]],
 
+        ['titre' => 'Gwen', 'benchmark' => 'girl', 'type' => 'for_load', 'difficulte' => 'difficile', 'duree' => 20, 'schema' => '15-12-9',
+            'consignes' => "La même charge pour les trois séries, repos libre entre les séries.\nTouch and go au sol uniquement : même un changement de prise au sol est une faute. Pas de lâcher de barre.\nScore : la charge utilisée.",
+            'lignes' => [['clean-and-jerk', 15, 'même charge sur les 3 séries']]],
+        ['titre' => 'Lynne', 'benchmark' => 'girl', 'type' => 'max_reps', 'difficulte' => 'moyen', 'duree' => 20, 'tours' => 5,
+            'consignes' => "Un maximum de répétitions de chaque mouvement à chaque tour, repos libre.\nScore : total des répétitions des 5 tours.",
+            'lignes' => [['bench-press', 0, 'poids de corps'], ['pull-up', 0]]],
+        ['titre' => 'Hope', 'benchmark' => 'girl', 'type' => 'max_reps', 'difficulte' => 'moyen', 'duree' => 17, 'blocs' => 3, 'travail' => 60, 'repos' => 60, 'parStation' => true,
+            'consignes' => "Le même format que Fight Gone Bad : une minute par station, sans pause entre les stations, puis une minute de repos avant le tour suivant.\nScore : une répétition = un point, total des 3 tours.",
+            'lignes' => [['burpee', 0], ['power-snatch', 0, '34 kg'], ['box-jump', 0, '60 cm'], ['thruster', 0, '34 kg'], ['chest-to-bar', 0]]],
+
         // --- Hero WODs -----------------------------------------------------------
         ['titre' => 'Murph', 'benchmark' => 'hero', 'type' => 'for_time', 'difficulte' => 'difficile', 'duree' => 75, 'tours' => 1,
             'consignes' => "En hommage au lieutenant Michael Murphy (Navy SEAL), tué en Afghanistan en 2005.\nAvec un gilet lesté de 9/6 kg. Tractions, pompes et squats peuvent être fractionnés librement entre les deux courses.",
@@ -295,5 +305,11 @@ return [
             'consignes' => 'Un chipper de 500 répétitions : terminez chaque mouvement avant de passer au suivant.',
             'lignes' => [['box-jump', 50, '60/50 cm'], ['jumping-pull-up', 50], ['kb-swing', 50, '16/12 kg'], ['pas-fentes-marchees', 50], ['knees-to-elbows', 50],
                 ['push-press', 50, '20/15 kg'], ['back-extension', 50], ['wall-ball', 50, '9/6 kg'], ['burpee', 50], ['double-unders', 50]]],
+        ['titre' => 'Fight Gone Bad', 'benchmark' => 'classique', 'type' => 'max_reps', 'difficulte' => 'moyen', 'duree' => 17, 'blocs' => 3, 'travail' => 60, 'repos' => 60, 'parStation' => true,
+            'consignes' => "Une minute par station, sans pause entre les stations, puis une minute de repos avant le tour suivant.\nScore : une répétition (ou une calorie) = un point, total des 3 tours.",
+            'lignes' => [['wall-ball', 0, '9/6 kg · cible 3/2,7 m'], ['sdhp', 0, '34/25 kg'], ['box-jump', 0, '50 cm'], ['push-press', 0, '34/25 kg'], ['rameur', 0]]],
+        ['titre' => 'The Chief', 'benchmark' => 'classique', 'type' => 'amrap', 'difficulte' => 'moyen', 'duree' => 19, 'blocs' => 5, 'travail' => 180, 'repos' => 60,
+            'consignes' => "Un maximum de tours en 3 minutes, 1 minute de repos, 5 fois.\nScore : total des tours (et répétitions) des 5 blocs.",
+            'lignes' => [['power-clean', 3, '61/43 kg'], ['push-up', 6], ['air-squat', 9]]],
     ],
 ];

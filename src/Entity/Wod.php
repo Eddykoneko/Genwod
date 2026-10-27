@@ -40,7 +40,7 @@ class Wod
     #[Assert\Range(min: 1, max: 180)]
     private int $duree = 15;
 
-    /** Nombre de tours imposés (For Time uniquement). */
+    /** Nombre de tours imposés (For Time, Max reps). */
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     #[Assert\Range(min: 1, max: 20)]
     private ?int $tours = null;
@@ -53,6 +53,28 @@ class Wod
     /** EMOM « circuit » : tous les mouvements chaque minute (ex. Chelsea), au lieu d'une alternance. */
     #[ORM\Column]
     private bool $toutChaqueMinute = false;
+
+    /**
+     * Travail par intervalles (ex. Fight Gone Bad, The Chief) : nombre de blocs, chacun composé
+     * d'une ou plusieurs périodes de travail puis d'un temps de repos. Null = pas d'intervalles.
+     */
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Assert\Range(min: 1, max: 20)]
+    private ?int $blocs = null;
+
+    /** Durée d'une période de travail, en secondes. */
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Assert\Range(min: 10, max: 1200)]
+    private ?int $travailSecondes = null;
+
+    /** Repos entre deux blocs, en secondes. */
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Assert\Range(min: 0, max: 600)]
+    private ?int $reposSecondes = null;
+
+    /** Intervalles « en stations » : une période de travail par mouvement (Fight Gone Bad), sinon tous les mouvements à chaque période. */
+    #[ORM\Column]
+    private bool $parStation = false;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\Length(max: 2000)]
@@ -107,9 +129,18 @@ class Wod
         return (string) $this->titre;
     }
 
-    /** Résumé court du format, ex. « AMRAP 12 min » ou « 5 tours For Time — cap 20 min ». */
+    /** Résumé court du format, ex. « AMRAP 12 min », « 5 tours For Time · cap 20 min » ou « 3 tours · 5 × 1 min · repos 1 min ». */
     public function getFormat(): string
     {
+        if (null !== $this->blocs && null !== $this->travailSecondes) {
+            $intervalles = $this->parStation
+                ? \sprintf('%d tours · %d × %s', $this->blocs, \count($this->lignes), self::formaterDuree($this->travailSecondes))
+                : \sprintf('%d × %s', $this->blocs, self::formaterDuree($this->travailSecondes));
+            $repos = $this->reposSecondes ? ' · repos '.self::formaterDuree($this->reposSecondes) : '';
+
+            return $this->type->label().' · '.$intervalles.$repos;
+        }
+
         return match ($this->type) {
             WodType::ForTime => match (true) {
                 null !== $this->schemaReps => $this->schemaReps.' For Time · cap '.$this->duree.' min',
@@ -119,6 +150,18 @@ class Wod
             WodType::Amrap => 'AMRAP '.$this->duree.' min',
             WodType::Emom => 'EMOM '.$this->duree.' min'.($this->toutChaqueMinute ? ' · tout chaque minute' : ''),
             WodType::DeathBy => 'Death By · cap '.$this->duree.' min',
+            WodType::ForLoad => null !== $this->schemaReps ? $this->schemaReps.' For Load' : 'For Load',
+            WodType::MaxReps => $this->tours > 1 ? $this->tours.' tours Max reps' : 'Max reps',
+        };
+    }
+
+    /** « 1 min », « 3 min », « 30 s », « 1 min 30 ». */
+    private static function formaterDuree(int $secondes): string
+    {
+        return match (true) {
+            $secondes < 60 => $secondes.' s',
+            0 === $secondes % 60 => intdiv($secondes, 60).' min',
+            default => \sprintf('%d min %02d', intdiv($secondes, 60), $secondes % 60),
         };
     }
 
@@ -219,6 +262,54 @@ class Wod
     public function setToutChaqueMinute(bool $toutChaqueMinute): static
     {
         $this->toutChaqueMinute = $toutChaqueMinute;
+
+        return $this;
+    }
+
+    public function getBlocs(): ?int
+    {
+        return $this->blocs;
+    }
+
+    public function setBlocs(?int $blocs): static
+    {
+        $this->blocs = $blocs;
+
+        return $this;
+    }
+
+    public function getTravailSecondes(): ?int
+    {
+        return $this->travailSecondes;
+    }
+
+    public function setTravailSecondes(?int $travailSecondes): static
+    {
+        $this->travailSecondes = $travailSecondes;
+
+        return $this;
+    }
+
+    public function getReposSecondes(): ?int
+    {
+        return $this->reposSecondes;
+    }
+
+    public function setReposSecondes(?int $reposSecondes): static
+    {
+        $this->reposSecondes = $reposSecondes;
+
+        return $this;
+    }
+
+    public function isParStation(): bool
+    {
+        return $this->parStation;
+    }
+
+    public function setParStation(bool $parStation): static
+    {
+        $this->parStation = $parStation;
 
         return $this;
     }

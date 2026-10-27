@@ -4,6 +4,7 @@
     <div class="form-grid">
         {{ form_row(seanceForm.realiseeLe) }}
         {% if seanceForm.tempsSecondes is defined %}{{ form_row(seanceForm.tempsSecondes) }}{% endif %}
+        {% if seanceForm.chargeKg is defined %}{{ form_row(seanceForm.chargeKg) }}{% endif %}
         {% if seanceForm.tours is defined %}{{ form_row(seanceForm.tours, {attr: {'data-chrono-cible': 'tours'}}) }}{% endif %}
         {% if seanceForm.reps is defined %}{{ form_row(seanceForm.reps) }}{% endif %}
     </div>

@@ -71,6 +71,35 @@ final class ParcoursAthleteTest extends AppWebTestCase
         self::assertSelectorTextContains('#classement', 'Testeur');
     }
 
+    public function testNoterUneChargeSurGwen(): void
+    {
+        $this->client->loginUser($athlete = $this->creerAthlete());
+        $url = '/wods/'.$this->wod('Gwen')->getSlug();
+
+        foreach (['70', '72.5'] as $charge) {
+            $crawler = $this->client->request('GET', $url);
+            $this->client->submit($crawler->selectButton('Enregistrer ma séance')->form([
+                'seance[chargeKg]' => $charge,
+                'seance[mode]' => 'rx',
+            ]));
+            self::assertResponseRedirects();
+            $this->client->followRedirect();
+        }
+
+        self::assertSelectorTextContains('.flashes', 'Nouveau record personnel : 72,5 kg');
+        $seances = static::getContainer()->get(SeanceRepository::class)->findBy(['athlete' => $athlete], ['id' => 'ASC']);
+        self::assertSame(['70 kg', '72,5 kg'], array_map(static fn ($s) => $s->getScoreLisible(), $seances));
+    }
+
+    public function testFightGoneBadEnIntervalles(): void
+    {
+        $this->client->loginUser($this->creerAthlete());
+        $this->client->request('GET', '/wods/'.$this->wod('Fight Gone Bad')->getSlug());
+
+        self::assertSelectorExists('[data-chrono-blocs-value="3"][data-chrono-travail-value="60"][data-chrono-repos-value="60"][data-chrono-par-station-value="true"]');
+        self::assertSelectorExists('[data-chrono-cible="reps"]');
+    }
+
     public function testUnTempsMalFormeEstSignale(): void
     {
         $this->client->loginUser($this->creerAthlete());

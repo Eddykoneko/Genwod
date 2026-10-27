@@ -33,4 +33,11 @@ final class CriteresGenerationTest extends TestCase
         self::assertSame([Equipement::Barre], $criteres->equipements);
         self::assertMatchesRegularExpression('/^[a-f0-9]{8}$/', (string) $criteres->graine);
     }
+
+    public function testLesFormatsReservesAuxBenchmarksNeSontPasGeneres(): void
+    {
+        self::assertSame(WodType::Amrap, CriteresGeneration::depuisQuery(['type' => 'for_load'])->type);
+        self::assertSame(WodType::Amrap, CriteresGeneration::depuisQuery(['type' => 'max_reps'])->type);
+        self::assertSame(WodType::DeathBy, CriteresGeneration::depuisQuery(['type' => 'death_by'])->type);
+    }
 }

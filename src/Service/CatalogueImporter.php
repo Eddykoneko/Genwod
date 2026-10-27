@@ -76,6 +76,10 @@ final class CatalogueImporter
                 ->setTours($d['tours'] ?? null)
                 ->setSchemaReps($d['schema'] ?? null)
                 ->setToutChaqueMinute($d['toutChaqueMinute'] ?? false)
+                ->setBlocs($d['blocs'] ?? null)
+                ->setTravailSecondes($d['travail'] ?? null)
+                ->setReposSecondes($d['repos'] ?? null)
+                ->setParStation($d['parStation'] ?? false)
                 ->setBenchmark(Benchmark::from($d['benchmark']))
                 ->setConsignes($d['consignes'] ?? null);
 

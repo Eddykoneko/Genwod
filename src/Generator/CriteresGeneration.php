@@ -57,10 +57,11 @@ final class CriteresGeneration
     public static function depuisQuery(array $query): self
     {
         $materiel = \is_array($query['materiel'] ?? null) ? $query['materiel'] : [];
+        $type = WodType::tryFrom((string) ($query['type'] ?? ''));
         $graine = \is_string($query['graine'] ?? null) && preg_match('/^[a-f0-9]{8}$/', $query['graine']) ? $query['graine'] : null;
 
         return new self(
-            type: WodType::tryFrom((string) ($query['type'] ?? '')) ?? WodType::Amrap,
+            type: $type?->isGenerable() ? $type : WodType::Amrap,
             duree: max(4, min(40, (int) ($query['duree'] ?? 12))),
             difficulte: Difficulte::tryFrom((string) ($query['difficulte'] ?? '')) ?? Difficulte::Moyen,
             equipements: array_values(array_filter(array_map(

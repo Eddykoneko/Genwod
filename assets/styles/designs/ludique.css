@@ -49,6 +49,8 @@
 .l-amrap { --pastel: #dfe9ff; --fonce: #2457c9; }
 .l-emom { --pastel: #d7f5e8; --fonce: #13704a; }
 .l-death_by { --pastel: #ece4ff; --fonce: #5b35c9; }
+.l-for_load { --pastel: #fff0cc; --fonce: #8a5a00; }
+.l-max_reps { --pastel: #ffe0ee; --fonce: #a3285d; }
 
 /* ---------- Structure ---------- */
 .l-nav { width: 100%; max-width: 1200px; margin: 0 auto; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }

@@ -11,7 +11,8 @@ Genwod génère des entraînements CrossFit (*Workout Of the Day*) adaptés au f
 |---|---|
 | 🎲 **Générateur** | For Time, AMRAP, EMOM et Death By, de 4 à 40 min. Sélection équilibrée par familles de mouvements, volumes adaptés à la difficulté et arrondis aux valeurs « naturelles » (15, 21, 400 m…). Déterministe : chaque WOD a une **URL partageable** (graine). |
 | ⏱️ **Chrono intégré** | Décompte de 10 s, minutes EMOM et Death By (bouton « Minute ratée »), bips (Web Audio), écran maintenu allumé (Wake Lock), compteur de tours. Le score est **reporté automatiquement** dans le formulaire. |
-| 📚 **Bibliothèque** | Recherche « live » (Live Component) dans les titres, consignes et mouvements, avec filtres reflétés dans l'URL. **65 WODs de référence de la communauté CrossFit**, relevés sur CrossFit.com : 27 Girls (Fran, Grace, Cindy, Helen, Diane, Linda, Nicole…), 17 Hero WODs (Murph, DT, JT, Nate, Badger, Michael, The Seven, CHAD1000x…), 20 WODs de l'**Open** (11.1, 12.1, 13.2, 14.5, 15.1, 15.5, 17.1, 18.1, 18.2, 19.1, 20.1, 20.3, 20.5, 21.1, 22.1, 22.3, 23.1, 24.1, 25.1, 26.1 — échelles croissantes et pyramide comprises) et le classique Filthy Fifty. Le WOD du jour est tiré parmi eux. |
+| 📚 **Bibliothèque** | Recherche « live » (Live Component) dans les titres, consignes et mouvements, avec filtres reflétés dans l'URL. **70 WODs de référence de la communauté CrossFit**, relevés sur CrossFit.com : 30 Girls (Fran, Grace, Cindy, Helen, Diane, Linda, Nicole, Gwen…), 17 Hero WODs (Murph, DT, JT, Nate, Badger, Michael, The Seven, CHAD1000x…), 20 WODs de l'**Open** (11.1, 12.1, 13.2, 14.5, 15.1, 15.5, 17.1, 18.1, 18.2, 19.1, 20.1, 20.3, 20.5, 21.1, 22.1, 22.3, 23.1, 24.1, 25.1, 26.1 — échelles croissantes et pyramide comprises) et les classiques Filthy Fifty, Fight Gone Bad et The Chief. Le WOD du jour est tiré parmi eux. |
+| 🧮 **Scores** | Temps (For Time), tours + répétitions (AMRAP), minutes + répétitions (Death By), **charge en kg** (For Load, ex. Gwen) et **total de répétitions** (Max reps, ex. Lynne). WODs **par intervalles** (Fight Gone Bad, Hope, The Chief) : blocs, stations et repos gérés par le chrono. |
 | 🏆 **Classements** | Par WOD (meilleur score par athlète, RX avant Scaled) et global par points (semaine, mois, tout). Détection des **records personnels**. |
 | 📈 **Tableau de bord** | Séances, points, série de jours consécutifs, part de séances en RX, heatmap d'activité sur 18 semaines, records. Profil public d'athlète. |
 | 💬 **Communauté** | « J'aime », favoris et commentaires sans rechargement (Turbo Streams). |
@@ -23,7 +24,7 @@ Genwod génère des entraînements CrossFit (*Workout Of the Day*) adaptés au f
 | v1 (soutenance DWWM) | v2 |
 |---|---|
 | Symfony 7.0, Doctrine ORM 2 | **Symfony 7.4 LTS**, Doctrine ORM 3, PHP 8.4 |
-| « Générateur » = tirage aléatoire d'un exercice en base | **Algorithme de génération** à partir d'un catalogue de 60 mouvements, et 65 benchmarks CrossFit (Girls, Heroes, Open, classiques) |
+| « Générateur » = tirage aléatoire d'un exercice en base | **Algorithme de génération** à partir d'un catalogue de 60 mouvements, et 70 benchmarks CrossFit (Girls, Heroes, Open, classiques) |
 | `Exercice` en texte libre, `HistoriqueExercice` + `Leaderboard` dupliqués | Modèle structuré : `Wod` → `WodMouvement` → `Mouvement`, `Seance` unique source des scores |
 | Propriétés `user_id` / `exercice_id` contenant des objets | Nommage clair (`athlete`, `wod`), **enums PHP** typées |
 | 7 contrôleurs CRUD admin générés | **EasyAdmin 5** |

@@ -5,13 +5,15 @@ import { Controller } from '@hotwired/stimulus';
  *  - For Time : chrono qui monte jusqu'au time cap, bouton « Terminé » qui reporte le temps dans le formulaire ;
  *  - AMRAP    : compte à rebours + compteur de tours reporté dans le formulaire ;
  *  - EMOM     : une minute par mouvement, en boucle ;
- *  - Death By : chaque minute, un pas de plus (1, 2, 3… répétitions) ; bouton « Minute ratée » qui reporte les minutes complétées.
+ *  - Death By : chaque minute, un pas de plus (1, 2, 3… répétitions) ; bouton « Minute ratée » qui reporte les minutes complétées ;
+ *  - For Load / Max reps : chrono libre (repos à volonté entre les séries) ;
+ *  - Intervalles (Fight Gone Bad, The Chief) : blocs de travail, une station par mouvement ou non, puis repos.
  * Décompte de 10 s, bips (Web Audio) et écran maintenu allumé (Wake Lock API).
  */
 const DECOMPTE = 10;
 
 export default class extends Controller {
-    static values = { type: String, duree: Number, lignes: Array, pas: Array };
+    static values = { type: String, duree: Number, lignes: Array, pas: Array, blocs: Number, travail: Number, repos: Number, parStation: Boolean };
     static targets = ['dialog', 'ecran', 'phase', 'temps', 'sous', 'barre', 'tours', 'boutonDemarrer', 'boutonPause', 'boutonFini'];
 
     connect() {
@@ -73,7 +75,8 @@ export default class extends Controller {
         this.boutonPauseTarget.hidden = true;
         this.boutonDemarrerTarget.hidden = false;
         this.boutonDemarrerTarget.lastChild.textContent = ' Démarrer';
-        this.afficher('pret', 'Prêt ?', this.typeValue === 'amrap' ? this.format(this.total()) : '0:00', this.premiereLigne(), 0);
+        const depart = this.blocsValue ? this.travailValue : this.typeValue === 'amrap' ? this.total() : 0;
+        this.afficher('pret', 'Prêt ?', this.format(depart), this.premiereLigne(), 0);
     }
 
     tourPlus() {
@@ -116,9 +119,17 @@ export default class extends Controller {
         const total = this.total();
         if (e >= total) {
             this.bip(1320, 0.8);
-            this.finir(this.typeValue === 'for_time' ? 'Time cap !' : 'Terminé !', this.typeValue === 'amrap' ? '0:00' : this.format(total));
+            const sous = ['max_reps', 'for_load'].includes(this.typeValue) ? 'Notez votre score dans « Noter mon score »' : undefined;
+            this.finir(this.typeValue === 'for_time' ? 'Time cap !' : 'Terminé !', this.typeValue === 'amrap' ? '0:00' : this.format(total), sous);
             if (this.typeValue === 'amrap') this.reporter('tours', String(this.tours));
             if (this.typeValue === 'death_by') this.reporter('tours', String(this.dureeValue));
+            if (this.typeValue === 'max_reps') this.reporter('reps', '');
+            if (this.typeValue === 'for_load') this.reporter('charge', '');
+            return;
+        }
+
+        if (this.blocsValue) {
+            this.ticIntervalles(e, total);
             return;
         }
 
@@ -139,6 +150,10 @@ export default class extends Controller {
                 this.afficher('effort', `Minute ${minute + 1} / ${this.dureeValue}`, this.format(reste), this.ligne(minute), e / total);
                 break;
             }
+            case 'for_load':
+            case 'max_reps':
+                this.afficher('effort', 'Chrono libre', this.format(e), 'Repos à volonté entre les séries', e / total);
+                break;
             case 'death_by': {
                 const minute = Math.floor(e / 60);
                 const reste = 60 - (e % 60);
@@ -149,6 +164,40 @@ export default class extends Controller {
                 break;
             }
         }
+    }
+
+    /** Blocs de travail (une période par station, ou une seule pour tous les mouvements) séparés par un repos. */
+    ticIntervalles(e, total) {
+        const periodes = this.periodes();
+        const travailBloc = periodes * this.travailValue;
+        const cycle = travailBloc + this.reposValue;
+        const bloc = Math.floor(e / cycle);
+        const dansCycle = e - bloc * cycle;
+        const titreBloc = `Tour ${bloc + 1} / ${this.blocsValue}`;
+
+        if (dansCycle >= travailBloc) {
+            const cle = `r${bloc}`;
+            this.bipUneFois(cle, 520, 0.35);
+            this.bipFinDePeriode(cycle - dansCycle, cle);
+            this.afficher('repos', `Repos · ${titreBloc}`, this.format(cycle - dansCycle), `Ensuite : ${this.parStationValue ? this.ligne(0) : `tour ${bloc + 2}`}`, e / total);
+            return;
+        }
+
+        const periode = Math.floor(dansCycle / this.travailValue);
+        const cle = `i${bloc}-${periode}`;
+        this.bipUneFois(cle, e > 0 ? 1320 : null, 0.4);
+        this.bipFinDePeriode(this.travailValue - (dansCycle % this.travailValue), cle);
+        this.afficher(
+            'effort',
+            this.parStationValue ? `${titreBloc} · station ${periode + 1} / ${periodes}` : titreBloc,
+            this.format(this.travailValue - (dansCycle % this.travailValue)),
+            this.parStationValue ? this.ligne(periode) : this.typeValue === 'amrap' ? 'Max de tours !' : 'Max de répétitions !',
+            e / total,
+        );
+    }
+
+    periodes() {
+        return this.parStationValue ? Math.max(1, this.lignesValue.length) : 1;
     }
 
     finir(phase, temps, sous = 'Score reporté dans « Noter mon score »') {
@@ -169,7 +218,7 @@ export default class extends Controller {
         if (!champ) {
             return;
         }
-        champ.value = valeur;
+        if (valeur !== '') champ.value = valeur;
         const noter = this.element.querySelector('#noter');
         if (noter) noter.open = true;
         setTimeout(() => {
@@ -189,6 +238,9 @@ export default class extends Controller {
     }
 
     total() {
+        if (this.blocsValue) {
+            return this.blocsValue * this.periodes() * this.travailValue + (this.blocsValue - 1) * this.reposValue;
+        }
         return this.dureeValue * 60;
     }
 
@@ -203,6 +255,7 @@ export default class extends Controller {
 
     premiereLigne() {
         if (this.typeValue === 'death_by') return `D'abord : ${this.travailDeathBy(0)}`;
+        if (this.blocsValue && this.parStationValue) return `D'abord : ${this.ligne(0)}`;
         return this.typeValue === 'emom' ? `D'abord : ${this.ligne(0)}` : '';
     }
 

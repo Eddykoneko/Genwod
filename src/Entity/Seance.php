@@ -50,6 +50,11 @@ class Seance
     #[Assert\Range(min: 0, max: 5000)]
     private ?int $reps = null;
 
+    /** Charge retenue pour un For Load, en kg. */
+    #[ORM\Column(nullable: true)]
+    #[Assert\Range(min: 0, max: 500)]
+    private ?float $chargeKg = null;
+
     /** Ressenti de l'effort (RPE simplifié) de 1 à 5. */
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     #[Assert\Range(min: 1, max: 5)]
@@ -84,31 +89,38 @@ class Seance
         if (WodType::DeathBy === $type && null === $this->tours) {
             $context->buildViolation('Indiquez le nombre de minutes complétées.')->atPath('tours')->addViolation();
         }
-        if (WodType::Emom === $type && null === $this->reps) {
+        if (WodType::ForLoad === $type && null === $this->chargeKg) {
+            $context->buildViolation('Indiquez la charge utilisée.')->atPath('chargeKg')->addViolation();
+        }
+        if (\in_array($type, [WodType::Emom, WodType::MaxReps], true) && null === $this->reps) {
             $context->buildViolation('Indiquez le total de répétitions.')->atPath('reps')->addViolation();
         }
     }
 
     /**
      * Valeur de tri du classement : plus petite = meilleure pour un For Time,
-     * plus grande = meilleure sinon (tours ou minutes × 1000 + reps).
+     * plus grande = meilleure sinon (charge en dixièmes de kg, ou tours / minutes × 1000 + reps).
      */
     public function getValeurScore(): int
     {
         if (WodType::ForTime === $this->wod?->getType()) {
             return $this->tempsSecondes ?? \PHP_INT_MAX;
         }
+        if (WodType::ForLoad === $this->wod?->getType()) {
+            return (int) round(($this->chargeKg ?? 0) * 10);
+        }
 
         return ($this->tours ?? 0) * 1000 + ($this->reps ?? 0);
     }
 
-    /** Score lisible : « 12:34 », « 7 tours + 12 reps », « 14 min + 6 reps » ou « 184 reps ». */
+    /** Score lisible : « 12:34 », « 7 tours + 12 reps », « 14 min + 6 reps », « 102,5 kg » ou « 184 reps ». */
     public function getScoreLisible(): string
     {
         return match ($this->wod?->getType()) {
             WodType::ForTime => self::formaterTemps($this->tempsSecondes ?? 0),
             WodType::Amrap => \sprintf('%d tours + %d reps', $this->tours ?? 0, $this->reps ?? 0),
             WodType::DeathBy => \sprintf('%d min + %d reps', $this->tours ?? 0, $this->reps ?? 0),
+            WodType::ForLoad => str_replace('.', ',', (string) round($this->chargeKg ?? 0, 1)).' kg',
             default => \sprintf('%d reps', $this->reps ?? 0),
         };
     }
@@ -203,6 +215,18 @@ class Seance
     public function setReps(?int $reps): static
     {
         $this->reps = $reps;
+
+        return $this;
+    }
+
+    public function getChargeKg(): ?float
+    {
+        return $this->chargeKg;
+    }
+
+    public function setChargeKg(?float $chargeKg): static
+    {
+        $this->chargeKg = $chargeKg;
 
         return $this;
     }

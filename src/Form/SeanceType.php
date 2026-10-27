@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -56,7 +57,13 @@ class SeanceType extends AbstractType
             WodType::DeathBy => $builder
                 ->add('tours', IntegerType::class, ['label' => 'Minutes complétées', 'attr' => ['min' => 0, 'inputmode' => 'numeric']])
                 ->add('reps', IntegerType::class, ['label' => '+ reps de la minute ratée', 'required' => false, 'attr' => ['min' => 0, 'inputmode' => 'numeric']]),
-            default => $builder->add('reps', IntegerType::class, ['label' => 'Total de répétitions', 'attr' => ['min' => 0, 'inputmode' => 'numeric']]),
+            WodType::ForLoad => $builder->add('chargeKg', NumberType::class, [
+                'label' => 'Charge (kg)',
+                'scale' => 1,
+                'html5' => true,
+                'attr' => ['min' => 0, 'step' => 0.5, 'inputmode' => 'decimal', 'data-chrono-cible' => 'charge'],
+            ]),
+            default => $builder->add('reps', IntegerType::class, ['label' => 'Total de répétitions', 'attr' => ['min' => 0, 'inputmode' => 'numeric', 'data-chrono-cible' => 'reps']]),
         };
 
         $builder

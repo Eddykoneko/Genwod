@@ -98,6 +98,7 @@ final class WodGenerator
             WodType::Emom => [$this->mouvementsEmom($c->duree), null, 0.55],
             // Un seul mouvement ; le facteur ramène le volume de base à un pas par minute (burpees 12 → 1).
             WodType::DeathBy => [1, null, 0.1],
+            WodType::ForLoad, WodType::MaxReps => throw new \LogicException(\sprintf('Le format « %s » n\'est pas proposé par le générateur.', $c->type->label())),
         };
     }
 
@@ -204,6 +205,7 @@ final class WodGenerator
             WodType::Amrap => 'Notez vos tours complets et les répétitions du tour entamé.',
             WodType::Emom => \sprintf('Minute 1 : mouvement 1, minute 2 : mouvement 2… en boucle pendant %d minutes.', $wod->getDuree()),
             WodType::DeathBy => \sprintf('Score : minutes complétées + répétitions de la minute ratée (time cap %d min).', $wod->getDuree()),
+            WodType::ForLoad, WodType::MaxReps => '',
         };
         $lignes[] = 'Échauffement conseillé : 10 minutes, en reprenant les mouvements du jour à vide.';
 

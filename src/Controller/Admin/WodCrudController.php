@@ -68,9 +68,13 @@ final class WodCrudController extends AbstractCrudController
             default => 'warning',
         });
         yield IntegerField::new('duree', 'Durée (min)');
-        yield IntegerField::new('tours')->setHelp('For Time uniquement (1 = chipper).')->hideOnIndex();
+        yield IntegerField::new('tours')->setHelp('For Time (1 = chipper) ou Max reps.')->hideOnIndex();
         yield TextField::new('schemaReps', 'Schéma de répétitions')->setHelp('For Time, ex. « 21-15-9 » : remplace les quantités des lignes.')->hideOnIndex();
         yield BooleanField::new('toutChaqueMinute', 'EMOM : tout chaque minute')->hideOnIndex();
+        yield IntegerField::new('blocs', 'Intervalles : blocs')->setHelp('Ex. 3 pour Fight Gone Bad, 5 pour The Chief. Vide = pas d\'intervalles.')->hideOnIndex();
+        yield IntegerField::new('travailSecondes', 'Intervalles : travail (s)')->setHelp('Durée d\'une période de travail.')->hideOnIndex();
+        yield IntegerField::new('reposSecondes', 'Intervalles : repos (s)')->setHelp('Repos entre deux blocs.')->hideOnIndex();
+        yield BooleanField::new('parStation', 'Intervalles : une station par mouvement')->hideOnIndex();
         yield ChoiceField::new('benchmark', 'Benchmark')->renderAsBadges();
         yield TextareaField::new('consignes')->hideOnIndex();
         yield CollectionField::new('lignes', 'Mouvements')

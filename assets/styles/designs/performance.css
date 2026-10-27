@@ -95,6 +95,8 @@
 .p-tag-amrap { background: rgb(77 163 255 / 0.15); color: var(--cyan); }
 .p-tag-emom, .p-tag-lime { background: rgb(200 255 61 / 0.13); color: var(--lime); }
 .p-tag-death_by { background: rgb(155 123 255 / 0.15); color: var(--p-violet); }
+.p-tag-for_load { background: rgb(255 201 77 / 0.15); color: #ffc94d; }
+.p-tag-max_reps { background: rgb(255 126 182 / 0.15); color: #ff7eb6; }
 .p-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .p-entete { margin-bottom: 22px; }
 .p-entete h1 { font-size: 1.9rem; }

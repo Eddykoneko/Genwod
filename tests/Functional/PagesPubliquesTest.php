@@ -47,7 +47,7 @@ final class PagesPubliquesTest extends AppWebTestCase
     {
         $officiels = static::getContainer()->get(WodRepository::class)->findBy(['officiel' => true]);
 
-        self::assertCount(65, $officiels);
+        self::assertCount(70, $officiels);
         foreach ($officiels as $wod) {
             self::assertNotNull($wod->getBenchmark(), (string) $wod->getTitre());
             self::assertNotEmpty($wod->getLignes(), (string) $wod->getTitre());
@@ -65,6 +65,9 @@ final class PagesPubliquesTest extends AppWebTestCase
         $filthy = $this->wod('Filthy Fifty');
         self::assertSame(500, array_sum(array_map(static fn ($l) => $l->getQuantite(), $filthy->getLignes()->toArray())));
         self::assertSame(Benchmark::Classique, $filthy->getBenchmark());
+        self::assertSame('Max reps · 3 tours · 5 × 1 min · repos 1 min', $this->wod('Fight Gone Bad')->getFormat());
+        self::assertSame('AMRAP · 5 × 3 min · repos 1 min', $this->wod('The Chief')->getFormat());
+        self::assertSame('15-12-9 For Load', $this->wod('Gwen')->getFormat());
     }
 
     /**

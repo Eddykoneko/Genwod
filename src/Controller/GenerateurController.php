@@ -79,7 +79,7 @@ final class GenerateurController extends AbstractController
     private function choix(): array
     {
         return [
-            'types' => WodType::cases(),
+            'types' => WodType::generables(),
             'difficultes' => Difficulte::cases(),
             'equipements' => Equipement::selectionnables(),
         ];

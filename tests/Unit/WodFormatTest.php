@@ -3,6 +3,7 @@
 namespace App\Tests\Unit;
 
 use App\Entity\Mouvement;
+use App\Entity\Seance;
 use App\Entity\Wod;
 use App\Entity\WodMouvement;
 use App\Enum\WodType;
@@ -42,5 +43,28 @@ final class WodFormatTest extends TestCase
         self::assertSame('Death By · cap 20 min', $deathBy->getFormat());
         self::assertSame('2-4-6… Thrusters (43/30 kg)', $ligne->getLibelle());
         self::assertSame('Thrusters (43/30 kg)', $ligne->getMouvementLibelle());
+    }
+
+    public function testFormatsParIntervalles(): void
+    {
+        $fightGoneBad = (new Wod())->setType(WodType::MaxReps)->setBlocs(3)->setTravailSecondes(60)->setReposSecondes(60)->setParStation(true);
+        foreach (['Wall balls', 'SDHP', 'Box jumps', 'Push press', 'Rameur'] as $nom) {
+            $fightGoneBad->addLigne((new WodMouvement())->setMouvement((new Mouvement())->setNom($nom))->setQuantite(0));
+        }
+        $theChief = (new Wod())->setType(WodType::Amrap)->setBlocs(5)->setTravailSecondes(180)->setReposSecondes(60);
+
+        self::assertSame('Max reps · 3 tours · 5 × 1 min · repos 1 min', $fightGoneBad->getFormat());
+        self::assertSame('AMRAP · 5 × 3 min · repos 1 min', $theChief->getFormat());
+        self::assertSame('15-12-9 For Load', (new Wod())->setType(WodType::ForLoad)->setSchemaReps('15-12-9')->getFormat());
+        self::assertSame('5 tours Max reps', (new Wod())->setType(WodType::MaxReps)->setTours(5)->getFormat());
+    }
+
+    public function testScoreEnCharge(): void
+    {
+        $seance = (new Seance())->setWod((new Wod())->setType(WodType::ForLoad))->setChargeKg(102.5);
+
+        self::assertSame('102,5 kg', $seance->getScoreLisible());
+        self::assertSame(1025, $seance->getValeurScore());
+        self::assertSame('80 kg', $seance->setChargeKg(80.0)->getScoreLisible());
     }
 }

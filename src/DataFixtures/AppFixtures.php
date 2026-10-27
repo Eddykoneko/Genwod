@@ -82,7 +82,7 @@ final class AppFixtures extends Fixture
         $manager->flush();
 
         // Des WODs générés par la communauté.
-        $types = WodType::cases();
+        $types = WodType::generables();
         $materiels = Equipement::selectionnables();
         for ($i = 0; $i < 24; ++$i) {
             shuffle($materiels);
@@ -169,6 +169,7 @@ final class AppFixtures extends Fixture
         match ($wod->getType()) {
             WodType::ForTime => $seance->setTempsSecondes(mt_rand((int) ($cap * 0.45), $cap)),
             WodType::Amrap => $seance->setTours(mt_rand(max(1, intdiv($wod->getDuree(), 3)), $wod->getDuree()))->setReps(mt_rand(0, 20)),
+            WodType::ForLoad => $seance->setChargeKg(mt_rand(80, 240) / 2),
             WodType::DeathBy => $seance->setTours(mt_rand(intdiv($wod->getDuree(), 2), $wod->getDuree() - 1))->setReps(mt_rand(0, 10)),
             default => $seance->setReps(mt_rand(6, 14) * $wod->getDuree()),
         };
