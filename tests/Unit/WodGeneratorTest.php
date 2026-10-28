@@ -13,6 +13,7 @@ use App\Generator\WodGenerator;
 use App\Repository\MouvementRepository;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Clock\MockClock;
 
 final class WodGeneratorTest extends TestCase
 {
@@ -35,6 +36,16 @@ final class WodGeneratorTest extends TestCase
 
         self::assertSame($a->getTitre(), $b->getTitre());
         self::assertSame($this->libelles($a->getLignes()->toArray()), $this->libelles($b->getLignes()->toArray()));
+    }
+
+    public function testUnWodGenerePorteLaDateDuJour(): void
+    {
+        $depot = $this->createStub(MouvementRepository::class);
+        $depot->method('findBy')->willReturn(CatalogueEnMemoire::mouvements());
+        $generateur = new WodGenerator($depot, new MockClock('2026-10-28 07:30:00'));
+
+        self::assertSame('WOD du 28 octobre 2026', $generateur->generer(new CriteresGeneration(graine: 'abcdef12'))->getTitre());
+        self::assertSame('WOD du 1er mars 2027', WodGenerator::titrePour(new \DateTimeImmutable('2027-03-01')));
     }
 
     public function testDesGrainesDifferentesVarientLesWods(): void

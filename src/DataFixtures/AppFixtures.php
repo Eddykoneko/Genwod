@@ -93,9 +93,11 @@ final class AppFixtures extends Fixture
                 \array_slice($materiels, 0, mt_rand(0, 4)),
                 \sprintf('%08x', mt_rand()),
             );
+            $creeLe = new \DateTimeImmutable(\sprintf('-%d days -%d hours', mt_rand(0, 120), mt_rand(0, 23)));
             $wod = $this->generateur->generer($criteres)
+                ->setTitre(WodGenerator::titrePour($creeLe))
                 ->setAuteur($athletes[mt_rand(0, \count($athletes) - 1)])
-                ->setCreatedAt(new \DateTimeImmutable(\sprintf('-%d days -%d hours', mt_rand(0, 120), mt_rand(0, 23))));
+                ->setCreatedAt($creeLe);
             $manager->persist($wod);
         }
         $manager->flush();

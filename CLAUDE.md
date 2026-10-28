@@ -37,7 +37,7 @@ php bin/console ux:icons:lock                   # après avoir utilisé une nouv
 
 ## Architecture
 
-- `WodGenerator` : génération déterministe (graine) depuis le catalogue `Mouvement`. Règles : matériel disponible, alternance des familles, ≤ 1 cardio, ≤ 1 gainage, volumes arrondis. Death By : un seul mouvement en répétitions (hors cardio), `quantite` = pas ajouté chaque minute (affiché « 2-4-6… »), time cap ≥ 10 min ; le score est stocké dans `Seance::tours` (minutes complétées) + `reps` (minute ratée).
+- `WodGenerator` : génération déterministe (graine) depuis le catalogue `Mouvement`. Règles : matériel disponible, alternance des familles, ≤ 1 cardio, ≤ 1 gainage, volumes arrondis. Titre = date du jour (« WOD du 28 octobre 2026 », `WodGenerator::titrePour()`) : les noms propres sont réservés aux benchmarks. Death By : un seul mouvement en répétitions (hors cardio), `quantite` = pas ajouté chaque minute (affiché « 2-4-6… »), time cap ≥ 10 min ; le score est stocké dans `Seance::tours` (minutes complétées) + `reps` (minute ratée).
 - `Seance` est l'unique source des scores ; le classement par WOD et les records sont calculés depuis elle (`SeanceRepository`). Les points sont figés à l'enregistrement (`EnregistreurSeance` + `Points`).
 - Formats : For Time, AMRAP, EMOM, Death By (générables, `WodType::generables()`) ; For Load (`Seance::chargeKg`) et Max reps (`reps`) réservés aux benchmarks. Intervalles sur `Wod` (`blocs`, `travailSecondes`, `reposSecondes`, `parStation`) lus par le chrono.
 - `Statistiques` : série de jours consécutifs et heatmap.

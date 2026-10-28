@@ -13,6 +13,8 @@ use App\Enum\WodType;
 use App\Repository\MouvementRepository;
 use Random\Engine\Xoshiro256StarStar;
 use Random\Randomizer;
+use Symfony\Component\Clock\ClockInterface;
+use Symfony\Component\Clock\NativeClock;
 
 /**
  * Le cœur de Genwod : compose un WOD équilibré à partir du catalogue de mouvements.
@@ -26,13 +28,26 @@ use Random\Randomizer;
  */
 final class WodGenerator
 {
-    private const NOMS = ['Tempête', 'Avalanche', 'Forge', 'Fournaise', 'Tornade', 'Déferlante', 'Éruption', 'Furie', 'Foudre', 'Marée', 'Rafale', 'Secousse', 'Canicule', 'Bourrasque', 'Charge'];
-    private const COMPLEMENTS = ['de fer', 'd\'acier', 'nocturne', 'sauvage', 'polaire', 'écarlate', 'sans fin', 'du lundi', 'de minuit', 'brûlante', 'magnétique', 'électrique', 'souterraine', 'infernale', 'de l\'aube'];
     private const REPS_NATURELLES = [3, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 24, 25, 30, 35, 40, 50, 60, 75, 80, 100, 150];
     private const METRES_NATURELS = [100, 150, 200, 250, 300, 400, 500, 600, 800, 1000, 1200, 1500, 2000];
 
-    public function __construct(private readonly MouvementRepository $mouvements)
+    private readonly ClockInterface $horloge;
+
+    public function __construct(private readonly MouvementRepository $mouvements, ?ClockInterface $horloge = null)
     {
+        $this->horloge = $horloge ?? new NativeClock();
+    }
+
+    /**
+     * Comme les WODs du jour de CrossFit.com, un WOD généré porte la date du jour :
+     * les noms propres restent réservés aux WODs de référence.
+     */
+    public static function titrePour(\DateTimeInterface $date): string
+    {
+        $jour = (int) $date->format('j');
+        $moisAnnee = (new \IntlDateFormatter('fr_FR', \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, $date->getTimezone(), null, 'MMMM y'))->format($date);
+
+        return \sprintf('WOD du %s %s', 1 === $jour ? '1er' : (string) $jour, $moisAnnee);
     }
 
     public function generer(CriteresGeneration $criteres): Wod
@@ -49,7 +64,7 @@ final class WodGenerator
             // Un Death By s'arrête à l'échec : la durée n'est qu'un time cap, qui doit laisser le temps de monter.
             ->setDuree(WodType::DeathBy === $criteres->type ? max(10, $criteres->duree) : $criteres->duree)
             ->setGraine($criteres->graine)
-            ->setTitre(self::NOMS[$rng->getInt(0, \count(self::NOMS) - 1)].' '.self::COMPLEMENTS[$rng->getInt(0, \count(self::COMPLEMENTS) - 1)]);
+            ->setTitre(self::titrePour($this->horloge->now()));
 
         [$nbMouvements, $tours, $facteur] = $this->structure($criteres, $rng);
         $wod->setTours($tours);
