@@ -28,8 +28,8 @@ final class PagesPubliquesTest extends AppWebTestCase
     {
         $crawler = $this->client->request('GET', '/');
 
-        self::assertSelectorTextContains('.hero', 'WOD du jour');
-        self::assertCount(1, $crawler->filter('.board'));
+        self::assertSelectorTextContains('.l-hero', 'WOD du jour');
+        self::assertCount(1, $crawler->filter('.l-carte-wod'));
     }
 
     public function testLaFicheDUnWod(): void
@@ -38,8 +38,8 @@ final class PagesPubliquesTest extends AppWebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Cindy');
-        self::assertSelectorTextContains('.board-format', 'AMRAP 20 min');
-        self::assertSelectorCount(3, '.board-lines li');
+        self::assertSelectorTextContains('.l-format', 'AMRAP 20 min');
+        self::assertSelectorCount(3, '.l-lignes > div');
     }
 
     /** La sélection officielle ne contient que des WODs de référence de la communauté CrossFit. */
@@ -120,7 +120,7 @@ final class PagesPubliquesTest extends AppWebTestCase
         self::assertMatchesRegularExpression('/graine=[a-f0-9]{8}/', (string) $this->client->getResponse()->headers->get('Location'));
 
         $this->client->followRedirect();
-        self::assertSelectorTextContains('.board-format', 'EMOM 12 min');
+        self::assertSelectorTextContains('.l-format', 'EMOM 12 min');
     }
 
     public function testLesEnTetesDeSecurite(): void

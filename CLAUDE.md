@@ -30,10 +30,11 @@ php bin/console ux:icons:lock                   # après avoir utilisé une nouv
 - Composants Twig anonymes dans `templates/components/` ; le seul composant PHP est le Live Component `WodRecherche`.
 - Éviter le N+1 sur les listes de WODs : `WodRepository::prechargerLignes()`.
 
-## Designs
+## Design
 
-- Trois propositions de refonte (`studio`, `performance`, `ludique`) en plus du design actuel : `DesignListener` (cookie + `?design=`) fait chercher Twig d'abord dans `templates/designs/<design>/`. Partiels communs à réutiliser : `wod/_chrono_attributs`, `wod/_chrono_dialog`, `wod/_seance_form`, `generateur/_enregistrer`. Les ids des cibles Turbo Stream (`interactions-*`, `commentaires-liste`, `nb-commentaires`…) doivent être conservés.
-- Fonctions Twig `resume_athlete()` et `badges_athlete()` (`App\Twig\AthleteExtension`).
+- Design unique « Ludique » (clair uniquement) : crème, contours encrés et ombres pleines, une couleur pastel par format (`.l-for_time`, `.l-amrap`…). Tout est dans `assets/styles/app.css` : composants de base puis « Habillage Ludique » (classes `l-*`), jetons de couleur dans `:root` (`--l-ink`, `--l-carte`…). Polices auto-hébergées dans `assets/fonts/` (Plus Jakarta Sans, Bricolage Grotesque, OFL).
+- Les ids des cibles Turbo Stream (`interactions-*`, `commentaires-liste`, `nb-commentaires`…) doivent être conservés.
+- Badge d'origine `<twig:OrigineBadge>` (Girl, Hero, Open, Classique, Communauté). Fonctions Twig `resume_athlete()` et `badges_athlete()` (`App\Twig\AthleteExtension`).
 
 ## Architecture
 

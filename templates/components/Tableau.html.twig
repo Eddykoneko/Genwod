@@ -1,24 +1,14 @@
-{# Affichage « tableau blanc » d'un WOD (persisté ou fraîchement généré). #}
-{% props wod, titreTag = 'h1' %}
-<article {{ attributes.defaults({class: 'board type-' ~ wod.type.value}) }}>
-    <div class="board-meta">
-        <twig:TypeBadge :type="wod.type" />
-        <twig:OrigineBadge :wod="wod" />
-        <span class="badge">{{ ux_icon('lucide:timer') }} {{ wod.duree }} min</span>
-        <span class="badge"><twig:Flammes :difficulte="wod.difficulte" /> {{ wod.difficulte.label }}</span>
-    </div>
-    <{{ titreTag }} class="board-title">{{ wod.titre }}</{{ titreTag }}>
-    <p class="board-format">{{ wod.format }}</p>
-    <ol class="board-lines">
+{# Ludique : grande carte pastel (couleur du format), lignes en pilules. #}
+{% props wod, titreTag = 'h1', etiquette = null %}
+<article {{ attributes.defaults({class: 'l-carte l-carte-wod l-' ~ wod.type.value}) }}>
+    {% if etiquette %}<span class="l-sticker">{{ etiquette }}</span>{% endif %}
+    <span class="l-pills"><span class="l-pill">{{ wod.type.label }}</span><twig:OrigineBadge :wod="wod" /></span>
+    <{{ titreTag }} class="l-titre-wod">{{ wod.titre }}</{{ titreTag }}>
+    <p class="l-format">{{ wod.format }} · <twig:Flammes :difficulte="wod.difficulte" /></p>
+    <div class="l-lignes">
         {% for ligne in wod.lignes %}
-            <li>
-                <span class="qte">{{ ligne.quantiteLisible }}</span>
-                <span class="mvt">{{ ligne.mouvement.nom }}{% if ligne.mouvement.description %}<small>{{ ligne.mouvement.description }}</small>{% endif %}</span>
-                {% set charge = ligne.note ?? ligne.mouvement.chargeRx %}
-                <span class="charge">{{ charge }}</span>
-            </li>
+            <div><b>{{ ligne.quantiteLisible }}</b><span>{{ ligne.mouvement.nom }}</span>{% set charge = ligne.note ?? ligne.mouvement.chargeRx %}{% if charge %}<small>{{ charge }}</small>{% endif %}</div>
         {% endfor %}
-    </ol>
-    {% if wod.consignes %}<div class="board-consignes">{{ wod.consignes }}</div>{% endif %}
+    </div>
     {% block content %}{% endblock %}
 </article>

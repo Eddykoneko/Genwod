@@ -1,4 +1,4 @@
-{# Formulaire d'enregistrement d'un WOD généré (champs cachés = critères), partagé par tous les designs. #}
+{# Formulaire d'enregistrement d'un WOD généré (champs cachés = critères). #}
 {% if app.user %}
     <form method="post" action="{{ path('app_generateur_enregistrer') }}" class="stack" style="--stack: 12px">
         {% for cle, valeur in criteres.versQuery %}

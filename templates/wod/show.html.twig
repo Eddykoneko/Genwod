@@ -1,112 +1,57 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ wod.titre }} · {{ wod.format }}{% endblock %}
-{% block description %}{{ wod.format }} — {{ wod.lignes|map(l => l.libelle)|join(', ') }}. Chrono intégré et classement sur Genwod.{% endblock %}
+{% block description %}{{ wod.format }} — {{ wod.lignes|map(l => l.libelle)|join(', ') }}.{% endblock %}
 
 {% block body %}
-<div {{ include('wod/_chrono_attributs.html.twig') }}>
-<div class="layout-aside">
-    <div class="stack" style="--stack: 24px">
-        <twig:Tableau :wod="wod">
-            <div class="cluster between mt-3">
-                <div class="cluster">
-                    <button type="button" class="btn btn-primary btn-lg" data-action="chrono#ouvrir">{{ ux_icon('lucide:timer') }} Lancer le chrono</button>
-                    {{ include('wod/_interactions.html.twig') }}
-                </div>
-                <div class="cluster" style="--gap: 4px">
-                    <button type="button" class="btn btn-ghost btn-icon" data-controller="partage" data-action="partage#partager" data-partage-titre-value="{{ wod.titre }} · Genwod" aria-label="Partager">{{ ux_icon('lucide:share-2') }}</button>
-                    <button type="button" class="btn btn-ghost btn-icon" onclick="window.print()" aria-label="Imprimer">{{ ux_icon('lucide:printer') }}</button>
-                    {% if is_granted('WOD_GERER', wod) %}
-                        <form method="post" action="{{ path('app_wod_supprimer', {slug: wod.slug}) }}" class="inline-form" data-turbo-confirm="Supprimer définitivement ce WOD et tous ses résultats ?">
-                            <input type="hidden" name="_token" value="{{ csrf_token('supprimer-wod-' ~ wod.id) }}">
-                            <button class="btn btn-ghost btn-icon" aria-label="Supprimer ce WOD">{{ ux_icon('lucide:trash-2') }}</button>
-                        </form>
-                    {% endif %}
-                </div>
-            </div>
-            <p class="tiny faint mt-2">
-                {% if wod.auteur %}Créé par <a href="{{ path('app_athlete', {pseudo: wod.auteur.pseudo}) }}">{{ wod.auteur.pseudo }}</a> · {% endif %}
-                ajouté le {{ wod.createdAt|format_date('long') }}{% if not wod.public %} · <strong>privé</strong>{% endif %}
-            </p>
-        </twig:Tableau>
-
-        <section class="card" id="classement">
-            <div class="card-head">
-                <h2>{{ ux_icon('lucide:trophy', {class: 'icon-inline accent'}) }} Classement</h2>
-                <nav class="tabs" aria-label="Filtrer le classement">
-                    <a href="{{ path('app_wod_show', {slug: wod.slug}) }}#classement" {{ modeClassement is null ? 'aria-current="page"' }}>Tous</a>
-                    <a href="{{ path('app_wod_show', {slug: wod.slug, classement: 'rx'}) }}#classement" {{ modeClassement and modeClassement.value == 'rx' ? 'aria-current="page"' }}>RX</a>
-                    <a href="{{ path('app_wod_show', {slug: wod.slug, classement: 'scaled'}) }}#classement" {{ modeClassement and modeClassement.value == 'scaled' ? 'aria-current="page"' }}>Scaled</a>
-                </nav>
-            </div>
-            {% if classement is not empty %}
-                <div class="table-wrap">
-                    <table class="table">
-                        <thead><tr><th>#</th><th>Athlète</th><th class="num">Score</th><th>Version</th><th class="num">Date</th></tr></thead>
-                        <tbody>
-                            {% for seance in classement %}
-                                <tr class="{{ app.user and seance.athlete.id == app.user.id ? 'moi' }}">
-                                    <td><span class="rank rank-{{ loop.index }}">{{ loop.index }}</span></td>
-                                    <td><span class="cluster" style="--gap: 10px"><twig:Avatar :user="seance.athlete" taille="sm" /> <a href="{{ path('app_athlete', {pseudo: seance.athlete.pseudo}) }}" style="font-weight:700;text-decoration:none">{{ seance.athlete.pseudo }}</a></span></td>
-                                    <td class="num"><strong>{{ seance.scoreLisible }}</strong></td>
-                                    <td><span class="badge {{ seance.mode.value == 'rx' ? 'badge-success' }}">{{ seance.mode.label }}</span></td>
-                                    <td class="num faint small">{{ seance.realiseeLe|date('d/m/y') }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% else %}
-                <twig:Vide icone="lucide:flag" titre="Personne n'a encore de score">
-                    <p>Soyez le premier ou la première à poser un temps de référence !</p>
-                </twig:Vide>
+<div class="l-detail" {{ include('wod/_chrono_attributs.html.twig') }}>
+    <twig:Tableau :wod="wod" class="l-detail-wod">
+        {% if wod.consignes %}<p class="l-consignes">{{ wod.consignes }}</p>{% endif %}
+        <div class="l-actions">{{ include('wod/_interactions.html.twig') }}
+            <button type="button" class="btn btn-icon" data-controller="partage" data-action="partage#partager" data-partage-titre-value="{{ wod.titre }} · Genwod" aria-label="Partager">{{ ux_icon('lucide:share-2') }}</button>
+            {% if is_granted('WOD_GERER', wod) %}
+                <form method="post" action="{{ path('app_wod_supprimer', {slug: wod.slug}) }}" class="inline-form" data-turbo-confirm="Supprimer définitivement ce WOD et tous ses résultats ?">
+                    <input type="hidden" name="_token" value="{{ csrf_token('supprimer-wod-' ~ wod.id) }}">
+                    <button class="btn btn-icon" aria-label="Supprimer ce WOD">{{ ux_icon('lucide:trash-2') }}</button>
+                </form>
             {% endif %}
-        </section>
+        </div>
+    </twig:Tableau>
 
-        <section class="card" id="commentaires">
-            <div class="card-head"><h2>{{ ux_icon('lucide:message-circle', {class: 'icon-inline accent'}) }} Commentaires <span class="faint">(<span id="nb-commentaires">{{ wod.commentaires|length }}</span>)</span></h2></div>
-            {% if app.user %}
-                {{ include('wod/_commentaire_form.html.twig', {form: commentaireForm}) }}
-            {% else %}
-                <p class="small muted"><a href="{{ path('app_login') }}">Connectez-vous</a> pour participer à la discussion.</p>
+    <div class="l-detail-cote">
+        <button type="button" class="l-depart" data-action="chrono#ouvrir">▶ Lancer le chrono</button>
+        {% if record %}<div class="l-carte l-record"><span class="l-sticker">Ton record</span><b>{{ record.scoreLisible }}</b><span class="l-muted">{{ record.mode.label }} · {{ record.realiseeLe|format_date('long') }}</span></div>{% endif %}
+        <section class="l-carte" id="classement">
+            <h2>Podium</h2>
+            <nav class="l-onglets">
+                <a href="{{ path('app_wod_show', {slug: wod.slug}) }}#classement" {{ modeClassement is null ? 'aria-current="page"' }}>Tous</a>
+                <a href="{{ path('app_wod_show', {slug: wod.slug, classement: 'rx'}) }}#classement" {{ modeClassement and modeClassement.value == 'rx' ? 'aria-current="page"' }}>RX</a>
+                <a href="{{ path('app_wod_show', {slug: wod.slug, classement: 'scaled'}) }}#classement" {{ modeClassement and modeClassement.value == 'scaled' ? 'aria-current="page"' }}>Scaled</a>
+            </nav>
+            {% if classement|length >= 3 %}
+                <div class="l-podium">
+                    {% for place in [2, 1, 3] %}
+                        {% set s = classement[place - 1] %}
+                        <a class="l-podium-{{ place }}" href="{{ path('app_athlete', {pseudo: s.athlete.pseudo}) }}"><span class="l-avatar" style="--h: {{ s.athlete.teinteAvatar }}">{{ s.athlete.initiales }}</span><b>{{ s.athlete.pseudo }}</b><small>{{ s.scoreLisible }}</small><i>{{ place }}</i></a>
+                    {% endfor %}
+                </div>
             {% endif %}
-            <div id="commentaires-liste" class="mt-2">
-                {% for commentaire in wod.commentaires %}
-                    {{ include('wod/_commentaire.html.twig') }}
+            <ol class="l-liste" start="{{ classement|length >= 3 ? 4 : 1 }}">
+                {% for s in classement|slice(classement|length >= 3 ? 3 : 0) %}
+                    <li class="{{ app.user and s.athlete.id == app.user.id ? 'moi' }}"><a href="{{ path('app_athlete', {pseudo: s.athlete.pseudo}) }}">{{ s.athlete.pseudo }}</a><span class="l-pill">{{ s.mode.label }}</span><b>{{ s.scoreLisible }}</b></li>
                 {% else %}
-                    <p id="aucun-commentaire" class="small faint">Pas encore de commentaire.</p>
+                    {% if classement is empty %}<li class="l-muted">Personne n'a encore de score : à toi la première place !</li>{% endif %}
                 {% endfor %}
-            </div>
+            </ol>
         </section>
+        <section class="l-carte" id="noter"><h2>Noter mon score</h2>{{ include('wod/_seance_form.html.twig') }}</section>
     </div>
 
-    <aside class="stack" style="--stack: 16px">
-        {% if record %}
-            <div class="card card-tight" style="background: linear-gradient(135deg, var(--lime-soft), transparent), var(--surface)">
-                <p class="eyebrow" style="color: var(--lime)">Ton record</p>
-                <p style="font-family: var(--font-display); font-size: 2rem; font-weight: 900; letter-spacing: -0.03em" class="nums">{{ record.scoreLisible }}</p>
-                <p class="small muted">{{ record.mode.label }} · le {{ record.realiseeLe|format_date('long') }}</p>
-            </div>
-        {% endif %}
-
-        <details class="card disclosure" id="noter" {{ seanceForm.vars.submitted or app.user ? 'open' }}>
-            <summary class="cluster between">
-                <h2 style="font-size:1.05rem;text-transform:uppercase">{{ ux_icon('lucide:notebook-pen', {class: 'icon-inline accent'}) }} Noter mon score</h2>
-                {{ ux_icon('lucide:chevron-down', {class: 'chevron'}) }}
-            </summary>
-            <div class="mt-2">
-                    {{ include('wod/_seance_form.html.twig') }}
-            </div>
-        </details>
-
-        <div class="card card-tight">
-            <h3 style="font-size:.95rem;text-transform:uppercase">{{ wod.type.label }}, c'est quoi ?</h3>
-            <p class="small muted mt-1">{{ wod.type.explication }}</p>
-        </div>
-    </aside>
-</div>
-
-{# Chrono plein écran, adapté au format du WOD. #}
-{{ include('wod/_chrono_dialog.html.twig') }}
+    <section class="l-carte l-detail-com" id="commentaires">
+        <h2>Commentaires (<span id="nb-commentaires">{{ wod.commentaires|length }}</span>)</h2>
+        {% if app.user %}{{ include('wod/_commentaire_form.html.twig', {form: commentaireForm}) }}{% endif %}
+        <div id="commentaires-liste">{% for commentaire in wod.commentaires %}{{ include('wod/_commentaire.html.twig') }}{% else %}<p id="aucun-commentaire" class="l-muted">Sois le premier à commenter 💬</p>{% endfor %}</div>
+    </section>
+    {{ include('wod/_chrono_dialog.html.twig') }}
 </div>
 {% endblock %}

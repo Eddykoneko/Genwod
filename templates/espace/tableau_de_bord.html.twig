@@ -3,69 +3,29 @@
 {% block title %}Tableau de bord{% endblock %}
 
 {% block body %}
-    {% if not app.user.verified %}
-        <div class="banner">
-            {{ ux_icon('lucide:mail-warning') }}
-            <span>Confirmez votre adresse e-mail grâce au lien reçu à l'inscription.</span>
-            <form method="post" action="{{ path('app_verify_email_resend') }}" class="inline-form" style="margin-left:auto">
-                <input type="hidden" name="_token" value="{{ csrf_token('renvoyer-confirmation') }}">
-                <button class="btn btn-sm btn-outline">Renvoyer le lien</button>
-            </form>
-        </div>
-    {% endif %}
-
-    <div class="section-head">
-        <div class="cluster" style="--gap: 16px">
-            <twig:Avatar :user="app.user" taille="lg" :lien="false" />
-            <div>
-                <p class="eyebrow">Mon espace</p>
-                <h1 style="font-size: clamp(1.8rem, 5vw, 2.6rem); text-transform: uppercase">Salut {{ app.user.pseudo }} !</h1>
-                {% if resume.serie > 0 %}<p class="muted">🔥 {{ resume.serie }} jour{{ resume.serie > 1 ? 's' }} d'affilée — ne casse pas la série !</p>{% else %}<p class="muted">Une séance aujourd'hui pour lancer ta série ?</p>{% endif %}
-            </div>
-        </div>
-        <a class="btn btn-primary" href="{{ path('app_generateur') }}">{{ ux_icon('lucide:dices') }} Nouveau WOD</a>
+<header class="l-entete"><h1>Salut {{ app.user.pseudo }} 👋</h1><p class="l-muted">{{ resume.serie > 0 ? 'Ne casse pas ta série !' : 'Une séance aujourd\'hui pour lancer ta série ?' }}</p></header>
+{{ include('espace/_nav.html.twig') }}
+{% if not app.user.verified %}
+    <div class="banner">{{ ux_icon('lucide:mail-warning') }}<span>Confirme ton adresse e-mail.</span>
+        <form method="post" action="{{ path('app_verify_email_resend') }}" class="inline-form" style="margin-left:auto"><input type="hidden" name="_token" value="{{ csrf_token('renvoyer-confirmation') }}"><button class="btn btn-sm btn-outline">Renvoyer le lien</button></form>
     </div>
-
-    {{ include('espace/_nav.html.twig') }}
-
-    <div class="grid grid-4" style="--gap: 12px">
-        <twig:Stat label="Séances" :valeur="resume.total.seances" icone="lucide:activity" :sous="resume.mois.seances ~ ' ce mois-ci'" />
-        <twig:Stat label="Points" :valeur="resume.total.points" icone="lucide:zap" :sous="resume.mois.points ~ ' ce mois-ci'" />
-        <twig:Stat label="Série actuelle" :valeur="resume.serie ~ ' j'" icone="lucide:flame" :sous="'Record : ' ~ resume.meilleureSerie ~ ' j'" />
-        <twig:Stat label="En RX" :valeur="resume.total.seances > 0 ? ((resume.total.rx / resume.total.seances * 100)|round ~ ' %') : '—'" icone="lucide:badge-check" sous="des séances" />
-    </div>
-
-    <div class="card mt-3">
-        <div class="card-head"><h2>Activité</h2><span class="tiny faint">{{ heatmap|length }} dernières semaines</span></div>
-        <twig:Heatmap :semaines="heatmap" />
-    </div>
-
-    <div class="grid grid-2 mt-3">
-        <section class="card">
-            <div class="card-head"><h2>Dernières séances</h2><a class="btn btn-ghost btn-sm" href="{{ path('app_espace_seances') }}">Tout voir</a></div>
-            {% if dernieres is not empty %}
-                <ul class="list">{% for seance in dernieres %}{{ include('espace/_seance.html.twig') }}{% endfor %}</ul>
-            {% else %}
-                <twig:Vide icone="lucide:timer" titre="Aucune séance pour l'instant">
-                    <p class="small">Lance le chrono sur un WOD puis note ton score.</p>
-                </twig:Vide>
-            {% endif %}
-        </section>
-        <section class="card">
-            <div class="card-head"><h2>Records personnels</h2></div>
-            {% if records is not empty %}
-                <ul class="list">
-                    {% for r in records %}
-                        <li>
-                            {{ ux_icon('lucide:medal', {style: 'width:22px;height:22px;color:var(--gold)'}) }}
-                            <div class="grow"><a class="title" href="{{ path('app_wod_show', {slug: r.wod.slug}) }}">{{ r.wod.titre }}</a><span class="tiny faint">{{ r.realiseeLe|format_date('medium') }} · {{ r.mode.label }}</span></div>
-                            <strong class="nums">{{ r.scoreLisible }}</strong>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <twig:Vide icone="lucide:medal" titre="Pas encore de record"><p class="small">Ils apparaîtront ici dès ta première séance.</p></twig:Vide>
-            {% endif %}
-        </section>
-    </div>
+{% endif %}
+<div class="l-tableau">
+    <div class="l-carte l-serie-carte"><span>🔥</span><b>{{ resume.serie }}</b><p>jour{{ resume.serie > 1 ? 's' }} de série<br><small>record : {{ resume.meilleureSerie }}</small></p></div>
+    <div class="l-carte l-stat l-for_time"><b>{{ resume.total.seances }}</b><span>séances</span></div>
+    <div class="l-carte l-stat l-amrap"><b>{{ resume.total.points }}</b><span>points</span></div>
+    <div class="l-carte l-stat l-emom"><b>{{ resume.total.seances > 0 ? (resume.total.rx / resume.total.seances * 100)|round : 0 }}%</b><span>en RX</span></div>
+</div>
+<div class="l-deux">
+    <section class="l-carte"><h2>Ton activité</h2><twig:Heatmap :semaines="heatmap" /></section>
+    {{ include('_badges.html.twig') }}
+</div>
+<div class="l-deux">
+    <section class="l-carte"><h2>Dernières séances</h2>
+        <ol class="l-liste">{% for s in dernieres %}<li><a href="{{ path('app_wod_show', {slug: s.wod.slug}) }}">{{ s.wod.titre }}</a><span class="l-pill">+{{ s.points }}</span><b>{{ s.scoreLisible }}</b></li>{% else %}<li class="l-muted">Pas encore de séance.</li>{% endfor %}</ol>
+    </section>
+    <section class="l-carte"><h2>Records 🏅</h2>
+        <ol class="l-liste">{% for r in records %}<li><a href="{{ path('app_wod_show', {slug: r.wod.slug}) }}">{{ r.wod.titre }}</a><span class="l-pill">{{ r.mode.label }}</span><b>{{ r.scoreLisible }}</b></li>{% else %}<li class="l-muted">Pas encore de record.</li>{% endfor %}</ol>
+    </section>
+</div>
 {% endblock %}

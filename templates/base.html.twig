@@ -4,38 +4,57 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <title>{% block title %}Générateur de WODs CrossFit{% endblock %} · Genwod</title>
-        <meta name="description" content="{% block description %}Genwod génère des entraînements CrossFit (WOD) adaptés à votre niveau et à votre matériel. Chrono intégré, suivi de vos séances et classements.{% endblock %}">
-        <meta name="theme-color" content="#0d0e10">
-        <meta property="og:site_name" content="Genwod">
-        <meta property="og:title" content="{{ block('title') }} · Genwod">
-        <meta property="og:description" content="{{ block('description') }}">
-        <meta property="og:type" content="website">
-        <meta property="og:image" content="{{ absolute_url(asset('img/logo.png')) }}">
-        <link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ app.request.pathInfo }}">
+        <meta name="description" content="{% block description %}Genwod génère des entraînements CrossFit (WOD) adaptés à votre niveau et à votre matériel.{% endblock %}">
+        <meta name="theme-color" content="#fff8ef">
         <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
-        <link rel="apple-touch-icon" href="{{ asset('img/logo.png') }}">
         <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
-        {# Applique le thème choisi avant le premier rendu (évite le flash). #}
-        <script>try{var t=localStorage.getItem('genwod-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
+        {% block javascripts %}{% block importmap %}{{ importmap('app') }}{% endblock %}{% endblock %}
     </head>
-    <body class="has-tabbar">
+    {% set route = app.current_route %}
+    <body class="l-body has-tabbar">
         <a class="sr-only" href="#contenu">Aller au contenu</a>
-        {{ include('_nav.html.twig') }}
+        <header class="l-nav">
+            <a class="l-logo" href="{{ path('app_accueil') }}"><img src="{{ asset('img/logo.png') }}" alt="" width="40" height="40"><span>genwod</span></a>
+            <nav class="l-liens" aria-label="Navigation principale">
+                <a href="{{ path('app_accueil') }}" {{ route == 'app_accueil' ? 'aria-current="page"' }}>Accueil</a>
+                <a href="{{ path('app_generateur') }}" {{ route starts with 'app_generateur' ? 'aria-current="page"' }}>Générateur</a>
+                <a href="{{ path('app_wod_index') }}" {{ route starts with 'app_wod' ? 'aria-current="page"' }}>WODs</a>
+                <a href="{{ path('app_classement') }}" {{ route == 'app_classement' ? 'aria-current="page"' }}>Classement</a>
+            </nav>
+            <div class="l-nav-fin">
+                {% if app.user %}
+                    {% set serie = resume_athlete(app.user).serie %}
+                    <a class="l-serie" href="{{ path('app_tableau_de_bord') }}" title="Ta série de jours d'entraînement"><i>🔥</i>{{ serie }}<span class="l-cache-mobile">&nbsp;jour{{ serie > 1 ? 's' }}</span></a>
+                    <details class="menu" data-controller="menu" data-action="click@window->menu#fermerSiDehors keydown.esc@window->menu#fermer">
+                        <summary class="l-avatar" style="--h: {{ app.user.teinteAvatar }}" aria-label="Menu du compte">{{ app.user.initiales }}</summary>
+                        <div class="menu-panel">
+                            <div class="menu-head"><strong>{{ app.user.pseudo }}</strong></div>
+                            <a href="{{ path('app_tableau_de_bord') }}">Mon espace</a>
+                            <a href="{{ path('app_espace_seances') }}">Mes séances</a>
+                            <a href="{{ path('app_athlete', {pseudo: app.user.pseudo}) }}">Profil public</a>
+                            <a href="{{ path('app_espace_profil') }}">Paramètres</a>
+                            {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('admin') }}" data-turbo="false">Administration</a>{% endif %}
+                            <hr><a href="{{ path('app_logout') }}" data-turbo="false">Se déconnecter</a>
+                        </div>
+                    </details>
+                {% else %}
+                    <a class="l-btn l-cache-mobile" href="{{ path('app_login') }}">Connexion</a>
+                    <a class="l-btn l-btn-orange" href="{{ path('app_register') }}">Rejoindre</a>
+                {% endif %}
+            </div>
+        </header>
+
         {{ include('_flashes.html.twig') }}
 
-        <main id="contenu">
-            {% block main %}
-                <div class="container">
-                    {% block body %}{% endblock %}
-                </div>
-            {% endblock %}
+        <main id="contenu" class="l-main">
+            {% block main %}{% block body %}{% endblock %}{% endblock %}
         </main>
 
-        {{ include('_footer.html.twig') }}
+        <footer class="l-footer">
+            <span>genwod · fait avec 💪 par William Luong</span>
+            <nav><a href="{{ path('app_a_propos') }}">Concept</a><a href="{{ path('app_mentions_legales') }}">Mentions légales</a><a href="{{ path('app_confidentialite') }}">Confidentialité</a></nav>
+        </footer>
+
         {{ include('_tabbar.html.twig') }}
-        {{ include('_design_switcher.html.twig') }}
     </body>
 </html>

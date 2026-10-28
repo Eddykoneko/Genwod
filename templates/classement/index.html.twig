@@ -3,69 +3,24 @@
 {% block title %}Classement des athlètes{% endblock %}
 
 {% block body %}
-<div class="container-narrow" style="margin-inline:auto">
-    <div class="section-head">
-        <div>
-            <p class="eyebrow">Hall of fame</p>
-            <h1 style="font-size: clamp(2rem, 5vw, 2.8rem); text-transform: uppercase">Classement</h1>
-        </div>
-        <nav class="tabs" aria-label="Période">
-            {% for cle, libelle in periodes %}
-                <a href="{{ path('app_classement', {periode: cle}) }}" {{ periode == cle ? 'aria-current="page"' }}>{{ libelle }}</a>
-            {% endfor %}
-        </nav>
-    </div>
-
-    {% if classement is not empty %}
-        {% set top = classement|slice(0, 3) %}
-        {% if top|length == 3 %}
-            <div class="podium">
-                {% for place in [2, 1, 3] %}
-                    {% set l = top[place - 1] %}
-                    <div class="p{{ place }}">
-                        <span class="avatar {{ place == 1 ? 'avatar-lg' }}" style="--h: {{ l.teinte }}">{{ l.pseudo|slice(0, 2)|upper }}</span>
-                        <a href="{{ path('app_athlete', {pseudo: l.pseudo}) }}">{{ l.pseudo }}</a>
-                        <span class="small muted nums">{{ l.points }} pts</span>
-                        <div class="marche">{{ place }}</div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        <div class="card card-flush">
-            <div class="table-wrap">
-                <table class="table">
-                    <thead><tr><th>#</th><th>Athlète</th><th class="num">Séances</th><th class="num">Points</th></tr></thead>
-                    <tbody>
-                        {% for l in classement %}
-                            <tr class="{{ app.user and app.user.id == l.id ? 'moi' }}">
-                                <td><span class="rank rank-{{ loop.index }}">{{ loop.index }}</span></td>
-                                <td><a href="{{ path('app_athlete', {pseudo: l.pseudo}) }}" style="font-weight:700;text-decoration:none">{{ l.pseudo }}</a></td>
-                                <td class="num muted">{{ l.seances }}</td>
-                                <td class="num"><strong>{{ l.points }}</strong></td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<header class="l-entete l-entete-ligne">
+    <div><h1>Classement 🏆</h1><p class="l-muted">{{ periodes[periode] }}, aux points.</p></div>
+    <nav class="l-onglets">{% for cle, libelle in periodes %}<a href="{{ path('app_classement', {periode: cle}) }}" {{ periode == cle ? 'aria-current="page"' }}>{{ libelle }}</a>{% endfor %}</nav>
+</header>
+{% if classement|length >= 3 %}
+    <div class="l-carte"><div class="l-podium l-podium-grand">
+        {% for place in [2, 1, 3] %}
+            {% set l = classement[place - 1] %}
+            <a class="l-podium-{{ place }}" href="{{ path('app_athlete', {pseudo: l.pseudo}) }}"><span class="l-avatar" style="--h: {{ l.teinte }}">{{ l.pseudo|slice(0, 2)|upper }}</span><b>{{ l.pseudo }}</b><small>{{ l.points }} pts</small><i>{{ place }}</i></a>
+        {% endfor %}
+    </div></div>
+{% endif %}
+<ol class="l-liste l-liste-grande" start="{{ classement|length >= 3 ? 4 : 1 }}">
+    {% for l in classement|slice(classement|length >= 3 ? 3 : 0) %}
+        <li class="{{ app.user and app.user.id == l.id ? 'moi' }}"><span class="l-avatar l-avatar-sm" style="--h: {{ l.teinte }}">{{ l.pseudo|slice(0, 2)|upper }}</span><a href="{{ path('app_athlete', {pseudo: l.pseudo}) }}">{{ l.pseudo }}</a><span class="l-muted l-cache-mobile">{{ l.seances }} séances</span><b>{{ l.points }} pts</b></li>
     {% else %}
-        <div class="card">
-            <twig:Vide icone="lucide:trophy" titre="Aucune séance sur cette période">
-                <p>Le podium est libre : à vous de jouer.</p>
-                <p><a class="btn btn-primary" href="{{ path('app_generateur') }}">{{ ux_icon('lucide:dices') }} Générer un WOD</a></p>
-            </twig:Vide>
-        </div>
-    {% endif %}
-
-    <div class="card card-tight mt-3">
-        <h2 style="font-size:1rem;text-transform:uppercase">Comment gagner des points ?</h2>
-        <ul class="small muted mt-1" style="padding-left:1.2em">
-            <li><strong>{{ bareme.base }} pts</strong> par séance enregistrée</li>
-            <li><strong>+5 / +10 pts</strong> pour un WOD intermédiaire / difficile</li>
-            <li><strong>+{{ bareme.rx }} pts</strong> en version RX</li>
-            <li><strong>+{{ bareme.record }} pts</strong> quand vous battez votre record sur un WOD</li>
-        </ul>
-    </div>
-</div>
+        {% if classement is empty %}<li class="l-muted">Personne sur cette période : la première place t'attend !</li>{% endif %}
+    {% endfor %}
+</ol>
+<p class="l-muted l-petit" style="margin-top:14px">{{ bareme.base }} pts par séance · +5/+10 selon l'intensité · +{{ bareme.rx }} en RX · +{{ bareme.record }} pour un record 🎉</p>
 {% endblock %}

@@ -29,18 +29,12 @@ Genwod génère des entraînements CrossFit (*Workout Of the Day*) adaptés au f
 | Propriétés `user_id` / `exercice_id` contenant des objets | Nommage clair (`athlete`, `wod`), **enums PHP** typées |
 | 7 contrôleurs CRUD admin générés | **EasyAdmin 5** |
 | Like/favori en GET sans CSRF | POST + CSRF + Turbo Streams, contraintes d'unicité en base |
-| Bootstrap + 3 CDN (Bootstrap, Font Awesome, Bootstrap Icons) | Design system sur mesure, sombre/clair, mobile d'abord, **icônes servies localement** (UX Icons) |
+| Bootstrap + 3 CDN (Bootstrap, Font Awesome, Bootstrap Icons) | Design system sur mesure « Ludique », mobile d'abord, **icônes servies localement** (UX Icons) |
 | Pas de tests | **69 tests** (unitaires + fonctionnels), **PHPStan niveau 8**, PHP-CS-Fixer, CI GitHub Actions |
 
-## Propositions de design (aperçu)
+## Design
 
-En plus du design actuel, trois refontes complètes sont consultables avec le sélecteur en bas de page ou en ajoutant `?design=…` à l'adresse :
-
-- **Studio** (`studio`) — clair, épuré, premium ; l'orange Genwod comme seul accent.
-- **Performance** (`performance`) — tableau de bord sportif sombre, chiffres en mono, barre d'icônes.
-- **Ludique** (`ludique`) — chaleureux et coloré, série 🔥 dans l'en-tête, badges à débloquer.
-
-Chaque design a ses propres gabarits dans `templates/designs/<design>/` (Twig y cherche en priorité, via `DesignListener`) et sa feuille de style dans `assets/styles/designs/`. Les polices (Inter, Inter Tight, Space Grotesk, JetBrains Mono, Plus Jakarta Sans, Bricolage Grotesque — licence SIL OFL) sont hébergées localement dans `assets/fonts/`.
+Un design « Ludique », chaleureux et motivant : fond crème, contours encrés et ombres pleines, une couleur pastel par format, série 🔥 dans l'en-tête et badges à débloquer. Polices Plus Jakarta Sans et Bricolage Grotesque (licence SIL OFL), hébergées localement dans `assets/fonts/`.
 
 ## Stack
 

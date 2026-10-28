@@ -1,21 +1,7 @@
 {% props wod %}
-<a href="{{ path('app_wod_show', {slug: wod.slug}) }}" {{ attributes.defaults({class: 'wod-card type-' ~ wod.type.value}) }}>
-    <div class="cluster between">
-        <span class="cluster" style="--gap: 6px"><twig:TypeBadge :type="wod.type" /><twig:OrigineBadge :wod="wod" /></span>
-        <twig:Flammes :difficulte="wod.difficulte" />
-    </div>
-    <div>
-        <h3>{{ wod.titre }}</h3>
-        <p class="small muted">{{ wod.format }}</p>
-    </div>
-    <ul class="wod-lines">
-        {% for ligne in wod.lignes|slice(0, 4) %}
-            <li>{{ ligne.libelle }}</li>
-        {% endfor %}
-        {% if wod.lignes|length > 4 %}<li>+ {{ wod.lignes|length - 4 }} autre(s)</li>{% endif %}
-    </ul>
-    <footer>
-        <span>{% if not wod.benchmark and wod.auteur %}par {{ wod.auteur.pseudo }}{% endif %}</span>
-        <span class="cluster" style="--gap: 4px">{{ ux_icon('lucide:heart', {class: 'icon-inline'}) }} {{ wod.likesCount }}</span>
-    </footer>
+<a href="{{ path('app_wod_show', {slug: wod.slug}) }}" {{ attributes.defaults({class: 'l-carte l-carte-petite l-' ~ wod.type.value}) }}>
+    <span class="l-pills"><span class="l-pill">{{ wod.type.label }}</span><twig:OrigineBadge :wod="wod" /></span>
+    <h3>{{ wod.titre }}</h3>
+    <ul>{% for ligne in wod.lignes|slice(0, 3) %}<li>{{ ligne.libelle }}</li>{% endfor %}{% if wod.lignes|length > 3 %}<li>+ {{ wod.lignes|length - 3 }} autre{{ wod.lignes|length - 3 > 1 ? 's' }}</li>{% endif %}</ul>
+    <span class="l-carte-bas"><twig:Flammes :difficulte="wod.difficulte" /><span>♥ {{ wod.likesCount }}</span></span>
 </a>
