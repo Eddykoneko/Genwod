@@ -41,3 +41,38 @@ jobs:
 
       - name: Tests (PHPUnit)
         run: php bin/phpunit
+
+  # Mise en production sur Hostinger, uniquement si les tests passent.
+  # Sans les secrets HOSTINGER_* (Settings → Secrets and variables → Actions), l'étape est ignorée.
+  deploiement:
+    name: Déploiement Hostinger
+    needs: qualite
+    if: github.event_name == 'push' && github.ref == format('refs/heads/{0}', vars.BRANCHE_DEPLOIEMENT || 'refonte/v2')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploiement
+      cancel-in-progress: false
+    steps:
+      - name: Mise en production
+        env:
+          HOTE: ${{ secrets.HOSTINGER_HOST }}
+          PORT: ${{ secrets.HOSTINGER_PORT }}
+          UTILISATEUR: ${{ secrets.HOSTINGER_USER }}
+          CLE: ${{ secrets.HOSTINGER_SSH_KEY }}
+          HOTES_CONNUS: ${{ secrets.HOSTINGER_KNOWN_HOSTS }}
+          DOSSIER: ${{ secrets.HOSTINGER_PATH }}
+        run: |
+          if [ -z "$HOTE" ] || [ -z "$UTILISATEUR" ] || [ -z "$CLE" ] || [ -z "$DOSSIER" ]; then
+            echo "::notice::Secrets HOSTINGER_* absents : déploiement ignoré."
+            exit 0
+          fi
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$CLE" > ~/.ssh/deploiement
+          chmod 600 ~/.ssh/deploiement
+          if [ -n "$HOTES_CONNUS" ]; then
+            printf '%s\n' "$HOTES_CONNUS" > ~/.ssh/known_hosts
+          else
+            ssh-keyscan -p "${PORT:-65002}" "$HOTE" > ~/.ssh/known_hosts 2>/dev/null
+          fi
+          ssh -i ~/.ssh/deploiement -p "${PORT:-65002}" -o BatchMode=yes "$UTILISATEUR@$HOTE" \
+            "cd '$DOSSIER' && git fetch --quiet origin && git reset --hard --quiet '$GITHUB_SHA' && bash bin/deployer"

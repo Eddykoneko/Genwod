@@ -1,0 +1,11 @@
+# Hébergement mutualisé (ex. Hostinger) dont le dossier du (sous-)domaine est la racine du projet :
+# tout est servi depuis public/, rien d'autre (vendor, .env.local, var…) n'est accessible.
+# Inutile quand la racine web pointe directement sur public/ : Apache ne lit alors pas ce fichier.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(?!public/)(.*)$ public/$1 [L]
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    Require all denied
+</IfModule>

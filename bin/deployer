@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Met en production la version du code présente dans ce dossier.
+# Appelé par la CI GitHub après chaque push validé (voir .github/workflows/ci.yml), ou à la main :
+#   bash bin/deployer
+# PHP_BIN / COMPOSER_BIN permettent de choisir d'autres exécutables que « php » et « composer ».
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+PHP="${PHP_BIN:-php}"
+COMPOSER="${COMPOSER_BIN:-composer}"
+
+mkdir -p var/log
+journal() { printf '[%s] %s\n' "$(date '+%F %T')" "$*" | tee -a var/log/deploiements.log; }
+
+if [ ! -f .env.local ]; then
+    echo "Fichier .env.local absent : voir docs/deploiement-hostinger.md (étape 3)." >&2
+    exit 1
+fi
+if ! "$PHP" -r 'exit(PHP_VERSION_ID >= 80400 ? 0 : 1);'; then
+    echo "PHP 8.4 requis, « $PHP » est en $("$PHP" -r 'echo PHP_VERSION;') : réglez la version dans hPanel ou PHP_BIN." >&2
+    exit 1
+fi
+
+journal "Déploiement de $(git rev-parse --short HEAD) : $(git log -1 --format=%s)"
+"$COMPOSER" install --no-dev --optimize-autoloader --no-interaction --no-progress
+"$PHP" bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+"$PHP" bin/console app:catalogue:importer --no-interaction
+"$PHP" bin/console asset-map:compile
+"$PHP" bin/console cache:clear
+journal "Déploiement terminé."
