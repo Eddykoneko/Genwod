@@ -65,94 +65,6 @@
 .l-for_load { --pastel: #fff0cc; --fonce: #8a5a00; }
 .l-max_reps { --pastel: #ffe0ee; --fonce: #a3285d; }
 
-/* ---------- Thème sombre (essai) : préférence système ou bouton, mémorisé comme pour le design Actuel ---------- */
-:root[data-design="ludique"][data-theme="dark"] {
-    --bg: #15131d;
-    --bg-elev: #211e2c;
-    --surface: #211e2c;
-    --surface-2: #2a2637;
-    --surface-3: #332e42;
-    --border: #f2e8d8;
-    --border-strong: #f2e8d8;
-    --text: #f6efe4;
-    --text-muted: #b5adc6;
-    --text-faint: #857e98;
-    --accent-soft: #4a2418;
-    --lime-soft: #143d2c;
-    --cyan-soft: #1c2b52;
-    --success-soft: #143d2c;
-    --heat-0: #2a2637;
-    --heat-1: #5a2c1c;
-    --heat-2: #a8471f;
-    --heat-3: #ff6b35;
-    --shadow: 0 4px 0 #000;
-    --l-ink: #f2e8d8;
-    --l-carte: #211e2c;
-    --l-sur-encre: #15131d;
-    --l-jaune: #4a3b12;
-    --l-peche: #4a2418;
-    --l-peche-fonce: #ffb08f;
-    --l-menthe: #143d2c;
-    --l-menthe-fonce: #8de0b8;
-    --l-gris: #3a3648;
-    --l-pointille: #5a5468;
-    --l-pointille-texte: #857e98;
-    --l-texte-liste: #d9d1e6;
-    --l-voile: rgb(0 0 0 / 0.25);
-    --l-sepia: #3a3546;
-    color-scheme: dark;
-}
-:root[data-design="ludique"][data-theme="dark"] .l-ft, :root[data-design="ludique"][data-theme="dark"] .l-for_time { --pastel: #4a2418; --fonce: #ffb08f; }
-:root[data-design="ludique"][data-theme="dark"] .l-amrap { --pastel: #1c2b52; --fonce: #a9c3ff; }
-:root[data-design="ludique"][data-theme="dark"] .l-emom { --pastel: #143d2c; --fonce: #8de0b8; }
-:root[data-design="ludique"][data-theme="dark"] .l-death_by { --pastel: #2f2357; --fonce: #c9b6ff; }
-:root[data-design="ludique"][data-theme="dark"] .l-for_load { --pastel: #45360f; --fonce: #ffd77a; }
-:root[data-design="ludique"][data-theme="dark"] .l-max_reps { --pastel: #4a1d33; --fonce: #ff9cc6; }
-@media (prefers-color-scheme: dark) {
-    :root[data-design="ludique"]:not([data-theme="light"]) {
-        --bg: #15131d;
-        --bg-elev: #211e2c;
-        --surface: #211e2c;
-        --surface-2: #2a2637;
-        --surface-3: #332e42;
-        --border: #f2e8d8;
-        --border-strong: #f2e8d8;
-        --text: #f6efe4;
-        --text-muted: #b5adc6;
-        --text-faint: #857e98;
-        --accent-soft: #4a2418;
-        --lime-soft: #143d2c;
-        --cyan-soft: #1c2b52;
-        --success-soft: #143d2c;
-        --heat-0: #2a2637;
-        --heat-1: #5a2c1c;
-        --heat-2: #a8471f;
-        --heat-3: #ff6b35;
-        --shadow: 0 4px 0 #000;
-        --l-ink: #f2e8d8;
-        --l-carte: #211e2c;
-        --l-sur-encre: #15131d;
-        --l-jaune: #4a3b12;
-        --l-peche: #4a2418;
-        --l-peche-fonce: #ffb08f;
-        --l-menthe: #143d2c;
-        --l-menthe-fonce: #8de0b8;
-        --l-gris: #3a3648;
-        --l-pointille: #5a5468;
-        --l-pointille-texte: #857e98;
-        --l-texte-liste: #d9d1e6;
-        --l-voile: rgb(0 0 0 / 0.25);
-        --l-sepia: #3a3546;
-        color-scheme: dark;
-    }
-    :root[data-design="ludique"]:not([data-theme="light"]) .l-ft, :root[data-design="ludique"]:not([data-theme="light"]) .l-for_time { --pastel: #4a2418; --fonce: #ffb08f; }
-    :root[data-design="ludique"]:not([data-theme="light"]) .l-amrap { --pastel: #1c2b52; --fonce: #a9c3ff; }
-    :root[data-design="ludique"]:not([data-theme="light"]) .l-emom { --pastel: #143d2c; --fonce: #8de0b8; }
-    :root[data-design="ludique"]:not([data-theme="light"]) .l-death_by { --pastel: #2f2357; --fonce: #c9b6ff; }
-    :root[data-design="ludique"]:not([data-theme="light"]) .l-for_load { --pastel: #45360f; --fonce: #ffd77a; }
-    :root[data-design="ludique"]:not([data-theme="light"]) .l-max_reps { --pastel: #4a1d33; --fonce: #ff9cc6; }
-}
-
 /* ---------- Structure ---------- */
 .l-nav { width: 100%; max-width: 1200px; margin: 0 auto; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
 .l-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 800 1.5rem var(--font-display); }
@@ -171,15 +83,11 @@
 .l-footer nav { display: flex; flex-wrap: wrap; gap: 6px 16px; }
 .l-footer a { text-decoration: none; }
 @media (max-width: 599px) { .l-nav, .l-main, .l-footer { padding-inline: 16px; } .l-cache-mobile { display: none !important; } }
-/* Très petits écrans : le logo seul laisse la place au bouton de thème. */
-@media (max-width: 359px) { .l-logo span { display: none; } }
 
 /* ---------- Éléments ---------- */
 .l-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 20px; border-radius: 16px; background: var(--l-carte); border: 2px solid var(--l-ink); box-shadow: 0 4px 0 var(--l-ink); color: var(--l-ink); font-weight: 800; text-decoration: none; white-space: nowrap; cursor: pointer; transition: transform .08s, box-shadow .08s; }
 .l-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--l-ink); }
 .l-btn-orange { background: var(--accent); color: #fff; }
-.l-btn-icone { width: 46px; padding: 0; }
-.l-btn-icone svg { width: 20px; height: 20px; }
 .l-btn-grand { min-height: 54px; font-size: 1.02rem; padding: 0 24px; }
 .l-btn-petit { min-height: 38px; padding: 0 14px; font-size: 0.88rem; box-shadow: 0 3px 0 var(--l-ink); }
 .l-btn-plein { width: 100%; }
@@ -193,7 +101,7 @@
 .l-avatar-sm { width: 32px; height: 32px; font-size: 0.7rem; }
 .l-pill { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 999px; border: 2px solid var(--l-ink); background: var(--l-carte); font-size: 0.78rem; font-weight: 800; white-space: nowrap; width: fit-content; }
 .l-pills { display: flex; flex-wrap: wrap; gap: 6px; }
-/* Badge d'origine : pastille pleine, texte foncé lisible en clair comme en sombre. */
+/* Badge d'origine : pastille pleine aux couleurs de la famille (Girl, Hero…). */
 [data-design="ludique"] .badge-origine { height: 28px; padding: 0 12px; border: 2px solid var(--l-ink); font-size: 0.78rem; letter-spacing: 0; text-transform: none; color: #1d1b2e; background: var(--origine); }
 [data-design="ludique"] .origine-girl { --origine: #ffb3d4; }
 [data-design="ludique"] .origine-hero { --origine: #ff9b8f; }

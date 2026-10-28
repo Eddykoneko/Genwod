@@ -5,11 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <title>{% block title %}Générateur de WODs CrossFit{% endblock %} · Genwod</title>
         <meta name="description" content="{% block description %}Genwod génère des entraînements CrossFit (WOD) adaptés à votre niveau et à votre matériel.{% endblock %}">
-        <meta name="theme-color" content="#fff8ef" data-clair="#fff8ef" data-sombre="#15131d">
+        <meta name="theme-color" content="#fff8ef">
         <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
         <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
-        {# Applique le thème choisi avant le premier rendu (évite le flash). #}
-        <script>try{var t=localStorage.getItem('genwod-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
         {% block javascripts %}{% block importmap %}{{ importmap('app') }}{% endblock %}{% endblock %}
     </head>
     {% set route = app.current_route %}
@@ -24,7 +22,6 @@
                 <a href="{{ path('app_classement') }}" {{ route == 'app_classement' ? 'aria-current="page"' }}>Classement</a>
             </nav>
             <div class="l-nav-fin">
-                <button type="button" class="l-btn l-btn-icone" data-controller="theme" data-action="theme#basculer" aria-label="Changer de thème" title="Thème clair / sombre">{{ ux_icon('lucide:sun-moon') }}</button>
                 {% if app.user %}
                     {% set serie = resume_athlete(app.user).serie %}
                     <a class="l-serie" href="{{ path('app_tableau_de_bord') }}" title="Ta série de jours d'entraînement"><i>🔥</i>{{ serie }}<span class="l-cache-mobile">&nbsp;jour{{ serie > 1 ? 's' }}</span></a>
