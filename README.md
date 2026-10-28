@@ -125,6 +125,8 @@ vendor/bin/php-cs-fixer fix          # règles @Symfony
 
 ## Déploiement (O2Switch ou équivalent)
 
+Guide pas à pas : [docs/deploiement-o2switch.md](docs/deploiement-o2switch.md).
+
 ```bash
 composer install --no-dev --optimize-autoloader
 APP_ENV=prod php bin/console doctrine:migrations:migrate -n
