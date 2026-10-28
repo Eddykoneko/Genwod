@@ -1,0 +1,6 @@
+{# Origine d'un WOD : famille du benchmark (Girl, Hero, Open, Classique) ou création de la communauté. #}
+{% props wod %}
+{% set origine = wod.benchmark ? wod.benchmark.value : 'communaute' %}
+<span {{ attributes.defaults({class: 'badge-origine origine-' ~ origine, title: wod.benchmark ? wod.benchmark.label : (wod.auteur ? 'Créé par ' ~ wod.auteur.pseudo : 'Généré par Genwod')}) }}>
+    {{- wod.benchmark ? wod.benchmark.badge : 'Communauté' -}}
+</span>

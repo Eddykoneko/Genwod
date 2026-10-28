@@ -2,7 +2,7 @@
 {% props wod, titreTag = 'h1', etiquette = null %}
 <article {{ attributes.defaults({class: 'l-carte l-carte-wod l-' ~ wod.type.value}) }}>
     {% if etiquette %}<span class="l-sticker">{{ etiquette }}</span>{% endif %}
-    <span class="l-pill">{{ wod.type.label }}{{ wod.benchmark ? ' · ' ~ wod.benchmark.label }}</span>
+    <span class="l-pills"><span class="l-pill">{{ wod.type.label }}</span><twig:OrigineBadge :wod="wod" /></span>
     <{{ titreTag }} class="l-titre-wod">{{ wod.titre }}</{{ titreTag }}>
     <p class="l-format">{{ wod.format }} · <twig:Flammes :difficulte="wod.difficulte" /></p>
     <div class="l-lignes">

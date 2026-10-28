@@ -3,9 +3,9 @@
 <article {{ attributes.defaults({class: 'board type-' ~ wod.type.value}) }}>
     <div class="board-meta">
         <twig:TypeBadge :type="wod.type" />
+        <twig:OrigineBadge :wod="wod" />
         <span class="badge">{{ ux_icon('lucide:timer') }} {{ wod.duree }} min</span>
         <span class="badge"><twig:Flammes :difficulte="wod.difficulte" /> {{ wod.difficulte.label }}</span>
-        {% if wod.benchmark %}<span class="badge badge-accent">{{ ux_icon(wod.benchmark.value == 'hero' ? 'lucide:medal' : 'lucide:badge-check') }} {{ wod.benchmark.label }}</span>{% endif %}
     </div>
     <{{ titreTag }} class="board-title">{{ wod.titre }}</{{ titreTag }}>
     <p class="board-format">{{ wod.format }}</p>

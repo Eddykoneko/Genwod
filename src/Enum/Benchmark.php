@@ -25,6 +25,17 @@ enum Benchmark: string implements TranslatableInterface
         };
     }
 
+    /** Libellé court du badge affiché à côté du WOD : « Girl », « Hero »… */
+    public function badge(): string
+    {
+        return match ($this) {
+            self::Girl => 'Girl',
+            self::Hero => 'Hero',
+            self::Open => 'Open',
+            self::Classique => 'Classique',
+        };
+    }
+
     /** Libellé affiché par les formulaires Symfony et EasyAdmin. */
     public function trans(TranslatorInterface $translator, ?string $locale = null): string
     {

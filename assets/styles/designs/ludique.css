@@ -192,6 +192,14 @@
 .l-avatar::-webkit-details-marker { display: none; }
 .l-avatar-sm { width: 32px; height: 32px; font-size: 0.7rem; }
 .l-pill { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 999px; border: 2px solid var(--l-ink); background: var(--l-carte); font-size: 0.78rem; font-weight: 800; white-space: nowrap; width: fit-content; }
+.l-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+/* Badge d'origine : pastille pleine, texte foncé lisible en clair comme en sombre. */
+[data-design="ludique"] .badge-origine { height: 28px; padding: 0 12px; border: 2px solid var(--l-ink); font-size: 0.78rem; letter-spacing: 0; text-transform: none; color: #1d1b2e; background: var(--origine); }
+[data-design="ludique"] .origine-girl { --origine: #ffb3d4; }
+[data-design="ludique"] .origine-hero { --origine: #ff9b8f; }
+[data-design="ludique"] .origine-open { --origine: #9cc0ff; }
+[data-design="ludique"] .origine-classique { --origine: #8de0b8; }
+[data-design="ludique"] .origine-communaute { --origine: var(--l-carte); color: var(--text); }
 .l-sticker { position: absolute; top: -15px; right: 20px; padding: 3px 12px; border-radius: 12px; border: 2px solid var(--l-ink); background: var(--gold); color: #1d1b2e; font-weight: 800; font-size: 0.8rem; transform: rotate(4deg); }
 .l-carte { position: relative; padding: 22px; border-radius: var(--radius-lg); background: var(--l-carte); border: 2px solid var(--l-ink); box-shadow: 0 5px 0 var(--l-ink); min-width: 0; }
 .l-carte h2 { font-size: 1.4rem; margin-bottom: 12px; }

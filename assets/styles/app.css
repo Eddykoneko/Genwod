@@ -318,6 +318,23 @@ body.has-tabbar { padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom
 .badge svg { width: 14px; height: 14px; }
 .badge-type { background: color-mix(in srgb, var(--type-color) 16%, transparent); color: var(--type-color); border-color: transparent; }
 .badge-accent { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+/* Origine d'un WOD : Girl, Hero, Open, Classique ou Communauté. */
+.badge-origine { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; color: var(--origine); background: color-mix(in srgb, var(--origine) 16%, transparent); }
+.origine-girl { --origine: #ff7eb6; }
+.origine-hero { --origine: #ff5d5d; }
+.origine-open { --origine: #4da3ff; }
+.origine-classique { --origine: #3ddc97; }
+.origine-communaute { --origine: var(--text-muted); }
+:root:not([data-design])[data-theme="light"] .origine-girl { --origine: #c2185b; }
+:root:not([data-design])[data-theme="light"] .origine-hero { --origine: #c62828; }
+:root:not([data-design])[data-theme="light"] .origine-open { --origine: #1f63c6; }
+:root:not([data-design])[data-theme="light"] .origine-classique { --origine: #1b7f52; }
+@media (prefers-color-scheme: light) {
+    :root:not([data-design]):not([data-theme]) .origine-girl { --origine: #c2185b; }
+    :root:not([data-design]):not([data-theme]) .origine-hero { --origine: #c62828; }
+    :root:not([data-design]):not([data-theme]) .origine-open { --origine: #1f63c6; }
+    :root:not([data-design]):not([data-theme]) .origine-classique { --origine: #1b7f52; }
+}
 .badge-lime { background: var(--lime-soft); color: var(--lime); border-color: transparent; }
 .badge-cyan { background: var(--cyan-soft); color: var(--cyan); border-color: transparent; }
 .badge-success { background: var(--success-soft); color: var(--success); border-color: transparent; }

@@ -1,7 +1,7 @@
 {% props wod %}
 <a href="{{ path('app_wod_show', {slug: wod.slug}) }}" {{ attributes.defaults({class: 'wod-card type-' ~ wod.type.value}) }}>
     <div class="cluster between">
-        <twig:TypeBadge :type="wod.type" />
+        <span class="cluster" style="--gap: 6px"><twig:TypeBadge :type="wod.type" /><twig:OrigineBadge :wod="wod" /></span>
         <twig:Flammes :difficulte="wod.difficulte" />
     </div>
     <div>
@@ -15,11 +15,7 @@
         {% if wod.lignes|length > 4 %}<li>+ {{ wod.lignes|length - 4 }} autre(s)</li>{% endif %}
     </ul>
     <footer>
-        <span>
-            {% if wod.benchmark %}{{ ux_icon(wod.benchmark.value == 'hero' ? 'lucide:medal' : 'lucide:badge-check', {class: 'icon-inline', style: 'color: var(--accent)'}) }} {{ wod.benchmark.label }}
-            {% elseif wod.auteur %}par {{ wod.auteur.pseudo }}
-            {% else %}Généré{% endif %}
-        </span>
+        <span>{% if not wod.benchmark and wod.auteur %}par {{ wod.auteur.pseudo }}{% endif %}</span>
         <span class="cluster" style="--gap: 4px">{{ ux_icon('lucide:heart', {class: 'icon-inline'}) }} {{ wod.likesCount }}</span>
     </footer>
 </a>

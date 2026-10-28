@@ -101,6 +101,7 @@ final class PagesPubliquesTest extends AppWebTestCase
         $this->client->request('GET', '/wods?benchmark=hero');
 
         self::assertSelectorTextContains('.results', 'The Seven');
+        self::assertSelectorTextContains('.results .badge-origine', 'Hero');
         self::assertSelectorTextNotContains('.results', 'Cindy');
     }
 
