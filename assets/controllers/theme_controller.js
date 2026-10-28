@@ -7,7 +7,8 @@ export default class extends Controller {
         const actuel = racine.dataset.theme ?? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
         const suivant = actuel === 'light' ? 'dark' : 'light';
         racine.dataset.theme = suivant;
-        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', suivant === 'light' ? '#f6f5f1' : '#0d0e10');
+        const meta = document.querySelector('meta[name="theme-color"]');
+        meta?.setAttribute('content', (suivant === 'light' ? meta.dataset.clair : meta.dataset.sombre) ?? (suivant === 'light' ? '#f6f5f1' : '#0d0e10'));
         try {
             localStorage.setItem('genwod-theme', suivant);
         } catch {
