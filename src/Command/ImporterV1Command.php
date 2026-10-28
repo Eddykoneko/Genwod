@@ -136,10 +136,10 @@ final class ImporterV1Command
                 default => Difficulte::Moyen,
             };
 
-            $creeLe = new \DateTimeImmutable((string) ($ligne['created_at'] ?? 'now'));
+            $creeLe = null !== $ligne['created_at'] ? new \DateTimeImmutable((string) $ligne['created_at']) : null;
             // Titré par sa date, comme un WOD généré : les noms propres restent réservés aux benchmarks.
             $wod = (new Wod())
-                ->setTitre(WodGenerator::titrePour($creeLe))
+                ->setTitre(null !== $creeLe ? WodGenerator::titrePour($creeLe) : \sprintf('WOD n°%d de la v1', $ligne['id']))
                 ->setGraine('v1-'.$ligne['id'])
                 ->setType($type)
                 ->setDifficulte($difficulte)
@@ -147,7 +147,7 @@ final class ImporterV1Command
                 ->setConsignes(trim((string) ($ligne['description'] ?? '')) ?: null)
                 // Pas un benchmark reconnu : publié comme WOD communautaire, hors sélection officielle.
                 ->setOfficiel(false)
-                ->setCreatedAt($creeLe);
+                ->setCreatedAt($creeLe ?? new \DateTimeImmutable());
             $this->em->persist($wod);
             $wods[(int) $ligne['id']] = $wod;
         }
