@@ -32,6 +32,9 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[AsCommand(name: 'app:import-v1', description: 'Importe les données de la base Genwod v1.')]
 final class ImporterV1Command
 {
+    /** @var array<int, true> exercices v1 sans date de création (clé : spl_object_id du WOD) */
+    private array $exercicesSansDate = [];
+
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly UserRepository $users,
@@ -150,6 +153,9 @@ final class ImporterV1Command
                 ->setCreatedAt($creeLe ?? new \DateTimeImmutable());
             $this->em->persist($wod);
             $wods[(int) $ligne['id']] = $wod;
+            if (null === $creeLe) {
+                $this->exercicesSansDate[spl_object_id($wod)] = true;
+            }
         }
 
         return $wods;
@@ -174,8 +180,9 @@ final class ImporterV1Command
             $secondes = (int) $temps->format('G') * 3600 + (int) $temps->format('i') * 60 + (int) $temps->format('s');
 
             // La v1 ne datait pas les séances : on prend la date la plus récente connue (compte ou exercice).
+            $date = isset($this->exercicesSansDate[spl_object_id($wod)]) ? $user->getCreatedAt() : max($user->getCreatedAt(), $wod->getCreatedAt());
             $seance = (new Seance())
-                ->setRealiseeLe(max($user->getCreatedAt(), $wod->getCreatedAt())->setTime(0, 0))
+                ->setRealiseeLe($date->setTime(0, 0))
                 ->setAthlete($user)
                 ->setWod($wod)
                 ->setMode('SCALED' === mb_strtoupper((string) $ligne['mode']) ? Mode::Scaled : Mode::Rx)
