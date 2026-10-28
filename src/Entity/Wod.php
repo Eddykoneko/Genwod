@@ -95,7 +95,7 @@ class Wod
     #[ORM\Column]
     private bool $public = true;
 
-    /** Graine du générateur, pour pouvoir reproduire le WOD. */
+    /** Graine du générateur, pour pouvoir reproduire le WOD (« v1-<id> » pour un exercice repris de la v1). */
     #[ORM\Column(length: 32, nullable: true)]
     private ?string $graine = null;
 

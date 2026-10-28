@@ -18,6 +18,8 @@ php bin/phpunit                                 # tests (SQLite, base remise à 
 vendor/bin/phpstan analyse --memory-limit=1G    # niveau 8 (nécessite var/cache/dev : cache:warmup)
 vendor/bin/php-cs-fixer fix                     # règles @Symfony
 php bin/console ux:icons:lock                   # après avoir utilisé une nouvelle icône
+php bin/console app:admin <e-mail>              # droits d'administration
+bash bin/deployer                               # mise en production (appelé par la CI, voir docs/deploiement-hostinger.md)
 ```
 
 ## Conventions
@@ -43,4 +45,5 @@ php bin/console ux:icons:lock                   # après avoir utilisé une nouv
 - Formats : For Time, AMRAP, EMOM, Death By (générables, `WodType::generables()`) ; For Load (`Seance::chargeKg`) et Max reps (`reps`) réservés aux benchmarks. Intervalles sur `Wod` (`blocs`, `travailSecondes`, `reposSecondes`, `parStation`) lus par le chrono.
 - `Statistiques` : série de jours consécutifs et heatmap.
 - `config/donnees/catalogue.php` : catalogue de mouvements et **uniquement des WODs de référence de la communauté CrossFit** (Girls, Hero WODs, CrossFit Open, classiques ; chaque WOD vérifié sur sa fiche `crossfit.com/benchmark/<slug>` ; pas de Tabata, jugé « cross-training » ; quantité 0 = « Max » ; les échelles et pyramides de l'Open sont saisies ligne par ligne comme des chippers, leurs totaux officiels sont vérifiés par PagesPubliquesTest), avec `schema` (21-15-9…) et `toutChaqueMinute` (EMOM type Chelsea). Les mouvements `actif = false` servent aux benchmarks mais pas au générateur.
+- Déploiement Hostinger : job `deploiement` de la CI (après les tests, secrets `HOSTINGER_*`) → SSH → `git reset` + `bin/deployer`. `.htaccess` racine → `public/`.
 - `app:import-v1` : reprise des données de la v1 (schéma avec colonnes `user_id_id` / `exercice_id_id`).

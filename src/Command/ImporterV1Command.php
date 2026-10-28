@@ -9,6 +9,7 @@ use App\Entity\Wod;
 use App\Enum\Difficulte;
 use App\Enum\Mode;
 use App\Enum\WodType;
+use App\Generator\WodGenerator;
 use App\Repository\UserRepository;
 use App\Service\Points;
 use Doctrine\DBAL\Connection;
@@ -45,7 +46,7 @@ final class ImporterV1Command
         #[Option('Affiche ce qui serait importé sans rien écrire')] bool $simulation = false,
     ): int {
         $dejaImporte = $this->em->getRepository(Wod::class)->createQueryBuilder('w')
-            ->select('COUNT(w.id)')->andWhere('w.titre LIKE :prefixe')->setParameter('prefixe', 'WOD classique n°%')
+            ->select('COUNT(w.id)')->andWhere('w.graine LIKE :prefixe')->setParameter('prefixe', 'v1-%')
             ->getQuery()->getSingleScalarResult();
         if ($dejaImporte > 0) {
             $io->error('Les données v1 ont déjà été importées dans cette base.');
@@ -135,15 +136,18 @@ final class ImporterV1Command
                 default => Difficulte::Moyen,
             };
 
+            $creeLe = new \DateTimeImmutable((string) ($ligne['created_at'] ?? 'now'));
+            // Titré par sa date, comme un WOD généré : les noms propres restent réservés aux benchmarks.
             $wod = (new Wod())
-                ->setTitre(\sprintf('WOD classique n°%d', $ligne['id']))
+                ->setTitre(WodGenerator::titrePour($creeLe))
+                ->setGraine('v1-'.$ligne['id'])
                 ->setType($type)
                 ->setDifficulte($difficulte)
                 ->setDuree(max(1, min(90, (int) ($ligne['duree'] ?? 15) ?: 15)))
                 ->setConsignes(trim((string) ($ligne['description'] ?? '')) ?: null)
                 // Pas un benchmark reconnu : publié comme WOD communautaire, hors sélection officielle.
                 ->setOfficiel(false)
-                ->setCreatedAt(new \DateTimeImmutable((string) ($ligne['created_at'] ?? 'now')));
+                ->setCreatedAt($creeLe);
             $this->em->persist($wod);
             $wods[(int) $ligne['id']] = $wod;
         }

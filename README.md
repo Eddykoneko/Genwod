@@ -123,21 +123,16 @@ vendor/bin/phpstan analyse           # niveau 8
 vendor/bin/php-cs-fixer fix          # règles @Symfony
 ```
 
-## Déploiement (O2Switch ou équivalent)
+## Déploiement (Hostinger ou tout hébergement Apache + SSH)
 
-Guide pas à pas : [docs/deploiement-o2switch.md](docs/deploiement-o2switch.md).
+Guide pas à pas : [docs/deploiement-hostinger.md](docs/deploiement-hostinger.md).
 
-```bash
-composer install --no-dev --optimize-autoloader
-APP_ENV=prod php bin/console doctrine:migrations:migrate -n
-APP_ENV=prod php bin/console app:catalogue:importer
-APP_ENV=prod php bin/console asset-map:compile
-APP_ENV=prod php bin/console cache:clear
-```
+- **Installation** : cloner le dépôt dans le dossier du site, créer `.env.local`, puis `bash bin/deployer` (Composer, migrations, catalogue, assets, cache). Le `.htaccess` racine sert tout depuis `public/`.
+- **Mises à jour automatiques** : à chaque push sur la branche suivie, la CI lance les tests et, s'ils passent, se connecte en SSH et exécute `bin/deployer` (secrets `HOSTINGER_*`, variable `BRANCHE_DEPLOIEMENT`).
 
 Variables à définir en production : `APP_ENV=prod`, `APP_SECRET`, `DATABASE_URL`, `MAILER_DSN`, `MAILER_FROM`, `DEFAULT_URI` et `EDITEUR_CONTACT` (adresse affichée dans les mentions légales).
 
-Pour reprendre les comptes et l'historique de la v1, déployez la v2 sur une **nouvelle base**, puis lancez `app:import-v1` en pointant vers l'ancienne base (d'abord avec `--simulation`). Les mots de passe existants restent valables.
+Pour reprendre les comptes et l'historique de la v1, déployez la v2 sur une **nouvelle base**, puis lancez `app:import-v1` en pointant vers l'ancienne base (d'abord avec `--simulation`). Les mots de passe existants restent valables. `app:admin <e-mail>` donne les droits d'administration.
 
 ---
 
