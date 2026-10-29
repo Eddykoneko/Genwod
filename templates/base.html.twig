@@ -6,6 +6,8 @@
         <title>{% block title %}Générateur de WODs CrossFit{% endblock %} · Genwod</title>
         <meta name="description" content="{% block description %}Genwod génère des entraînements CrossFit (WOD) adaptés à votre niveau et à votre matériel.{% endblock %}">
         <meta name="theme-color" content="#fff8ef">
+        {# Design clair uniquement : empêche l'assombrissement automatique (Chrome Android, Samsung Internet). #}
+        <meta name="color-scheme" content="only light">
         <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
         <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
         {% block javascripts %}{% block importmap %}{{ importmap('app') }}{% endblock %}{% endblock %}
