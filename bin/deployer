@@ -5,6 +5,8 @@
 # PHP_BIN / COMPOSER_BIN permettent de choisir d'autres exécutables que « php » et « composer ».
 set -euo pipefail
 cd "$(dirname "$0")/.."
+# Les fichiers publiés (assets, cache) doivent rester lisibles par le serveur web.
+umask 022
 
 PHP="${PHP_BIN:-php}"
 # Sur un hébergement mutualisé, « php » en ligne de commande peut être plus ancien que celui du site :
