@@ -75,4 +75,4 @@ jobs:
             ssh-keyscan -p "${PORT:-65002}" "$HOTE" > ~/.ssh/known_hosts 2>/dev/null
           fi
           ssh -i ~/.ssh/deploiement -p "${PORT:-65002}" -o BatchMode=yes "$UTILISATEUR@$HOTE" \
-            "cd '$DOSSIER' && git fetch --quiet origin && git reset --hard --quiet '$GITHUB_SHA' && bash bin/deployer"
+            "bash '$DOSSIER/bin/deploiement-distant' $GITHUB_SHA"

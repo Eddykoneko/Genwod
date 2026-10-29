@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Point d'entrée SSH du déploiement automatique (job « deploiement » de la CI) :
+#   bash bin/deploiement-distant <sha du commit>
+# Ne déploie qu'un commit présent sur la branche suivie par ce dossier, puis lance bin/deployer.
+# Prévu pour être la « commande forcée » de la clé de la CI dans ~/.ssh/authorized_keys :
+#   command="bash ~/apps/genwod-v2/bin/deploiement-distant",no-pty,no-port-forwarding,no-agent-forwarding,no-X11-forwarding ssh-ed25519 …
+# (la clé ne peut alors rien faire d'autre ; le commit est lu dans SSH_ORIGINAL_COMMAND).
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+demande="${1:-${SSH_ORIGINAL_COMMAND:-}}"
+sha="${demande##* }"
+if ! [[ "$sha" =~ ^[0-9a-f]{40}$ ]]; then
+    echo "Déploiement refusé : commit attendu (40 caractères hexadécimaux)." >&2
+    exit 64
+fi
+
+git fetch --quiet origin
+branche="$(git rev-parse --abbrev-ref HEAD)"
+if ! git merge-base --is-ancestor "$sha" "origin/$branche"; then
+    echo "Déploiement refusé : $sha n'est pas sur origin/$branche." >&2
+    exit 65
+fi
+
+git reset --hard --quiet "$sha"
+exec bash bin/deployer
