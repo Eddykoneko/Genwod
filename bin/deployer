@@ -7,7 +7,19 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 PHP="${PHP_BIN:-php}"
-COMPOSER="${COMPOSER_BIN:-composer}"
+# Sur un hébergement mutualisé, « php » en ligne de commande peut être plus ancien que celui du site :
+# on prend alors PHP 8.4+ là où les hébergeurs l'installent (ex. /opt/alt/php84 chez Hostinger).
+if ! "$PHP" -r 'exit(PHP_VERSION_ID >= 80400 ? 0 : 1);' 2>/dev/null; then
+    for alternatif in /opt/alt/php84/usr/bin/php /opt/alt/php85/usr/bin/php; do
+        if [ -x "$alternatif" ]; then PHP="$alternatif"; break; fi
+    done
+fi
+# Composer est lancé avec ce même PHP, sinon ses scripts (cache:clear…) tourneraient sur l'ancien.
+if [ -n "${COMPOSER_BIN:-}" ]; then
+    COMPOSER=("$COMPOSER_BIN")
+else
+    COMPOSER=("$PHP" "$(command -v composer)")
+fi
 
 mkdir -p var/log
 journal() { printf '[%s] %s\n' "$(date '+%F %T')" "$*" | tee -a var/log/deploiements.log; }
@@ -17,12 +29,12 @@ if [ ! -f .env.local ]; then
     exit 1
 fi
 if ! "$PHP" -r 'exit(PHP_VERSION_ID >= 80400 ? 0 : 1);'; then
-    echo "PHP 8.4 requis, « $PHP » est en $("$PHP" -r 'echo PHP_VERSION;') : réglez la version dans hPanel ou PHP_BIN." >&2
+    echo "PHP 8.4 requis, « $PHP » est en $("$PHP" -r 'echo PHP_VERSION;') : indiquez son chemin dans PHP_BIN." >&2
     exit 1
 fi
 
-journal "Déploiement de $(git rev-parse --short HEAD) : $(git log -1 --format=%s)"
-"$COMPOSER" install --no-dev --optimize-autoloader --no-interaction --no-progress
+journal "Déploiement de $(git rev-parse --short HEAD) (PHP $("$PHP" -r 'echo PHP_VERSION;')) : $(git log -1 --format=%s)"
+"${COMPOSER[@]}" install --no-dev --optimize-autoloader --no-interaction --no-progress
 "$PHP" bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 "$PHP" bin/console app:catalogue:importer --no-interaction
 "$PHP" bin/console asset-map:compile
