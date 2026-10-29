@@ -48,26 +48,29 @@ cd ~/apps/genwod-v2
 
 ## Brancher le déploiement automatique (une fois)
 
-Sur votre Mac, une clé SSH réservée au déploiement :
+Sur le Mac, une clé réservée à GitHub et les secrets du dépôt (la clé privée ne s'affiche pas) :
 
 ```bash
-ssh-keygen -t ed25519 -C genwod-deploiement -f ~/.ssh/genwod_deploiement -N ""
-cat ~/.ssh/genwod_deploiement.pub
-```
-
-hPanel → Avancé → Accès SSH → Clés SSH → **ajouter** le contenu affiché (la clé `.pub`).
-Puis, toujours sur le Mac, les secrets GitHub (la clé privée ne s'affiche pas) :
-
-```bash
-gh secret set HOSTINGER_SSH_KEY --repo Eddykoneko/Genwod < ~/.ssh/genwod_deploiement
-gh secret set HOSTINGER_HOST --repo Eddykoneko/Genwod --body "<IP>"
+ssh-keygen -t ed25519 -C genwod-deploiement-github -f ~/.ssh/genwod_deploiement_github -N ""
+gh secret set HOSTINGER_SSH_KEY --repo Eddykoneko/Genwod < ~/.ssh/genwod_deploiement_github
+gh secret set HOSTINGER_HOST --repo Eddykoneko/Genwod --body "147.79.103.15"
 gh secret set HOSTINGER_PORT --repo Eddykoneko/Genwod --body "65002"
-gh secret set HOSTINGER_USER --repo Eddykoneko/Genwod --body "<utilisateur>"
+gh secret set HOSTINGER_USER --repo Eddykoneko/Genwod --body "u855251883"
 gh secret set HOSTINGER_PATH --repo Eddykoneko/Genwod --body "/home/u855251883/apps/genwod-v2"
-ssh-keyscan -p 65002 <IP> | gh secret set HOSTINGER_KNOWN_HOSTS --repo Eddykoneko/Genwod
+ssh-keyscan -p 65002 147.79.103.15 2>/dev/null | gh secret set HOSTINGER_KNOWN_HOSTS --repo Eddykoneko/Genwod
+cat ~/.ssh/genwod_deploiement_github.pub
 ```
 
-C'est tout : au prochain `git push` sur `refonte/v2`, l'onglet **Actions** du dépôt montre les tests puis « Déploiement Hostinger ».
+hPanel → Avancé → Accès SSH → Clés SSH → **ajouter** la ligne affichée par la dernière commande.
+Puis, sur le serveur, restreindre cette clé au seul déploiement en préfixant sa ligne dans `~/.ssh/authorized_keys` :
+
+```
+command="bash /home/u855251883/apps/genwod-v2/bin/deploiement-distant",no-pty,no-port-forwarding,no-agent-forwarding,no-X11-forwarding ssh-ed25519 … genwod-deploiement-github
+```
+
+Si hPanel réécrit ce fichier (ajout ou retrait d'une clé), la restriction disparaît mais le déploiement continue de fonctionner : il suffit de la remettre.
+
+C'est tout : à chaque `git push` sur `refonte/v2`, l'onglet **Actions** du dépôt montre les tests puis « Déploiement Hostinger ».
 Pour suivre `main` après la fusion de la v2 : Settings → Secrets and variables → Actions → **Variables** → `BRANCHE_DEPLOIEMENT` = `main`
 (et `git checkout main` dans `~/apps/genwod-v2`).
 
